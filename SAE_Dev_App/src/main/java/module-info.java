@@ -7,11 +7,6 @@ module com.example.sae_dev_app {
 
     exports exemples;
     exports controleur;
-    exports data;
     exports modele;
     exports app;
-    opens exemples to javafx.fxml;
-    opens controleur to javafx.fxml;
-    opens data to javafx.fxml;
-    opens modele to javafx.fxml;
 }
