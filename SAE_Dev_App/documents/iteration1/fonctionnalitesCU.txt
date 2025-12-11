@@ -1,0 +1,21 @@
+1. FONCTIONNALITÉS DÉVELOPPÉES
+---------------------------------------------------------------------
+Modélisation des Tâches :
+implémentation du patron composite avec une classe tache abstraite sous tache et tache mère
+
+Gestion de la hiérarchie :
+Implémentation de la logique permettant à une tâche de contenir d'autres 
+tâches
+
+affichage :
+Implementation patron mvc textuelle avec creation de tache et priorite et creation d'une vue console
+
+
+2. CAS D'UTILISATION
+---------------------------------------------------------------------
+- CU1 : Permettre l'instanciation de tâches avec titre, date et priorité.
+- CU2 : ajout d'une tâche enfant dans une tâche mère.
+- CU3 : creation et instantiation du controlleur et de la vue
+
+3. RÔLES DES MEMBRES DU GROUPE
+---------------------------------------------------------------------
