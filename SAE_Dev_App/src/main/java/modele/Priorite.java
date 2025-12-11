@@ -1,4 +1,7 @@
 package modele;
 
-public class Priorite {
+public enum Priorite {
+    BASSE,
+    MOYENNE,
+    HAUTE
 }

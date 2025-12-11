@@ -5,6 +5,13 @@ module com.example.sae_dev_app {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
 
-    opens com.example.sae_dev_app to javafx.fxml;
-    exports com.example.sae_dev_app;
+    exports exemples;
+    exports controleur;
+    exports data;
+    exports modele;
+    exports app;
+    opens exemples to javafx.fxml;
+    opens controleur to javafx.fxml;
+    opens data to javafx.fxml;
+    opens modele to javafx.fxml;
 }
