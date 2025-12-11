@@ -9,8 +9,8 @@ import java.util.Scanner;
 
 public class Controleur {
 
-    private TacheMere modele; // Notre "Racine" (Le Modèle)
-    private VueConsole vue;   // L'écran (La Vue)
+    private TacheMere modele;
+    private VueConsole vue;
     private Scanner scanner;
 
     public Controleur(TacheMere modele, VueConsole vue) {

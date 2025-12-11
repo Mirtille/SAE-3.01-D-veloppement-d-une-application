@@ -16,11 +16,8 @@ public abstract class TacheAbstraite {
 
     public String getTitre() { return titre; }
 
-    // --- AJOUTE CECI ---
-    // Chaque enfant devra coder sa propre façon de s'afficher
     public abstract String afficher();
 
-    // Tu peux garder ou enlever toString, c'est comme tu veux
     @Override
     public String toString() { return titre; }
 }

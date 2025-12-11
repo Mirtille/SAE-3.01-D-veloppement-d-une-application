@@ -10,7 +10,7 @@ public class SousTache extends TacheAbstraite {
 
     @Override
     public String afficher() {
-        // Retourne juste le texte, pas de System.out.println ici !
+
         return "   -> [Tâche] " + titre + " (" + priorite + ")";
     }
 }
