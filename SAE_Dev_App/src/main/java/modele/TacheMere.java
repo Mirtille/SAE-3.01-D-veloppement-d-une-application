@@ -27,4 +27,20 @@ public class TacheMere extends TacheAbstraite {
         }
         return sb.toString();
     }
+
+    public Priorite getPriorite() {
+        return priorite;
+    }
+
+    public LocalDate getDateLimite() {
+        return dateLimite;
+    }
+
+    public String getTitre() {
+        return titre;
+    }
+
+    public List<TacheAbstraite> getEnfants() {
+        return enfants;
+    }
 }

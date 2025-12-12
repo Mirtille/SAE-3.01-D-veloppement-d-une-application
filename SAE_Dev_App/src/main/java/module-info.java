@@ -4,6 +4,7 @@ module com.example.sae_dev_app {
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
+    requires org.junit.jupiter.api;
 
     exports exemples;
     exports controleur;
