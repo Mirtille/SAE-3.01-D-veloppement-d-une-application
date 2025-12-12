@@ -1,10 +1,11 @@
 package vue;
 
 import modele.TacheAbstraite;
+import observateur.Observateur;
+import observateur.Sujet;
 
-public class VueConsole {
+public class VueConsole implements Observateur {
 
-    // Méthode pour afficher le menu principal
     public void afficherMenu() {
         System.out.println("\n=== Test console MVC textuelle ===");
         System.out.println("1. Ajouter une sous-tâche");
@@ -15,9 +16,9 @@ public class VueConsole {
 
     public void demanderPriorite() {
         System.out.println("\n=== CHOIX DE PRIORITE ===");
-        System.out.println("1. PRIORITE_BASSE");
-        System.out.println("2. PRIORITE_MOYENNE");
-        System.out.println("3. PRIORITE_HAUTE");
+        System.out.println("1. BASSE");
+        System.out.println("2. MOYENNE");
+        System.out.println("3. HAUTE");
         System.out.print("Votre choix : ");
     }
 
@@ -28,10 +29,17 @@ public class VueConsole {
     }
 
     public void demanderDateLimite() {
-        System.out.print("Entrez la date limite de la tâche (AAAA-MM-JJ) : ");
+        System.out.print("Entrez la date limite (AAAA-MM-JJ) : ");
     }
 
     public void demanderTitre() {
         System.out.print("Entrez le titre de la tâche : ");
+    }
+
+    public void actualiser(Sujet s) {
+        if (s instanceof TacheAbstraite) {
+            System.out.println("\n>>> Mise à jour automatique <<<");
+            afficherTache((TacheAbstraite) s);
+        }
     }
 }

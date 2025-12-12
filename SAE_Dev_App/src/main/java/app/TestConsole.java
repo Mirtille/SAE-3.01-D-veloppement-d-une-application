@@ -8,13 +8,10 @@ import java.time.LocalDate;
 
 public class TestConsole {
     public static void main(String[] args) {
-
-        TacheMere racine = new TacheMere("test", LocalDate.now(), Priorite.HAUTE);
-
+        TacheMere racine = new TacheMere("Projet Global", LocalDate.now(), Priorite.HAUTE);
         VueConsole vue = new VueConsole();
-
+        racine.enregistrerObservateur(vue);
         Controleur controleur = new Controleur(racine, vue);
-
         controleur.demarrer();
     }
 }

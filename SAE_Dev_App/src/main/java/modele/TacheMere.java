@@ -15,18 +15,16 @@ public class TacheMere extends TacheAbstraite {
 
     public void ajouterEnfant(TacheAbstraite t) {
         enfants.add(t);
+        notifierObservateurs();
     }
 
     @Override
     public String afficher() {
         StringBuilder sb = new StringBuilder();
-
         sb.append("[DOSSIER] ").append(titre).append("\n");
-
         for (TacheAbstraite enfant : enfants) {
             sb.append(enfant.afficher()).append("\n");
         }
-
         return sb.toString();
     }
 }

@@ -15,7 +15,9 @@ Implementation patron mvc textuelle avec creation de tache et priorite et creati
 ---------------------------------------------------------------------
 - CU1 : Permettre l'instanciation de tâches avec titre, date et priorité.
 - CU2 : ajout d'une tâche enfant dans une tâche mère.
-- CU3 : creation et instantiation du controlleur et de la vue
+- CU3 : creation et instantiation du controlleur et de la vue.
+- CU4 : Afficher la liste des tâches avec leurs détails dans la vue console.
+- CU5 :
 
 3. RÔLES DES MEMBRES DU GROUPE
 ---------------------------------------------------------------------

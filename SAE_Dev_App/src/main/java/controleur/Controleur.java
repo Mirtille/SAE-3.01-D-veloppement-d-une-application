@@ -4,8 +4,8 @@ import modele.Priorite;
 import modele.SousTache;
 import modele.TacheMere;
 import vue.VueConsole;
+
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Scanner;
 
 public class Controleur {
@@ -22,11 +22,8 @@ public class Controleur {
 
     public void demarrer() {
         boolean continuer = true;
-
         while (continuer) {
-
             vue.afficherMenu();
-
             String choix = scanner.nextLine();
 
             switch (choix) {
@@ -38,7 +35,7 @@ public class Controleur {
                     break;
                 case "3":
                     continuer = false;
-                    System.out.println("Au revoir !");
+                    System.out.println(" FIN ");
                     break;
                 default:
                     System.out.println("Choix invalide.");
@@ -47,35 +44,33 @@ public class Controleur {
     }
 
     private void ajouterTache() {
-
         vue.demanderTitre();
         String titre = scanner.nextLine();
+        vue.demanderDateLimite();
+        String dateStr = scanner.nextLine();
+        LocalDate date;
+            date = LocalDate.parse(dateStr);
+            System.out.println("Format de date invalide. On utilise la date d'aujourd'hui.");
+            date = LocalDate.now();
+
 
         vue.demanderPriorite();
-        String priorite = scanner.nextLine();
+        String choixPrio = scanner.nextLine();
+        Priorite priorite = null;
 
-        Priorite prioriteSelectionnee = null;
-
-        switch (priorite) {
-            case "1":
-                prioriteSelectionnee = Priorite.BASSE;
-                break;
-            case "2":
-                prioriteSelectionnee = Priorite.MOYENNE;
-                break;
-            case "3":
-                prioriteSelectionnee = Priorite.HAUTE;
-                break;
+        switch (choixPrio) {
+            case "1": priorite = Priorite.BASSE;
+            break;
+            case "2": priorite = Priorite.MOYENNE;
+            break;
+            case "3": priorite = Priorite.HAUTE;
+            break;
             default:
-                System.out.println("Choix invalide.");
+                System.out.println("Priorité invalide. Annulation.");
         }
 
-        vue.demanderDateLimite();
-        LocalDate date = LocalDate.parse(scanner.nextLine());
-
-        SousTache nouvelle = new SousTache(titre, LocalDate.now(), prioriteSelectionnee);
+        SousTache nouvelle = new SousTache(titre, date, priorite);
         modele.ajouterEnfant(nouvelle);
-
-        System.out.println("-> Tâche ajoutée avec succès.");
+        System.out.println("-> Commande effectuée");
     }
 }

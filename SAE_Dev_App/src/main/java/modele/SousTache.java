@@ -10,7 +10,6 @@ public class SousTache extends TacheAbstraite {
 
     @Override
     public String afficher() {
-
-        return "   -> [Tâche] " + titre + " (" + dateLimite + ") " + " (" + priorite + ")";
+        return "   -> [Tâche] >>> TITRE : " + titre + " | DATE LIMITE : (" + dateLimite + ") " + "| PRIORITE (" + priorite + ")";
     }
 }
