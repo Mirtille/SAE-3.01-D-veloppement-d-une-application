@@ -17,7 +17,11 @@ Implementation patron mvc textuelle avec creation de tache et priorite et creati
 - CU2 : ajout d'une tâche enfant dans une tâche mère.
 - CU3 : creation et instantiation du controlleur et de la vue.
 - CU4 : Afficher la liste des tâches avec leurs détails dans la vue console.
-- CU5 :
 
 3. RÔLES DES MEMBRES DU GROUPE
 ---------------------------------------------------------------------
+Pierre :
+
+Louis :
+
+Mathis : Implementation de la classe TacheMere et des méthodes d'ajout de sous-tâches, du patron MVC pour la vue console.
