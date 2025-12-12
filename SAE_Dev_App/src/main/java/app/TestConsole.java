@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class TestConsole {
     public static void main(String[] args) {
 
-        TacheMere racine = new TacheMere("Projet test", LocalDate.now(), Priorite.HAUTE);
+        TacheMere racine = new TacheMere("test", LocalDate.now(), Priorite.HAUTE);
 
         VueConsole vue = new VueConsole();
 

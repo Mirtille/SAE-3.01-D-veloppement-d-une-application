@@ -5,6 +5,7 @@ import modele.SousTache;
 import modele.TacheMere;
 import vue.VueConsole;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Controleur {
@@ -57,7 +58,7 @@ public class Controleur {
 
         switch (priorite) {
             case "1":
-                prioriteSelectionnee = Priorite.BASSE;;;
+                prioriteSelectionnee = Priorite.BASSE;
                 break;
             case "2":
                 prioriteSelectionnee = Priorite.MOYENNE;
@@ -68,6 +69,9 @@ public class Controleur {
             default:
                 System.out.println("Choix invalide.");
         }
+
+        vue.demanderDateLimite();
+        LocalDate date = LocalDate.parse(scanner.nextLine());
 
         SousTache nouvelle = new SousTache(titre, LocalDate.now(), prioriteSelectionnee);
         modele.ajouterEnfant(nouvelle);

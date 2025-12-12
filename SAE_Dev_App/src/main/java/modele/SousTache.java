@@ -11,6 +11,6 @@ public class SousTache extends TacheAbstraite {
     @Override
     public String afficher() {
 
-        return "   -> [Tâche] " + titre + " (" + priorite + ")";
+        return "   -> [Tâche] " + titre + " (" + dateLimite + ") " + " (" + priorite + ")";
     }
 }

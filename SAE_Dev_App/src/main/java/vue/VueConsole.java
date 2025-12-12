@@ -21,15 +21,16 @@ public class VueConsole {
         System.out.print("Votre choix : ");
     }
 
-    // Méthode pour afficher l'état du modèle (la tâche racine)
     public void afficherTache(TacheAbstraite tache) {
         System.out.println("\n--- ÉTAT ACTUEL ---");
-        // On utilise la méthode afficher() du composite qui renvoie un String
         System.out.println(tache.afficher());
         System.out.println("-------------------");
     }
 
-    // Méthode pour demander une info
+    public void demanderDateLimite() {
+        System.out.print("Entrez la date limite de la tâche (AAAA-MM-JJ) : ");
+    }
+
     public void demanderTitre() {
         System.out.print("Entrez le titre de la tâche : ");
     }
