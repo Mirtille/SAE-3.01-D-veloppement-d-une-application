@@ -1,17 +1,18 @@
 package app;
 
 import controleur.Controleur;
-import modele.Priorite;
-import modele.TacheMere;
+import modele.Modele; // <--- Changement ici
 import vue.VueConsole;
-import java.time.LocalDate;
 
 public class TestConsole {
     public static void main(String[] args) {
-        TacheMere racine = new TacheMere("Projet Global", LocalDate.now(), Priorite.HAUTE);
         VueConsole vue = new VueConsole();
-        racine.enregistrerObservateur(vue);
-        Controleur controleur = new Controleur(racine, vue);
+
+        // On abonne la vue directement au Modèle (via le Singleton)
+        Modele.getInstance().getRacine().enregistrerObservateur(vue);
+
+        // On lance le contrôleur
+        Controleur controleur = new Controleur(vue);
         controleur.demarrer();
     }
 }
