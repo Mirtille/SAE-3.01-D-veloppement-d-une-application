@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import vue.VueListe;
-import vue.VueSemaine;
 
 public class MainFX extends Application {
     @Override
