@@ -1,5 +1,3 @@
-package test;
-
 import modele.Priorite;
 import modele.SousTache;
 import modele.TacheMere;
