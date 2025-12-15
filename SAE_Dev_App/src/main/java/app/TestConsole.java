@@ -1,17 +1,22 @@
 package app;
 
 import controleur.Controleur;
-import modele.Priorite;
-import modele.TacheMere;
+import modele.Modele;
 import vue.VueConsole;
-import java.time.LocalDate;
 
 public class TestConsole {
     public static void main(String[] args) {
-        TacheMere racine = new TacheMere("Projet Global", LocalDate.now(), Priorite.HAUTE);
+        // 1. La Vue
         VueConsole vue = new VueConsole();
-        racine.enregistrerObservateur(vue);
-        Controleur controleur = new Controleur(racine, vue);
+
+        // 2. ABONNEMENT
+        // On récupère la racine via le DataManager pour l'abonner
+        Modele.getInstance().getRacine().enregistrerObservateur(vue);
+
+        // 3. Le Contrôleur (plus besoin de lui passer la racine)
+        Controleur controleur = new Controleur(vue);
+
+        // 4. Action
         controleur.demarrer();
     }
 }

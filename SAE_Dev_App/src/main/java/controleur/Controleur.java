@@ -1,21 +1,25 @@
 package controleur;
 
+import modele.Modele;
 import modele.Priorite;
 import modele.SousTache;
 import modele.TacheMere;
 import vue.VueConsole;
-
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class Controleur {
 
+    // On garde une référence, mais on ne l'attend plus en paramètre
     private TacheMere modele;
     private VueConsole vue;
     private Scanner scanner;
 
-    public Controleur(TacheMere modele, VueConsole vue) {
-        this.modele = modele;
+    // CHANGEMENT ICI : On enlève "TacheMere modele" des paramètres
+    public Controleur(VueConsole vue) {
+        // On récupère le modèle via le Singleton
+        this.modele = Modele.getInstance().getRacine();
         this.vue = vue;
         this.scanner = new Scanner(System.in);
     }
