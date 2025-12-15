@@ -7,39 +7,32 @@ import observateur.Sujet;
 public class VueConsole implements Observateur {
 
     public void afficherMenu() {
-        System.out.println("\n=== Test console MVC textuelle ===");
-        System.out.println("1. Ajouter une sous-tâche");
-        System.out.println("2. Afficher tout l'arbre");
+        System.out.println("\n=== MENU GESTION TÂCHES ===");
+        System.out.println("1. Ajouter une tâche");
+        System.out.println("2. Afficher tout");
         System.out.println("3. Quitter");
         System.out.print("Votre choix : ");
     }
 
+    public void demanderTitre() { System.out.print("Titre : "); }
+    public void demanderDate() { System.out.print("Date (AAAA-MM-JJ) : "); }
+
     public void demanderPriorite() {
-        System.out.println("\n=== CHOIX DE PRIORITE ===");
-        System.out.println("1. BASSE");
-        System.out.println("2. MOYENNE");
-        System.out.println("3. HAUTE");
-        System.out.print("Votre choix : ");
+        System.out.println("Priorité : 1=BASSE, 2=MOYENNE, 3=HAUTE");
+        System.out.print("Choix : ");
     }
 
-    public void afficherTache(TacheAbstraite tache) {
-        System.out.println("\n--- ÉTAT ACTUEL ---");
+    public void afficherArbre(TacheAbstraite tache) {
+        System.out.println("\n--- ÉTAT DU PROJET ---");
         System.out.println(tache.afficher());
-        System.out.println("-------------------");
+        System.out.println("----------------------");
     }
 
-    public void demanderDateLimite() {
-        System.out.print("Entrez la date limite (AAAA-MM-JJ) : ");
-    }
-
-    public void demanderTitre() {
-        System.out.print("Entrez le titre de la tâche : ");
-    }
-
+    @Override
     public void actualiser(Sujet s) {
         if (s instanceof TacheAbstraite) {
-            System.out.println("\n>>> Mise à jour automatique <<<");
-            afficherTache((TacheAbstraite) s);
+            System.out.println("\n>>> NOTIFICATION : Mise à jour automatique <<<");
+            afficherArbre((TacheAbstraite) s);
         }
     }
 }

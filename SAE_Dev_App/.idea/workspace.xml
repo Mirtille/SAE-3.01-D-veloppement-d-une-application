@@ -4,8 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="215c67f4-e118-49e1-876e-ed6e6ec9faa2" name="Changes" comment="">
+    <list default="true" id="215c67f4-e118-49e1-876e-ed6e6ec9faa2" name="Changes" comment="testdemrd">
+      <change afterPath="$PROJECT_DIR$/src/main/java/modele/ModeleTache.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/TestConsole.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/TestConsole.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controleur/Controleur.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controleur/Controleur.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modele/Modele.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modele/SousTache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/SousTache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modele/TacheAbstraite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/TacheAbstraite.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modele/TacheMere.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/TacheMere.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/vue/VueConsole.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vue/VueConsole.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +72,9 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\mathi\Desktop\java S3\SAE_Qualité_dev\SAE-3.01-D-veloppement-d-une-application\SAE_Dev_App\src\test\java\test" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
     </key>
@@ -108,9 +119,22 @@
       <updated>1765670513192</updated>
       <workItem from="1765670514236" duration="997000" />
     </task>
+    <task id="LOCAL-00001" summary="testdemrd">
+      <option name="closed" value="true" />
+      <created>1765794233921</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1765794233921</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="testdemrd" />
+    <option name="LAST_COMMIT_MESSAGE" value="testdemrd" />
   </component>
 </project>

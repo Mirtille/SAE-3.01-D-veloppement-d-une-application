@@ -1,25 +1,19 @@
 package controleur;
 
-import modele.Modele;
+import modele.ModeleTache;
 import modele.Priorite;
-import modele.SousTache;
-import modele.TacheMere;
 import vue.VueConsole;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class Controleur {
 
-    // On garde une référence, mais on ne l'attend plus en paramètre
-    private TacheMere modele;
+    private ModeleTache modele;
     private VueConsole vue;
     private Scanner scanner;
 
-    // CHANGEMENT ICI : On enlève "TacheMere modele" des paramètres
     public Controleur(VueConsole vue) {
-        // On récupère le modèle via le Singleton
-        this.modele = Modele.getInstance().getRacine();
+        this.modele = ModeleTache.getInstance();
         this.vue = vue;
         this.scanner = new Scanner(System.in);
     }
@@ -32,14 +26,14 @@ public class Controleur {
 
             switch (choix) {
                 case "1":
-                    ajouterTache();
+                    gererAjout();
                     break;
                 case "2":
-                    vue.afficherTache(modele);
+                    vue.afficherArbre(modele.getRacine());
                     break;
                 case "3":
                     continuer = false;
-                    System.out.println(" FIN ");
+                    System.out.println("Au revoir !");
                     break;
                 default:
                     System.out.println("Choix invalide.");
@@ -47,34 +41,30 @@ public class Controleur {
         }
     }
 
-    private void ajouterTache() {
+    private void gererAjout() {
         vue.demanderTitre();
         String titre = scanner.nextLine();
-        vue.demanderDateLimite();
+
+        vue.demanderDate();
         String dateStr = scanner.nextLine();
         LocalDate date;
+        try {
             date = LocalDate.parse(dateStr);
-            System.out.println("Format de date invalide. On utilise la date d'aujourd'hui.");
+        } catch (Exception e) {
             date = LocalDate.now();
-
-
-        vue.demanderPriorite();
-        String choixPrio = scanner.nextLine();
-        Priorite priorite = null;
-
-        switch (choixPrio) {
-            case "1": priorite = Priorite.BASSE;
-            break;
-            case "2": priorite = Priorite.MOYENNE;
-            break;
-            case "3": priorite = Priorite.HAUTE;
-            break;
-            default:
-                System.out.println("Priorité invalide. Annulation.");
+            System.out.println("Date invalide, utilisation d'aujourd'hui.");
         }
 
-        SousTache nouvelle = new SousTache(titre, date, priorite);
-        modele.ajouterEnfant(nouvelle);
-        System.out.println("-> Commande effectuée");
+        vue.demanderPriorite();
+        String prioStr = scanner.nextLine();
+        Priorite prio = Priorite.MOYENNE;
+        switch (prioStr) {
+            case "1": prio = Priorite.BASSE; break;
+            case "2": prio = Priorite.MOYENNE; break;
+            case "3": prio = Priorite.HAUTE; break;
+        }
+
+        // Appel au service du Modèle (Singleton)
+        modele.creerEtAjouterTache(titre, date, prio);
     }
 }

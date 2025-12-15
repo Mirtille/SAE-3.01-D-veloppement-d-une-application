@@ -1,22 +1,19 @@
 package app;
 
 import controleur.Controleur;
-import modele.Modele;
+import modele.ModeleTache;
 import vue.VueConsole;
 
 public class TestConsole {
     public static void main(String[] args) {
-        // 1. La Vue
+        // 1. Création de la vue
         VueConsole vue = new VueConsole();
 
-        // 2. ABONNEMENT
-        // On récupère la racine via le DataManager pour l'abonner
-        Modele.getInstance().getRacine().enregistrerObservateur(vue);
+        // 2. Abonnement au modèle (via Singleton)
+        ModeleTache.getInstance().getRacine().enregistrerObservateur(vue);
 
-        // 3. Le Contrôleur (plus besoin de lui passer la racine)
+        // 3. Lancement du contrôleur
         Controleur controleur = new Controleur(vue);
-
-        // 4. Action
         controleur.demarrer();
     }
 }

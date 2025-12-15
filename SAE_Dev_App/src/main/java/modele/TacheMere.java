@@ -15,6 +15,7 @@ public class TacheMere extends TacheAbstraite {
 
     public void ajouterEnfant(TacheAbstraite t) {
         enfants.add(t);
+        // Notification automatique à la vue
         notifierObservateurs();
     }
 
@@ -26,21 +27,5 @@ public class TacheMere extends TacheAbstraite {
             sb.append(enfant.afficher()).append("\n");
         }
         return sb.toString();
-    }
-
-    public Priorite getPriorite() {
-        return priorite;
-    }
-
-    public LocalDate getDateLimite() {
-        return dateLimite;
-    }
-
-    public String getTitre() {
-        return titre;
-    }
-
-    public List<TacheAbstraite> getEnfants() {
-        return enfants;
     }
 }
