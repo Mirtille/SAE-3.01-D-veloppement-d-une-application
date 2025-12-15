@@ -3,6 +3,7 @@ package vue;
 import controleur.ControleurFX;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -21,6 +22,9 @@ public class VueListe extends VBox implements Observateur {
     private ObservableList<TacheAbstraite> items;
 
     public VueListe() {
+        // Un peu de marge pour que ce soit joli
+        this.setPadding(new Insets(10));
+        this.setSpacing(15);
 
         this.racine = ModeleTache.getInstance().getRacine();
         this.controleur = new ControleurFX();
@@ -29,7 +33,7 @@ public class VueListe extends VBox implements Observateur {
 
         Label titre = new Label("Projet : " + racine.getTitre());
 
-        // ---- FORMULAIRE ----
+        // ---- FORMULAIRE (Sert pour l'Ajout ET la Modification) ----
         TextField champTitre = new TextField();
         champTitre.setPromptText("Titre de la tâche");
 
@@ -39,8 +43,12 @@ public class VueListe extends VBox implements Observateur {
         prioriteBox.getItems().addAll(Priorite.values());
         prioriteBox.setValue(Priorite.BASSE);
 
+        // ---- BOUTONS ----
         Button btnAjouter = new Button("Ajouter");
+        Button btnModifier = new Button("Modifier la sélection");
+        Button btnSupprimer = new Button("Supprimer la sélection");
 
+        // Action Ajouter
         btnAjouter.setOnAction(e -> {
             controleur.creerTache(
                     champTitre.getText(),
@@ -50,9 +58,8 @@ public class VueListe extends VBox implements Observateur {
             champTitre.clear();
         });
 
-        Button modifierTache = new Button("Modifier Tâche");
-
-        modifierTache.setOnAction(e -> {
+        // Action Modifier
+        btnModifier.setOnAction(e -> {
             TacheAbstraite tacheSelectionnee = liste.getSelectionModel().getSelectedItem();
             if (tacheSelectionnee != null) {
                 controleur.modifierTache(
@@ -62,9 +69,16 @@ public class VueListe extends VBox implements Observateur {
                         prioriteBox.getValue()
                 );
                 champTitre.clear();
+                liste.getSelectionModel().clearSelection(); // On désélectionne après modif
             }
         });
 
+        // Action Supprimer
+        btnSupprimer.setOnAction(e ->
+                controleur.supprimerTache(liste.getSelectionModel().getSelectedItem())
+        );
+
+        // Mise en page du formulaire
         HBox formulaire = new HBox(10, champTitre, datePicker, prioriteBox, btnAjouter);
 
         // ---- LISTE ----
@@ -79,29 +93,33 @@ public class VueListe extends VBox implements Observateur {
             }
         });
 
-        // ---- SUPPRESSION ----
-        Button btnSupprimer = new Button("Supprimer la tâche sélectionnée");
+        // --- C'EST LE PETIT AJOUT MAGIQUE ---
+        // Quand on clique sur une ligne, on remplit les champs automatiquement
+        liste.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                champTitre.setText(newVal.getTitre());
+                datePicker.setValue(newVal.getDateLimite());
+                prioriteBox.setValue(newVal.getPriorite());
+            }
+        });
 
-        btnSupprimer.setOnAction(e ->
-                controleur.supprimerTache(liste.getSelectionModel().getSelectedItem())
-        );
+        // Barre d'outils en bas pour modifier/supprimer
+        HBox actions = new HBox(10, btnModifier, btnSupprimer);
 
-        this.setSpacing(15);
-        this.getChildren().addAll(titre, formulaire, liste, btnSupprimer, modifierTache);
+        // Assemblage final
+        this.getChildren().addAll(titre, formulaire, liste, actions);
 
         rafraichir();
     }
 
     private void rafraichir() {
         items.clear();
-        // CORRECTION : On passe directement la liste, sans cast
         items.addAll(racine.getEnfants());
     }
 
     @Override
     public void actualiser(Sujet s) {
-        if (s instanceof TacheMere) {
-            rafraichir();
-        }
+        // On rafraichit tout le temps pour être sûr d'avoir les dernières infos
+        rafraichir();
     }
 }

@@ -17,8 +17,10 @@ public class ControleurFX {
     }
 
     public void creerTache(String titre, LocalDate date, Priorite priorite) {
-        SousTache tache = new SousTache(titre, date, priorite);
-        racine.ajouterEnfant(tache);
+        if (titre != null && !titre.isEmpty()) {
+            SousTache tache = new SousTache(titre, date, priorite);
+            racine.ajouterEnfant(tache);
+        }
     }
 
     public void supprimerTache(TacheAbstraite tache) {
@@ -27,13 +29,11 @@ public class ControleurFX {
         }
     }
 
-    public void modifierTache(TacheAbstraite tache, String nouveauTitre, LocalDate nouvelleDate, Priorite nouvellePriorite) {
-        if (tache != null) {
+    public void modifierTache(TacheAbstraite tache, String nouveauTitre, LocalDate nouvelleDate, Priorite nouvellePrio) {
+        if (tache != null && nouveauTitre != null && !nouveauTitre.isEmpty()) {
             tache.setTitre(nouveauTitre);
             tache.setDateLimite(nouvelleDate);
-            tache.setPriorite(nouvellePriorite);
-            // Notifier les observateurs de la modification
-            tache.notifierObservateurs();
+            tache.setPriorite(nouvellePrio);
         }
     }
 }
