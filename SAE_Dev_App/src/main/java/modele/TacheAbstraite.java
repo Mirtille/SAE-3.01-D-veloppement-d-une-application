@@ -48,7 +48,7 @@ public abstract class TacheAbstraite implements Sujet {
         return priorite;
     }
 
-    public List<Object> getEnfants() {
+    public List<TacheAbstraite> getEnfants() {
         return new ArrayList<>();
     }
 }

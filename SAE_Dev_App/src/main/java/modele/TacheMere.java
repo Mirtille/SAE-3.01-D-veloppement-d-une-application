@@ -23,6 +23,10 @@ public class TacheMere extends TacheAbstraite {
         notifierObservateurs();
     }
 
+    @Override
+    public List<TacheAbstraite> getEnfants() {
+        return enfants;
+    }
 
     @Override
     public String afficher() {

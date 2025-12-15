@@ -79,7 +79,8 @@ public class VueListe extends VBox implements Observateur {
 
     private void rafraichir() {
         items.clear();
-        items.addAll((TacheAbstraite) racine.getEnfants());
+        // CORRECTION : On passe directement la liste, sans cast
+        items.addAll(racine.getEnfants());
     }
 
     @Override
