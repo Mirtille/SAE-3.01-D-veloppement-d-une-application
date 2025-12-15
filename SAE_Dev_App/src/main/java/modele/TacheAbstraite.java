@@ -43,4 +43,12 @@ public abstract class TacheAbstraite implements Sujet {
             o.actualiser(this);
         }
     }
+
+    public Priorite getPriorite() {
+        return priorite;
+    }
+
+    public List<Object> getEnfants() {
+        return new ArrayList<>();
+    }
 }
