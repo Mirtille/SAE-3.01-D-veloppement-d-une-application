@@ -17,6 +17,9 @@ public class ControleurFX {
     }
 
     public void creerTache(String titre, LocalDate date, Priorite priorite) {
+        if (date.isBefore(LocalDate.now())) {
+            date = LocalDate.now();
+        }
         if (titre != null && !titre.isEmpty()) {
             SousTache tache = new SousTache(titre, date, priorite);
             racine.ajouterEnfant(tache);
@@ -35,5 +38,8 @@ public class ControleurFX {
             tache.setDateLimite(nouvelleDate);
             tache.setPriorite(nouvellePrio);
         }
+    }
+
+    public void archiverTache(TacheAbstraite tache) {
     }
 }

@@ -33,7 +33,6 @@ public class VueListe extends VBox implements Observateur {
 
         Label titre = new Label("Projet : " + racine.getTitre());
 
-        // ---- FORMULAIRE (Sert pour l'Ajout ET la Modification) ----
         TextField champTitre = new TextField();
         champTitre.setPromptText("Titre de la tâche");
 
@@ -43,12 +42,11 @@ public class VueListe extends VBox implements Observateur {
         prioriteBox.getItems().addAll(Priorite.values());
         prioriteBox.setValue(Priorite.BASSE);
 
-        // ---- BOUTONS ----
         Button btnAjouter = new Button("Ajouter");
         Button btnModifier = new Button("Modifier la sélection");
         Button btnSupprimer = new Button("Supprimer la sélection");
+        Button btnArchiver = new Button("Archiver la sélection");
 
-        // Action Ajouter
         btnAjouter.setOnAction(e -> {
             controleur.creerTache(
                     champTitre.getText(),
@@ -58,7 +56,8 @@ public class VueListe extends VBox implements Observateur {
             champTitre.clear();
         });
 
-        // Action Modifier
+
+
         btnModifier.setOnAction(e -> {
             TacheAbstraite tacheSelectionnee = liste.getSelectionModel().getSelectedItem();
             if (tacheSelectionnee != null) {
@@ -73,15 +72,16 @@ public class VueListe extends VBox implements Observateur {
             }
         });
 
-        // Action Supprimer
+        btnArchiver.setOnAction(e -> {
+            controleur.archiverTache(liste.getSelectionModel().getSelectedItem());
+        });
+
         btnSupprimer.setOnAction(e ->
                 controleur.supprimerTache(liste.getSelectionModel().getSelectedItem())
         );
 
-        // Mise en page du formulaire
-        HBox formulaire = new HBox(10, champTitre, datePicker, prioriteBox, btnAjouter);
+        HBox formulaire = new HBox(10, champTitre, datePicker, prioriteBox, btnAjouter, btnModifier);
 
-        // ---- LISTE ----
         items = FXCollections.observableArrayList();
         liste = new ListView<>(items);
 
@@ -93,8 +93,6 @@ public class VueListe extends VBox implements Observateur {
             }
         });
 
-        // --- C'EST LE PETIT AJOUT MAGIQUE ---
-        // Quand on clique sur une ligne, on remplit les champs automatiquement
         liste.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 champTitre.setText(newVal.getTitre());
@@ -103,8 +101,7 @@ public class VueListe extends VBox implements Observateur {
             }
         });
 
-        // Barre d'outils en bas pour modifier/supprimer
-        HBox actions = new HBox(10, btnModifier, btnSupprimer);
+        HBox actions = new HBox(10, btnSupprimer, btnArchiver);
 
         // Assemblage final
         this.getChildren().addAll(titre, formulaire, liste, actions);
