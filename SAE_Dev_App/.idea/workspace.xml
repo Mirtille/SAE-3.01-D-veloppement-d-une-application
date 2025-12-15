@@ -4,16 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="215c67f4-e118-49e1-876e-ed6e6ec9faa2" name="Changes" comment="testdemrd">
-      <change afterPath="$PROJECT_DIR$/src/main/java/modele/ModeleTache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/TestConsole.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/TestConsole.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controleur/Controleur.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controleur/Controleur.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modele/Modele.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modele/SousTache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/SousTache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modele/TacheAbstraite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/TacheAbstraite.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modele/TacheMere.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/TacheMere.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/vue/VueConsole.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vue/VueConsole.java" afterDir="false" />
+    <list default="true" id="215c67f4-e118-49e1-876e-ed6e6ec9faa2" name="Changes" comment="iteration2">
+      <change beforePath="$PROJECT_DIR$/src/main/java/vue/VueListe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vue/VueListe.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +22,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Mirtille"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Mirtille/SAE-3.01-D-veloppement-d-une-application.git",
+    "accountId": "216d7a57-f93d-4e59-b8a9-6fc905af518f"
+  }
+}]]></component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -45,32 +49,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.TestConsole.executor": "Run",
-    "JUnit.TacheTest.testCreationTacheSimple.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "main",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/mathi/Desktop/java S3/SAE_Qualité_dev/SAE-3.01-D-veloppement-d-une-application/SAE_Dev_App/pom.xml",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.MainFX.executor&quot;: &quot;Run&quot;,
+    &quot;Application.TestConsole.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TacheTest.testCreationTacheSimple.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/mathi/Desktop/java S3/SAE_Qualité_dev/SAE-3.01-D-veloppement-d-une-application/SAE_Dev_App/pom.xml&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\mathi\Desktop\java S3\SAE_Qualité_dev\SAE-3.01-D-veloppement-d-une-application\SAE_Dev_App\src\test\java\test" />
@@ -105,11 +110,12 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
-        <option value="bundled-js-predefined-d6986cc7102b-c7e53b3be11b-JavaScript-IU-253.28294.334" />
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59" />
       </set>
     </attachedChunks>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="215c67f4-e118-49e1-876e-ed6e6ec9faa2" name="Changes" comment="" />
@@ -118,6 +124,7 @@
       <option name="presentableId" value="Default" />
       <updated>1765670513192</updated>
       <workItem from="1765670514236" duration="997000" />
+      <workItem from="1765801052893" duration="2249000" />
     </task>
     <task id="LOCAL-00001" summary="testdemrd">
       <option name="closed" value="true" />
@@ -127,7 +134,39 @@
       <option name="project" value="LOCAL" />
       <updated>1765794233921</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="iteration2">
+      <option name="closed" value="true" />
+      <created>1765795207147</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1765795207147</updated>
+    </task>
+    <task id="LOCAL-00003" summary="iteration2">
+      <option name="closed" value="true" />
+      <created>1765795320180</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1765795320180</updated>
+    </task>
+    <task id="LOCAL-00004" summary="iteration2">
+      <option name="closed" value="true" />
+      <created>1765803995268</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1765803995268</updated>
+    </task>
+    <task id="LOCAL-00005" summary="iteration2">
+      <option name="closed" value="true" />
+      <created>1765804611032</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1765804611033</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -135,6 +174,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="testdemrd" />
-    <option name="LAST_COMMIT_MESSAGE" value="testdemrd" />
+    <MESSAGE value="iteration2" />
+    <option name="LAST_COMMIT_MESSAGE" value="iteration2" />
   </component>
 </project>

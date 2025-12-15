@@ -22,7 +22,7 @@ public class VueListe extends VBox implements Observateur {
 
     public VueListe() {
 
-        this.racine = Modele.getInstance().getRacine();
+        this.racine = ModeleTache.getInstance().getRacine();
         this.controleur = new ControleurFX();
 
         racine.enregistrerObservateur(this);
@@ -37,7 +37,7 @@ public class VueListe extends VBox implements Observateur {
 
         ComboBox<Priorite> prioriteBox = new ComboBox<>();
         prioriteBox.getItems().addAll(Priorite.values());
-        prioriteBox.setValue(Priorite.MOYENNE);
+        prioriteBox.setValue(Priorite.BASSE);
 
         Button btnAjouter = new Button("Ajouter");
 
@@ -48,6 +48,21 @@ public class VueListe extends VBox implements Observateur {
                     prioriteBox.getValue()
             );
             champTitre.clear();
+        });
+
+        Button modifierTache = new Button("Modifier Tâche");
+
+        modifierTache.setOnAction(e -> {
+            TacheAbstraite tacheSelectionnee = liste.getSelectionModel().getSelectedItem();
+            if (tacheSelectionnee != null) {
+                controleur.modifierTache(
+                        tacheSelectionnee,
+                        champTitre.getText(),
+                        datePicker.getValue(),
+                        prioriteBox.getValue()
+                );
+                champTitre.clear();
+            }
         });
 
         HBox formulaire = new HBox(10, champTitre, datePicker, prioriteBox, btnAjouter);
@@ -72,14 +87,15 @@ public class VueListe extends VBox implements Observateur {
         );
 
         this.setSpacing(15);
-        this.getChildren().addAll(titre, formulaire, liste, btnSupprimer);
+        this.getChildren().addAll(titre, formulaire, liste, btnSupprimer, modifierTache);
 
         rafraichir();
     }
 
     private void rafraichir() {
         items.clear();
-        items.addAll((TacheAbstraite) racine.getEnfants());
+        // CORRECTION : On passe directement la liste, sans cast
+        items.addAll(racine.getEnfants());
     }
 
     @Override

@@ -1,6 +1,6 @@
 package controleur;
 
-import modele.Modele;
+import modele.ModeleTache;
 import modele.Priorite;
 import modele.SousTache;
 import modele.TacheAbstraite;
@@ -13,7 +13,7 @@ public class ControleurFX {
     private TacheMere racine;
 
     public ControleurFX() {
-        this.racine = Modele.getInstance().getRacine();
+        this.racine = ModeleTache.getInstance().getRacine();
     }
 
     public void creerTache(String titre, LocalDate date, Priorite priorite) {
@@ -24,6 +24,16 @@ public class ControleurFX {
     public void supprimerTache(TacheAbstraite tache) {
         if (tache != null) {
             racine.supprimerEnfant(tache);
+        }
+    }
+
+    public void modifierTache(TacheAbstraite tache, String nouveauTitre, LocalDate nouvelleDate, Priorite nouvellePriorite) {
+        if (tache != null) {
+            tache.setTitre(nouveauTitre);
+            tache.setDateLimite(nouvelleDate);
+            tache.setPriorite(nouvellePriorite);
+            // Notifier les observateurs de la modification
+            tache.notifierObservateurs();
         }
     }
 }
