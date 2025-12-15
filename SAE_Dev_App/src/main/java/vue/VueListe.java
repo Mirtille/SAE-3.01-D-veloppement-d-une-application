@@ -22,7 +22,7 @@ public class VueListe extends VBox implements Observateur {
 
     public VueListe() {
 
-        this.racine = Modele.getInstance().getRacine();
+        this.racine = ModeleTache.getInstance().getRacine();
         this.controleur = new ControleurFX();
 
         racine.enregistrerObservateur(this);
