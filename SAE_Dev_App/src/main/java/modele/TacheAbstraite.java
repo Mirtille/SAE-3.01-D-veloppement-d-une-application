@@ -51,4 +51,23 @@ public abstract class TacheAbstraite implements Sujet {
     public List<TacheAbstraite> getEnfants() {
         return new ArrayList<>();
     }
+
+    public String setTitre(String nouveauTitre) {
+        this.titre = nouveauTitre;
+        return this.titre;
+    }
+
+    public LocalDate setDateLimite(LocalDate nouvelleDate) {
+        this.dateLimite = nouvelleDate;
+        return this.dateLimite;
+    }
+
+    public LocalDate getDateLimite() {
+        return dateLimite;
+    }
+
+    public Priorite setPriorite(Priorite nouvellePriorite) {
+        this.priorite = nouvellePriorite;
+        return this.priorite;
+    }
 }

@@ -26,4 +26,14 @@ public class ControleurFX {
             racine.supprimerEnfant(tache);
         }
     }
+
+    public void modifierTache(TacheAbstraite tache, String nouveauTitre, LocalDate nouvelleDate, Priorite nouvellePriorite) {
+        if (tache != null) {
+            tache.setTitre(nouveauTitre);
+            tache.setDateLimite(nouvelleDate);
+            tache.setPriorite(nouvellePriorite);
+            // Notifier les observateurs de la modification
+            tache.notifierObservateurs();
+        }
+    }
 }
