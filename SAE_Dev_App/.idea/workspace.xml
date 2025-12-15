@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="215c67f4-e118-49e1-876e-ed6e6ec9faa2" name="Changes" comment="iteration2">
+      <change afterPath="$PROJECT_DIR$/documents/iteration2/fonctionnalitesCU.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controleur/Controleur.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controleur/Controleur.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controleur/ControleurFX.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controleur/ControleurFX.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modele/ModeleTache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/ModeleTache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modele/TacheAbstraite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/TacheAbstraite.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/vue/VueListe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vue/VueListe.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,7 +125,7 @@
       <option name="presentableId" value="Default" />
       <updated>1765670513192</updated>
       <workItem from="1765670514236" duration="997000" />
-      <workItem from="1765801052893" duration="5830000" />
+      <workItem from="1765801052893" duration="7509000" />
     </task>
     <task id="LOCAL-00001" summary="testdemrd">
       <option name="closed" value="true" />
@@ -203,7 +199,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765807533040</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="iteration2">
+      <option name="closed" value="true" />
+      <created>1765808528001</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1765808528001</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

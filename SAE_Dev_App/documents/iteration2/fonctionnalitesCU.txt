@@ -1,0 +1,25 @@
+1. FONCTIONNALITÉS DÉVELOPPÉES
+---------------------------------------------------------------------
+Singleton :
+modification de la classe gestionnaireTache en singleton pour une gestion centralisée des tâches
+
+Implmentation d'une vue graphique :
+création d'une interface graphique basique pour l'affichage et la gestion des tâches
+
+gestion d'une tache :
+ajout de la fonctionnalité de modification et suppression des tâches via l'interface graphique
+
+
+2. CAS D'UTILISATION
+---------------------------------------------------------------------
+- CU1 : Modifier les tache existante.
+- CU2 : ajout d'une vue graphique pour la gestion des taches.
+- CU3 : Singleton pour la gestion centralisée des taches.
+
+3. RÔLES DES MEMBRES DU GROUPE
+---------------------------------------------------------------------
+Pierre :
+
+Louis :
+
+Mathis :
