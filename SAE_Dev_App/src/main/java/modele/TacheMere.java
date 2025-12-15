@@ -18,6 +18,11 @@ public class TacheMere extends TacheAbstraite {
         // Notification automatique à la vue
         notifierObservateurs();
     }
+    public void supprimerEnfant(TacheAbstraite t) {
+        enfants.remove(t);
+        notifierObservateurs();
+    }
+
 
     @Override
     public String afficher() {
