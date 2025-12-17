@@ -5,30 +5,36 @@ import java.time.LocalDate;
 public class ModeleTache {
 
     private static ModeleTache instance;
-    private TacheMere racine;
 
-    private ModeleTache() {
-        this.racine = new TacheMere("Projet Global", LocalDate.now(), Priorite.MOYENNE);
-    }
+    private ModeleTache() {}
 
-    public static synchronized ModeleTache getInstance() {
-        if (instance == null) {
-            instance = new ModeleTache();
-        }
+    public static ModeleTache getInstance() {
+        if (instance == null) instance = new ModeleTache();
         return instance;
     }
 
-    public TacheMere getRacine() {
-        return racine;
-    }
-
-    // Service métier : Créer et Ajouter
-    public void creerEtAjouterTache(String titre, LocalDate date, Priorite priorite) {
-        if (titre != null && !titre.isEmpty()) {
-            SousTache nouvelle = new SousTache(titre, date, priorite);
-            racine.ajouterEnfant(nouvelle);
+    // 1. Créer une NOUVELLE LISTE (Nouveau Projet)
+    public void creerNouveauProjet(String nom) {
+        if (nom != null && !nom.isEmpty()) {
+            TacheMere nouveauProjet = new TacheMere(nom, LocalDate.now(), Priorite.MOYENNE);
+            SingletonTache.getInstance().ajouterProjet(nouveauProjet);
         }
     }
 
+    // 2. Créer une Tâche DANS une liste existante
+    // (Note: 'parent' ne peut plus être null, il faut savoir dans quel projet on est)
+    public void creerEtAjouterTache(TacheMere parent, String titre, LocalDate date, Priorite priorite, boolean estUnDossier) {
+        if (titre == null || titre.isEmpty() || parent == null) return;
 
+        TacheAbstraite nouvelleTache;
+        if (estUnDossier) {
+            nouvelleTache = new TacheMere(titre, date, priorite);
+        } else {
+            nouvelleTache = new SousTache(titre, date, priorite);
+        }
+
+        parent.ajouterEnfant(nouvelleTache);
+        // On notifie le parent spécifique, pas besoin de tout rafraichir
+        parent.notifierObservateurs();
+    }
 }

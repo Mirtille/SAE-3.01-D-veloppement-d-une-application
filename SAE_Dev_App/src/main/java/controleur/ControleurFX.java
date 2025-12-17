@@ -1,45 +1,34 @@
 package controleur;
 
-import modele.ModeleTache;
-import modele.Priorite;
-import modele.SousTache;
-import modele.TacheAbstraite;
-import modele.TacheMere;
-
+import modele.*;
 import java.time.LocalDate;
 
 public class ControleurFX {
 
-    private TacheMere racine;
+    private ModeleTache modeleGestion;
 
     public ControleurFX() {
-        this.racine = ModeleTache.getInstance().getRacine();
+        this.modeleGestion = ModeleTache.getInstance();
     }
 
-    public void creerTache(String titre, LocalDate date, Priorite priorite) {
-        if (date.isBefore(LocalDate.now())) {
-            date = LocalDate.now();
-        }
-        if (titre != null && !titre.isEmpty()) {
-            SousTache tache = new SousTache(titre, date, priorite);
-            racine.ajouterEnfant(tache);
-        }
+    public void creerNouveauProjet(String nom) {
+        ModeleTache.getInstance().creerNouveauProjet(nom);
     }
 
-    public void supprimerTache(TacheAbstraite tache) {
-        if (tache != null) {
-            racine.supprimerEnfant(tache);
+    public void creerTache(TacheAbstraite selectionParent, String titre, LocalDate date, Priorite prio, boolean estDossier) {
+
+        TacheMere parent = null;
+
+        // On vérifie si la sélection est bien un conteneur (TacheMere)
+        if (selectionParent instanceof TacheMere) {
+            parent = (TacheMere) selectionParent;
         }
+        // Si c'est une SousTache ou null, le parent restera null
+        // et ModeleTache le mettra à la racine automatiquement.
+
+        // Appel au gestionnaire
+        modeleGestion.creerEtAjouterTache(parent, titre, date, prio, estDossier);
     }
 
-    public void modifierTache(TacheAbstraite tache, String nouveauTitre, LocalDate nouvelleDate, Priorite nouvellePrio) {
-        if (tache != null && nouveauTitre != null && !nouveauTitre.isEmpty()) {
-            tache.setTitre(nouveauTitre);
-            tache.setDateLimite(nouvelleDate);
-            tache.setPriorite(nouvellePrio);
-        }
-    }
-
-    public void archiverTache(TacheAbstraite tache) {
-    }
+    // ... tes autres méthodes (modifier, supprimer) ...
 }

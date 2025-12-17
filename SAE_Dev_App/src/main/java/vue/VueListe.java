@@ -1,12 +1,11 @@
 package vue;
 
 import controleur.ControleurFX;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 import modele.*;
 import observateur.Observateur;
 import observateur.Sujet;
@@ -15,108 +14,142 @@ import java.time.LocalDate;
 
 public class VueListe extends VBox implements Observateur {
 
-    private TacheMere racine;
     private ControleurFX controleur;
 
-    private ListView<TacheAbstraite> liste;
-    private ObservableList<TacheAbstraite> items;
+    // Sélecteur de Projet
+    private ComboBox<TacheMere> selecteurProjet;
+    private Button btnNouveauProjet;
+
+    // La liste des tâches du projet en cours
+    private ListView<TacheAbstraite> listeTaches;
+
+    // Le projet actuellement affiché
+    private TacheMere projetEnCours;
+
+    // Formulaire
+    private TextField champTitre;
+    private DatePicker datePicker;
+    private ComboBox<Priorite> prioriteBox;
+    private CheckBox checkDossier;
 
     public VueListe() {
-        // Un peu de marge pour que ce soit joli
         this.setPadding(new Insets(10));
-        this.setSpacing(15);
-
-        this.racine = ModeleTache.getInstance().getRacine();
+        this.setSpacing(10);
         this.controleur = new ControleurFX();
 
-        racine.enregistrerObservateur(this);
+        // 1. Abonnement au Singleton (pour savoir quand on ajoute un PROJET)
+        SingletonTache.getInstance().enregistrerObservateur(this);
 
-        Label titre = new Label("Projet : " + racine.getTitre());
+        // --- ZONE HAUTE : SÉLECTION DE PROJET ---
+        Label labelProjet = new Label("Projet actuel :");
+        selecteurProjet = new ComboBox<>();
 
-        TextField champTitre = new TextField();
-        champTitre.setPromptText("Titre de la tâche");
+        // Pour afficher le nom du projet proprement dans la ComboBox
+        selecteurProjet.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(TacheMere t) { return t == null ? "" : t.getTitre(); }
+            @Override
+            public TacheMere fromString(String string) { return null; }
+        });
 
-        DatePicker datePicker = new DatePicker(LocalDate.now());
+        // Quand on change de projet dans la liste déroulante
+        selecteurProjet.setOnAction(e -> {
+            changerProjet(selecteurProjet.getValue());
+        });
 
-        ComboBox<Priorite> prioriteBox = new ComboBox<>();
+        btnNouveauProjet = new Button("+ Liste");
+        btnNouveauProjet.setOnAction(e -> {
+            TextInputDialog dialog = new TextInputDialog("Nouveau Projet");
+            dialog.setHeaderText("Créer une nouvelle liste de tâches");
+            dialog.showAndWait().ifPresent(nom -> controleur.creerNouveauProjet(nom));
+        });
+
+        HBox barreProjet = new HBox(10, labelProjet, selecteurProjet, btnNouveauProjet);
+        barreProjet.setStyle("-fx-background-color: #ddd; -fx-padding: 10;");
+
+
+        // --- ZONE BASSE : GESTION DES TÂCHES ---
+        champTitre = new TextField();
+        datePicker = new DatePicker(LocalDate.now());
+        prioriteBox = new ComboBox<>();
         prioriteBox.getItems().addAll(Priorite.values());
-        prioriteBox.setValue(Priorite.BASSE);
-
-        Button btnAjouter = new Button("Ajouter");
-        Button btnModifier = new Button("Modifier la sélection");
-        Button btnSupprimer = new Button("Supprimer la sélection");
-        Button btnArchiver = new Button("Archiver la sélection");
+        prioriteBox.setValue(Priorite.MOYENNE);
+        checkDossier = new CheckBox("Dossier");
+        Button btnAjouter = new Button("Ajouter Tâche");
 
         btnAjouter.setOnAction(e -> {
+            // On ajoute la tâche DANS le projet en cours
             controleur.creerTache(
+                    projetEnCours, // C'est le parent racine de la liste actuelle
                     champTitre.getText(),
                     datePicker.getValue(),
-                    prioriteBox.getValue()
+                    prioriteBox.getValue(),
+                    checkDossier.isSelected()
             );
             champTitre.clear();
         });
 
+        HBox formulaire = new HBox(5, champTitre, datePicker, prioriteBox, checkDossier, btnAjouter);
 
+        listeTaches = new ListView<>();
+        // (Copie ici ta CellFactory pour l'affichage joli)
 
-        btnModifier.setOnAction(e -> {
-            TacheAbstraite tacheSelectionnee = liste.getSelectionModel().getSelectedItem();
-            if (tacheSelectionnee != null) {
-                controleur.modifierTache(
-                        tacheSelectionnee,
-                        champTitre.getText(),
-                        datePicker.getValue(),
-                        prioriteBox.getValue()
-                );
-                champTitre.clear();
-                liste.getSelectionModel().clearSelection(); // On désélectionne après modif
-            }
-        });
+        this.getChildren().addAll(barreProjet, new Separator(), formulaire, listeTaches);
 
-        btnArchiver.setOnAction(e -> {
-            controleur.archiverTache(liste.getSelectionModel().getSelectedItem());
-        });
-
-        btnSupprimer.setOnAction(e ->
-                controleur.supprimerTache(liste.getSelectionModel().getSelectedItem())
-        );
-
-        HBox formulaire = new HBox(10, champTitre, datePicker, prioriteBox, btnAjouter, btnModifier);
-
-        items = FXCollections.observableArrayList();
-        liste = new ListView<>(items);
-
-        liste.setCellFactory(param -> new ListCell<>() {
-            @Override
-            protected void updateItem(TacheAbstraite item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : item.afficher());
-            }
-        });
-
-        liste.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                champTitre.setText(newVal.getTitre());
-                datePicker.setValue(newVal.getDateLimite());
-                prioriteBox.setValue(newVal.getPriorite());
-            }
-        });
-
-        HBox actions = new HBox(10, btnSupprimer, btnArchiver);
-
-        // Assemblage final
-        this.getChildren().addAll(titre, formulaire, liste, actions);
-
-        rafraichir();
+        // Initialisation : On charge les projets et on sélectionne le premier
+        rafraichirListeDesProjets();
+        if (!selecteurProjet.getItems().isEmpty()) {
+            selecteurProjet.getSelectionModel().selectFirst();
+        }
     }
 
-    private void rafraichir() {
-        items.clear();
-        items.addAll(racine.getEnfants());
+    // Appelé quand on change de sélection dans la ComboBox
+    private void changerProjet(TacheMere nouveauProjet) {
+        if (nouveauProjet == null) return;
+
+        // 1. On se désabonne de l'ancien projet (s'il y en avait un)
+        if (this.projetEnCours != null) {
+            this.projetEnCours.supprimerObservateur(this);
+        }
+
+        // 2. On change le projet courant
+        this.projetEnCours = nouveauProjet;
+
+        // 3. On s'abonne au nouveau (pour voir ses tâches changer)
+        this.projetEnCours.enregistrerObservateur(this);
+
+        // 4. On met à jour l'affichage de la liste
+        rafraichirListeTaches();
+    }
+
+    private void rafraichirListeDesProjets() {
+        // Sauvegarde de la sélection actuelle
+        TacheMere selection = selecteurProjet.getValue();
+
+        selecteurProjet.getItems().clear();
+        selecteurProjet.getItems().addAll(SingletonTache.getInstance().getMesProjets());
+
+        if (selection != null && selecteurProjet.getItems().contains(selection)) {
+            selecteurProjet.setValue(selection);
+        }
+    }
+
+    private void rafraichirListeTaches() {
+        listeTaches.getItems().clear();
+        if (projetEnCours != null) {
+            listeTaches.getItems().addAll(projetEnCours.getEnfants());
+        }
     }
 
     @Override
     public void actualiser(Sujet s) {
-        // On rafraichit tout le temps pour être sûr d'avoir les dernières infos
-        rafraichir();
+        // Cas 1 : C'est le Singleton qui notifie (Ajout d'un PROJET)
+        if (s instanceof SingletonTache) {
+            rafraichirListeDesProjets();
+        }
+        // Cas 2 : C'est le Projet en cours qui notifie (Ajout d'une TÂCHE)
+        else if (s == projetEnCours) {
+            rafraichirListeTaches();
+        }
     }
 }

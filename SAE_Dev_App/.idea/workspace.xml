@@ -4,10 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="215c67f4-e118-49e1-876e-ed6e6ec9faa2" name="Changes" comment="iteration2">
-      <change afterPath="$PROJECT_DIR$/src/main/java/modele/SingletonTache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Enonce_SAE_3_01__2025_26_ETU_DV.pdf" beforeDir="false" />
+    <list default="true" id="215c67f4-e118-49e1-876e-ed6e6ec9faa2" name="Changes" comment="iteration3">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/TestConsole.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/TestConsole.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controleur/Controleur.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controleur/Controleur.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controleur/ControleurFX.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controleur/ControleurFX.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modele/ModeleTache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/ModeleTache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modele/SingletonTache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/SingletonTache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/vue/VueListe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vue/VueListe.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +131,7 @@
       <updated>1765670513192</updated>
       <workItem from="1765670514236" duration="997000" />
       <workItem from="1765801052893" duration="9510000" />
-      <workItem from="1765976837771" duration="739000" />
+      <workItem from="1765976837771" duration="1653000" />
     </task>
     <task id="LOCAL-00001" summary="testdemrd">
       <option name="closed" value="true" />
@@ -217,7 +221,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765810038424</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="iteration3">
+      <option name="closed" value="true" />
+      <created>1765977599014</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1765977599014</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -226,6 +238,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="testdemrd" />
     <MESSAGE value="iteration2" />
-    <option name="LAST_COMMIT_MESSAGE" value="iteration2" />
+    <MESSAGE value="iteration3" />
+    <option name="LAST_COMMIT_MESSAGE" value="iteration3" />
   </component>
 </project>

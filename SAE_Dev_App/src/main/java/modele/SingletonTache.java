@@ -1,14 +1,24 @@
 package modele;
 
-import java.time.LocalDate;
+import observateur.Observateur;
+import observateur.Sujet;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SingletonTache {
+public class SingletonTache implements Sujet { // Il devient Sujet !
 
     private static SingletonTache instance;
-    private ModeleTache racine;
+
+    // Au lieu d'une seule racine, on a une liste de Projets
+    private List<TacheMere> mesProjets;
+    private List<Observateur> observateurs; // Pour le pattern Observer
 
     private SingletonTache() {
-        this.racine = new TacheMere("Projet Global", LocalDate.now(), Priorite.MOYENNE);
+        this.mesProjets = new ArrayList<>();
+        this.observateurs = new ArrayList<>();
+
+        // On crée un projet par défaut pour ne pas arriver sur du vide
+        mesProjets.add(new TacheMere("Défaut", java.time.LocalDate.now(), Priorite.MOYENNE));
     }
 
     public static synchronized SingletonTache getInstance() {
@@ -18,17 +28,27 @@ public class SingletonTache {
         return instance;
     }
 
-    public TacheMere getRacine() {
-        return racine;
+    public List<TacheMere> getMesProjets() {
+        return mesProjets;
     }
 
-    // Service métier : Créer et Ajouter
-    public void creerEtAjouterTache(String titre, LocalDate date, Priorite priorite) {
-        if (titre != null && !titre.isEmpty()) {
-            SousTache nouvelle = new SousTache(titre, date, priorite);
-            racine.ajouterEnfant(nouvelle);
-        }
+    public void ajouterProjet(TacheMere nouveauProjet) {
+        mesProjets.add(nouveauProjet);
+        notifierObservateurs(); // On prévient que la liste des projets a changé
     }
 
+    public void supprimerProjet(TacheMere projet) {
+        mesProjets.remove(projet);
+        notifierObservateurs();
+    }
 
+    // --- Implémentation SUJET (Pour la liste des projets) ---
+    @Override
+    public void enregistrerObservateur(Observateur o) { observateurs.add(o); }
+    @Override
+    public void supprimerObservateur(Observateur o) { observateurs.remove(o); }
+    @Override
+    public void notifierObservateurs() {
+        for (Observateur o : observateurs) o.actualiser(this);
+    }
 }
