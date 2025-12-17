@@ -51,13 +51,13 @@ public class VueCarte extends VBox implements Observateur {
         lblTitre.setMaxWidth(Double.MAX_VALUE);
 
         // Bouton Modifier
-        Button btnModifier = new Button("✎");
+        Button btnModifier = new Button("modif ✎");
         btnModifier.setStyle("-fx-background-color: transparent; -fx-text-fill: #5e6c84; -fx-font-size: 14px; -fx-cursor: hand;");
         btnModifier.setTooltip(new Tooltip("Modifier"));
         btnModifier.setOnAction(e -> ouvrirPopUpModification());
 
         // Bouton Supprimer
-        Button btnSuppr = new Button("supprimer ×");
+        Button btnSuppr = new Button("×");
         btnSuppr.setStyle("-fx-background-color: transparent; -fx-text-fill: #eb5a46; -fx-font-size: 18px; -fx-cursor: hand; -fx-padding: 0 5 0 5;");
         btnSuppr.setTooltip(new Tooltip("Supprimer"));
         btnSuppr.setOnAction(e -> controleur.supprimerTache(tache));
@@ -181,7 +181,7 @@ public class VueCarte extends VBox implements Observateur {
                     HBox.setHgrow(text, Priority.ALWAYS);
                     text.setMaxWidth(Double.MAX_VALUE);
 
-                    Button btnDel = new Button("supprimer x");
+                    Button btnDel = new Button("x");
                     btnDel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
                     btnDel.setOnAction(e -> {
                         // Action de suppression
@@ -191,7 +191,13 @@ public class VueCarte extends VBox implements Observateur {
                         actualiser(tache); // Met à jour le compteur sur la carte parente
                     });
 
-                    HBox cellLayout = new HBox(10, text, btnDel);
+                    // Bouton Modifier
+                    Button btnModifier = new Button("mod ✎");
+                    btnModifier.setStyle("-fx-background-color: transparent; -fx-text-fill: #5e6c84; -fx-font-size: 14px; -fx-cursor: hand;");
+                    btnModifier.setTooltip(new Tooltip("Modifier"));
+                    btnModifier.setOnAction(e -> ouvrirPopUpModification());
+
+                    HBox cellLayout = new HBox(10, text, btnDel, btnModifier);
                     cellLayout.setAlignment(Pos.CENTER_LEFT);
                     setGraphic(cellLayout);
                 }
@@ -215,6 +221,8 @@ public class VueCarte extends VBox implements Observateur {
             champSousTache.clear();
             actualiser(tache);
         });
+
+
 
         HBox ajoutBox = new HBox(10, champSousTache, btnAjouter);
         layout.getChildren().addAll(new Label("Liste des tâches :"), listeVisuelle, ajoutBox);

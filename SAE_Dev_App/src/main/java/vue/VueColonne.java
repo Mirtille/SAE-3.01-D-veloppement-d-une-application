@@ -2,10 +2,7 @@ package vue;
 
 import controleur.ControleurFX;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import modele.Priorite;
@@ -48,6 +45,12 @@ public class VueColonne extends VBox implements Observateur {
         Button btnAjouterCarte = new Button("+ Ajouter une carte");
         btnAjouterCarte.setMaxWidth(Double.MAX_VALUE);
 
+        // Bouton Supprimer
+        Button btnSuppr = new Button("supprimer ×");
+        btnSuppr.setStyle("-fx-background-color: transparent; -fx-text-fill: #eb5a46; -fx-font-size: 18px; -fx-cursor: hand; -fx-padding: 0 5 0 5;");
+        btnSuppr.setTooltip(new Tooltip("Supprimer"));
+        btnSuppr.setOnAction(e -> controleur.supprimerTache(colonneDonnees));
+
         btnAjouterCarte.setOnAction(e -> {
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle("Nouvelle Carte");
@@ -68,7 +71,7 @@ public class VueColonne extends VBox implements Observateur {
             });
         });
 
-        this.getChildren().addAll(lblTitre, scroll, btnAjouterCarte);
+        this.getChildren().addAll(lblTitre, scroll, btnAjouterCarte, btnSuppr);
 
         rafraichir();
     }

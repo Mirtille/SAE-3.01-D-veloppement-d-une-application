@@ -4,18 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="215c67f4-e118-49e1-876e-ed6e6ec9faa2" name="Changes" comment="iteration3">
-      <change afterPath="$PROJECT_DIR$/src/main/java/modele/Etat.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/vue/VueCarte.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/vue/VueColonne.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/vue/VueKanban.java" afterDir="false" />
+    <list default="true" id="215c67f4-e118-49e1-876e-ed6e6ec9faa2" name="Changes" comment="iteration3 vue kanban">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/MainFX.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/MainFX.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controleur/ControleurFX.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controleur/ControleurFX.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modele/ModeleTache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/ModeleTache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modele/SingletonTache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/SingletonTache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modele/TacheAbstraite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/TacheAbstraite.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modele/TacheMere.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/TacheMere.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/vue/VueCarte.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vue/VueCarte.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/vue/VueColonne.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vue/VueColonne.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,7 +127,7 @@
       <updated>1765670513192</updated>
       <workItem from="1765670514236" duration="997000" />
       <workItem from="1765801052893" duration="9510000" />
-      <workItem from="1765976837771" duration="5031000" />
+      <workItem from="1765976837771" duration="5815000" />
     </task>
     <task id="LOCAL-00001" summary="testdemrd">
       <option name="closed" value="true" />
@@ -241,7 +233,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765978710923</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="iteration3 vue kanban">
+      <option name="closed" value="true" />
+      <created>1765981958719</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1765981958719</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -251,6 +251,7 @@
     <MESSAGE value="testdemrd" />
     <MESSAGE value="iteration2" />
     <MESSAGE value="iteration3" />
-    <option name="LAST_COMMIT_MESSAGE" value="iteration3" />
+    <MESSAGE value="iteration3 vue kanban" />
+    <option name="LAST_COMMIT_MESSAGE" value="iteration3 vue kanban" />
   </component>
 </project>
