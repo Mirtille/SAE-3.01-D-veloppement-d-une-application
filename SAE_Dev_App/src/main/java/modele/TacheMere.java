@@ -18,9 +18,10 @@ public class TacheMere extends TacheAbstraite {
         // Notification automatique à la vue
         notifierObservateurs();
     }
+    // Dans TacheMere.java
     public void supprimerEnfant(TacheAbstraite t) {
         enfants.remove(t);
-        notifierObservateurs();
+        notifierObservateurs(); // Indispensable pour que la carte disparaisse de l'écran !
     }
 
     @Override

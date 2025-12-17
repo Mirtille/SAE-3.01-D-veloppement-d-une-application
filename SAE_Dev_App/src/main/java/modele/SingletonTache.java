@@ -5,20 +5,21 @@ import observateur.Sujet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SingletonTache implements Sujet { // Il devient Sujet !
+public class SingletonTache implements Sujet {
 
     private static SingletonTache instance;
 
-    // Au lieu d'une seule racine, on a une liste de Projets
+    // TA LISTE DE PROJETS (Au lieu d'une seule racine)
     private List<TacheMere> mesProjets;
-    private List<Observateur> observateurs; // Pour le pattern Observer
+
+    // Gestion des observateurs (ceux qui regardent la liste des projets)
+    private List<Observateur> observateurs;
 
     private SingletonTache() {
         this.mesProjets = new ArrayList<>();
         this.observateurs = new ArrayList<>();
-
-        // On crée un projet par défaut pour ne pas arriver sur du vide
-        mesProjets.add(new TacheMere("Défaut", java.time.LocalDate.now(), Priorite.MOYENNE));
+        // On initialise avec un projet par défaut
+        mesProjets.add(new TacheMere("Mon Premier Projet", java.time.LocalDate.now(), Priorite.MOYENNE));
     }
 
     public static synchronized SingletonTache getInstance() {
@@ -32,17 +33,12 @@ public class SingletonTache implements Sujet { // Il devient Sujet !
         return mesProjets;
     }
 
-    public void ajouterProjet(TacheMere nouveauProjet) {
-        mesProjets.add(nouveauProjet);
-        notifierObservateurs(); // On prévient que la liste des projets a changé
+    public void ajouterProjet(TacheMere projet) {
+        mesProjets.add(projet);
+        notifierObservateurs(); // On dit à la VueListe : "La liste des projets a changé !"
     }
 
-    public void supprimerProjet(TacheMere projet) {
-        mesProjets.remove(projet);
-        notifierObservateurs();
-    }
-
-    // --- Implémentation SUJET (Pour la liste des projets) ---
+    // --- SUJET ---
     @Override
     public void enregistrerObservateur(Observateur o) { observateurs.add(o); }
     @Override

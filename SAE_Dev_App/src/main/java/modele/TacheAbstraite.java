@@ -11,6 +11,7 @@ public abstract class TacheAbstraite implements Sujet {
     protected String titre;
     protected LocalDate dateLimite;
     protected Priorite priorite;
+    protected Etat etat;
 
     // Gestion des observateurs factorisée ici
     protected List<Observateur> observateurs;
@@ -19,7 +20,18 @@ public abstract class TacheAbstraite implements Sujet {
         this.titre = titre;
         this.dateLimite = dateLimite;
         this.priorite = priorite;
+        this.etat = Etat.A_FAIRE; // État par défaut
         this.observateurs = new ArrayList<>();
+    }
+
+    // --- Getter et Setter pour l'État ---
+    public Etat getEtat() {
+        return etat;
+    }
+
+    public void setEtat(Etat etat) {
+        this.etat = etat;
+        notifierObservateurs(); // Important pour déplacer la carte d'une colonne à l'autre !
     }
 
     public String getTitre() { return titre; }

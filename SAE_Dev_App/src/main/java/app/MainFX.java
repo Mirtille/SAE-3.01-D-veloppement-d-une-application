@@ -3,9 +3,13 @@ package app;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import modele.SingletonTache;
+import modele.TacheMere;
+import vue.VueKanban;
 import vue.VueListe;
 
 public class MainFX extends Application {
+    /**
     @Override
     public void start(Stage stage) {
 
@@ -14,6 +18,21 @@ public class MainFX extends Application {
         Scene scene = new Scene(vue, 800, 500);
 
         stage.setTitle("Gestionnaire de tâches - Vue Liste");
+        stage.setScene(scene);
+        stage.show();
+    }
+**/
+    // ...
+    @Override
+    public void start(Stage stage) {
+        // Récupère le projet par défaut ou le premier de la liste
+        TacheMere projet = SingletonTache.getInstance().getMesProjets().get(0);
+
+        // Crée le Kanban
+        VueKanban kanban = new VueKanban(projet);
+
+        Scene scene = new Scene(kanban, 900, 600);
+        stage.setTitle("Mon Kanban Trello");
         stage.setScene(scene);
         stage.show();
     }

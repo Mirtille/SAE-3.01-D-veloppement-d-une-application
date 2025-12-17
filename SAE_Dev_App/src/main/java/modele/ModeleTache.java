@@ -13,28 +13,31 @@ public class ModeleTache {
         return instance;
     }
 
-    // 1. Créer une NOUVELLE LISTE (Nouveau Projet)
-    public void creerNouveauProjet(String nom) {
-        if (nom != null && !nom.isEmpty()) {
-            TacheMere nouveauProjet = new TacheMere(nom, LocalDate.now(), Priorite.MOYENNE);
-            SingletonTache.getInstance().ajouterProjet(nouveauProjet);
+    // 1. MÉTHODE POUR CRÉER UN PROJET (Nouveau !)
+    public void creerNouveauProjet(String nomProjet) {
+        if (nomProjet != null && !nomProjet.isEmpty()) {
+            TacheMere nouveau = new TacheMere(nomProjet, LocalDate.now(), Priorite.MOYENNE);
+            // On l'ajoute au Singleton
+            SingletonTache.getInstance().ajouterProjet(nouveau);
         }
     }
 
-    // 2. Créer une Tâche DANS une liste existante
-    // (Note: 'parent' ne peut plus être null, il faut savoir dans quel projet on est)
-    public void creerEtAjouterTache(TacheMere parent, String titre, LocalDate date, Priorite priorite, boolean estUnDossier) {
-        if (titre == null || titre.isEmpty() || parent == null) return;
+    // 2. MÉTHODE POUR CRÉER UNE TÂCHE (Dans un projet existant)
+    public void creerEtAjouterTache(TacheMere parent, String titre, LocalDate date, Priorite prio, boolean estDossier) {
+        if (titre == null || titre.isEmpty()) return;
 
-        TacheAbstraite nouvelleTache;
-        if (estUnDossier) {
-            nouvelleTache = new TacheMere(titre, date, priorite);
+        // Sécurité : Si pas de parent, on ne peut rien faire (il faut choisir un projet)
+        if (parent == null) return;
+
+        TacheAbstraite tache;
+        if (estDossier) {
+            tache = new TacheMere(titre, date, prio);
         } else {
-            nouvelleTache = new SousTache(titre, date, priorite);
+            tache = new SousTache(titre, date, prio);
         }
 
-        parent.ajouterEnfant(nouvelleTache);
-        // On notifie le parent spécifique, pas besoin de tout rafraichir
+        parent.ajouterEnfant(tache);
+        // On notifie le projet concerné pour qu'il mette à jour sa liste de tâches
         parent.notifierObservateurs();
     }
 }

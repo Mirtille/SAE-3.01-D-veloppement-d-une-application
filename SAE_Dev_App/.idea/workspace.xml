@@ -5,13 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="215c67f4-e118-49e1-876e-ed6e6ec9faa2" name="Changes" comment="iteration3">
+      <change afterPath="$PROJECT_DIR$/src/main/java/modele/Etat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/vue/VueCarte.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/vue/VueColonne.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/vue/VueKanban.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/TestConsole.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/TestConsole.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controleur/Controleur.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controleur/Controleur.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/MainFX.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/MainFX.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controleur/ControleurFX.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controleur/ControleurFX.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/modele/ModeleTache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/ModeleTache.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/modele/SingletonTache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/SingletonTache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/vue/VueListe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vue/VueListe.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modele/TacheAbstraite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/TacheAbstraite.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modele/TacheMere.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/TacheMere.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,7 +135,7 @@
       <updated>1765670513192</updated>
       <workItem from="1765670514236" duration="997000" />
       <workItem from="1765801052893" duration="9510000" />
-      <workItem from="1765976837771" duration="1653000" />
+      <workItem from="1765976837771" duration="5031000" />
     </task>
     <task id="LOCAL-00001" summary="testdemrd">
       <option name="closed" value="true" />
@@ -229,7 +233,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765977599014</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="iteration3">
+      <option name="closed" value="true" />
+      <created>1765978710923</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1765978710923</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
