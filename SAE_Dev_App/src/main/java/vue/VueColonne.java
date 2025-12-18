@@ -42,7 +42,7 @@ public class VueColonne extends VBox implements Observateur {
         VBox.setVgrow(scroll, Priority.ALWAYS);
 
         // --- BOUTON AJOUTER UNE CARTE ---
-        Button btnAjouterCarte = new Button("+ Ajouter une carte");
+        Button btnAjouterCarte = new Button("+ Ajouter une tache");
         btnAjouterCarte.setMaxWidth(Double.MAX_VALUE);
 
         // Bouton Supprimer
