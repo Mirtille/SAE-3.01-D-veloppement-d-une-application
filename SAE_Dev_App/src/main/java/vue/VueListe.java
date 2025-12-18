@@ -42,23 +42,17 @@ public class VueListe extends VBox implements Observateur {
     public VueListe() {
         this.controleur = new ControleurFX();
 
-        // --- STYLE CSS ---
-        // On applique le style global si tu as une classe .root ou .vue-liste
         this.setPadding(new Insets(15));
         this.setSpacing(15);
-        // Optionnel : this.getStyleClass().add("vue-liste");
 
-        // 1. Abonnement au Singleton (pour savoir quand on ajoute un PROJET)
         SingletonTache.getInstance().enregistrerObservateur(this);
 
-        // --- ZONE HAUTE : SÉLECTION DE PROJET ---
         Label labelProjet = new Label("Projet actuel :");
         labelProjet.setStyle("-fx-font-weight: bold;");
 
         selecteurProjet = new ComboBox<>();
         selecteurProjet.setMinWidth(200);
 
-        // Convertisseur pour afficher le titre du projet au lieu de l'objet
         selecteurProjet.setConverter(new StringConverter<>() {
             @Override
             public String toString(TacheMere t) { return t == null ? "Aucun projet" : t.getTitre(); }
