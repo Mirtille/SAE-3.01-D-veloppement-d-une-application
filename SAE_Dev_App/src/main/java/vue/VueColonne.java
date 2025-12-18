@@ -41,7 +41,6 @@ public class VueColonne extends VBox implements Observateur {
         scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
         VBox.setVgrow(scroll, Priority.ALWAYS);
 
-        // --- BOUTON AJOUTER UNE CARTE ---
         Button btnAjouterCarte = new Button("+ Ajouter une tache");
         btnAjouterCarte.setMaxWidth(Double.MAX_VALUE);
 
@@ -58,9 +57,7 @@ public class VueColonne extends VBox implements Observateur {
             dialog.setContentText("Titre :");
 
             dialog.showAndWait().ifPresent(titre -> {
-                // MODIFICATION IMPORTANTE ICI :
-                // paramètre 'estDossier' à TRUE.
-                // La carte sera une TacheMere, donc elle pourra contenir des sous-tâches !
+
                 controleur.creerTache(
                         colonneDonnees,
                         titre,
@@ -79,7 +76,6 @@ public class VueColonne extends VBox implements Observateur {
     private void rafraichir() {
         containerCartes.getChildren().clear();
         for (TacheAbstraite t : colonneDonnees.getEnfants()) {
-            // On ajoute la carte visuelle pour chaque enfant de la colonne
             containerCartes.getChildren().add(new VueCarte(t, controleur));
         }
     }

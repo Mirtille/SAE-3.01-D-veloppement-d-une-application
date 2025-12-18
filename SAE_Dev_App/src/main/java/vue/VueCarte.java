@@ -25,7 +25,6 @@ public class VueCarte extends VBox implements Observateur {
     private TacheAbstraite tache;
     private ControleurFX controleur;
 
-    // Éléments graphiques à mettre à jour
     private Label lblTitre;
     private Label lblInfo;
     private Label lblSousTaches;
@@ -34,17 +33,14 @@ public class VueCarte extends VBox implements Observateur {
         this.tache = tache;
         this.controleur = controleur;
 
-        // ABONNEMENT INDISPENSABLE
         this.tache.enregistrerObservateur(this);
 
-        // --- STYLE ---
         this.setStyle("-fx-background-color: white; " +
                 "-fx-background-radius: 8; " +
                 "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);");
         this.setPadding(new Insets(10));
         this.setSpacing(8);
 
-        // --- ENTÊTE ---
         lblTitre = new Label(tache.getTitre());
         lblTitre.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #172b4d;");
         lblTitre.setWrapText(true);
@@ -71,14 +67,12 @@ public class VueCarte extends VBox implements Observateur {
         entete.getChildren().addAll(lblTitre, actions);
         HBox.setHgrow(lblTitre, Priority.ALWAYS);
 
-        // --- INFOS ---
         lblInfo = new Label();
         mettreAJourInfos();
         lblInfo.setStyle("-fx-text-fill: #5e6c84; -fx-font-size: 11px;");
 
         this.getChildren().addAll(entete, lblInfo);
 
-        // --- SOUS-TÂCHES (Seulement si c'est un dossier) ---
         if (tache instanceof TacheMere) {
             lblSousTaches = new Label();
             mettreAJourCompteurSousTaches();
@@ -93,17 +87,14 @@ public class VueCarte extends VBox implements Observateur {
         }
     }
 
-    // --- MISE A JOUR (Observer) ---
     @Override
     public void actualiser(Sujet s) {
-        // Platform.runLater force la mise à jour sur le Thread graphique (Règle le bug d'affichage)
-        Platform.runLater(() -> {
+
             lblTitre.setText(tache.getTitre());
             mettreAJourInfos();
             if (tache instanceof TacheMere) {
                 mettreAJourCompteurSousTaches();
-            }
-        });
+            };
     }
 
     private void mettreAJourInfos() {
@@ -117,7 +108,6 @@ public class VueCarte extends VBox implements Observateur {
         }
     }
 
-    // --- POPUP MODIFICATION ---
     private void ouvrirPopUpModification(TacheAbstraite tacheCible) {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
@@ -153,7 +143,6 @@ public class VueCarte extends VBox implements Observateur {
         popup.showAndWait();
     }
 
-    // --- POPUP SOUS-TÂCHES (CORRIGÉ POUR SUPPRESSION) ---
     private void ouvrirFenetreSousTaches() {
         if (!(tache instanceof TacheMere)) return;
         TacheMere maTacheConteneur = (TacheMere) tache;
@@ -165,10 +154,8 @@ public class VueCarte extends VBox implements Observateur {
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(15));
 
-        // NOUVEAU : Une liste d'OBJETS TacheAbstraite, pas de String
         ListView<TacheAbstraite> listeVisuelle = new ListView<>();
 
-        // Affichage personnalisé : Texte + Bouton Supprimer
         listeVisuelle.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(TacheAbstraite item, boolean empty) {

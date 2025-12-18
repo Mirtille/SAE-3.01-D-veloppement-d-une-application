@@ -22,7 +22,6 @@ public class VueKanban extends VBox implements Observateur {
     private HBox containerColonnes;
     private ControleurFX controleur;
 
-    // --- CORRECTION ICI : On ajoute le paramètre 'TacheMere projet' ---
     public VueKanban(TacheMere projet) {
         this.projet = projet;
         this.projet.enregistrerObservateur(this);
@@ -33,7 +32,6 @@ public class VueKanban extends VBox implements Observateur {
         this.setSpacing(10);
         this.setStyle("-fx-background-color: #0079bf;");
 
-        // Zone horizontale pour les colonnes (Scrollable horizontalement)
         containerColonnes = new HBox(15);
         ScrollPane scrollH = new ScrollPane(containerColonnes);
         scrollH.setFitToHeight(true);
@@ -68,7 +66,6 @@ public class VueKanban extends VBox implements Observateur {
     private void rafraichir() {
         containerColonnes.getChildren().clear();
 
-        // On cherche tous les dossiers à la racine du projet
         for (TacheAbstraite t : projet.getEnfants()) {
             if (t instanceof TacheMere) {
                 VueColonne colonne = new VueColonne((TacheMere) t);
