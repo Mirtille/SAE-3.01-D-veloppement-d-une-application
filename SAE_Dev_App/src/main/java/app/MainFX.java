@@ -25,10 +25,8 @@ public class MainFX extends Application {
     // ...
     @Override
     public void start(Stage stage) {
-        // Récupère le projet par défaut ou le premier de la liste
         TacheMere projet = SingletonTache.getInstance().getMesProjets().get(0);
 
-        // Crée le Kanban
         VueKanban kanban = new VueKanban(projet);
 
         Scene scene = new Scene(kanban, 900, 600);

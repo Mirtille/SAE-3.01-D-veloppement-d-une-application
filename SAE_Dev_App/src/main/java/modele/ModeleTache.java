@@ -26,7 +26,7 @@ public class ModeleTache {
     public void creerEtAjouterTache(TacheMere parent, String titre, LocalDate date, Priorite prio, boolean estDossier) {
         if (titre == null || titre.isEmpty()) return;
 
-        // Sécurité : Si pas de parent, on ne peut rien faire (il faut choisir un projet)
+        // Sécurité : Si pas de parent, on ne peut rien faire (il faut choisir un projet
         if (parent == null) return;
 
         TacheAbstraite tache;
