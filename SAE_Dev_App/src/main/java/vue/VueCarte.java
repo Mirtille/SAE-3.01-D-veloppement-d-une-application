@@ -54,7 +54,7 @@ public class VueCarte extends VBox implements Observateur {
         Button btnModifier = new Button("modif ✎");
         btnModifier.setStyle("-fx-background-color: transparent; -fx-text-fill: #5e6c84; -fx-font-size: 14px; -fx-cursor: hand;");
         btnModifier.setTooltip(new Tooltip("Modifier"));
-        btnModifier.setOnAction(e -> ouvrirPopUpModification());
+        btnModifier.setOnAction(e -> ouvrirPopUpModification(this.tache));
 
         // Bouton Supprimer
         Button btnSuppr = new Button("×");
@@ -118,7 +118,7 @@ public class VueCarte extends VBox implements Observateur {
     }
 
     // --- POPUP MODIFICATION ---
-    private void ouvrirPopUpModification() {
+    private void ouvrirPopUpModification(TacheAbstraite tacheCible) {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setTitle("Modifier");
@@ -128,11 +128,11 @@ public class VueCarte extends VBox implements Observateur {
         grid.setHgap(10);
         grid.setVgap(15);
 
-        TextField champTitre = new TextField(tache.getTitre());
-        DatePicker champDate = new DatePicker(tache.getDateLimite());
+        TextField champTitre = new TextField(tacheCible.getTitre());
+        DatePicker champDate = new DatePicker(tacheCible.getDateLimite());
         ComboBox<Priorite> champPriorite = new ComboBox<>();
         champPriorite.getItems().setAll(Priorite.values());
-        champPriorite.setValue(tache.getPriorite());
+        champPriorite.setValue(tacheCible.getPriorite());
 
         grid.add(new Label("Titre :"), 0, 0);
         grid.add(champTitre, 1, 0);
@@ -144,7 +144,7 @@ public class VueCarte extends VBox implements Observateur {
         Button btnValider = new Button("Enregistrer");
         btnValider.setDefaultButton(true);
         btnValider.setOnAction(e -> {
-            controleur.modifierTache(tache, champTitre.getText(), champDate.getValue(), champPriorite.getValue());
+            controleur.modifierTache(tacheCible, champTitre.getText(), champDate.getValue(), champPriorite.getValue());
             popup.close();
         });
 
@@ -194,8 +194,8 @@ public class VueCarte extends VBox implements Observateur {
                     // Bouton Modifier
                     Button btnModifier = new Button("mod ✎");
                     btnModifier.setStyle("-fx-background-color: transparent; -fx-text-fill: #5e6c84; -fx-font-size: 14px; -fx-cursor: hand;");
-                    btnModifier.setTooltip(new Tooltip("Modifier"));
-                    btnModifier.setOnAction(e -> ouvrirPopUpModification());
+                    final TacheAbstraite tacheA_Modifier = item;
+                    btnModifier.setOnAction(e -> ouvrirPopUpModification(tacheA_Modifier));
 
                     HBox cellLayout = new HBox(10, text, btnDel, btnModifier);
                     cellLayout.setAlignment(Pos.CENTER_LEFT);
