@@ -28,9 +28,8 @@ public class VueCarte extends VBox implements Observateur {
     private Label lblTitre;
     private Label lblInfo;
 
-    // Conteneurs pour la partie "Sous-tâches"
+    // Conteneur pour la liste des sous-tâches
     private VBox containerSousTaches;
-    private HBox zoneAjoutSousTache;
 
     public VueCarte(TacheAbstraite tache, ControleurFX controleur) {
         this.tache = tache;
@@ -79,37 +78,73 @@ public class VueCarte extends VBox implements Observateur {
         if (tache instanceof TacheMere) {
             Separator sep = new Separator();
 
-            // Conteneur visuel des sous-tâches
-            containerSousTaches = new VBox(4); // Espacement vertical entre les lignes
+            // Conteneur visuel des sous-tâches existantes
+            containerSousTaches = new VBox(4);
             containerSousTaches.setPadding(new Insets(5, 0, 5, 0));
 
-            // Zone d'ajout rapide en bas
-            TextField champAjout = new TextField();
-            champAjout.setPromptText("Ajouter une étape...");
-            champAjout.setStyle("-fx-font-size: 11px; -fx-background-color: #f4f5f7; -fx-background-radius: 3;");
+            // --- NOUVEAU BOUTON D'AJOUT (remplace le champ texte) ---
+            Button btnAjoutSousTache = new Button("+ Ajouter une sous-tâche");
+            btnAjoutSousTache.setMaxWidth(Double.MAX_VALUE);
+            btnAjoutSousTache.setStyle("-fx-background-color: #f4f5f7; -fx-text-fill: #172b4d; -fx-font-size: 11px; -fx-cursor: hand;");
 
-            Button btnAjout = new Button("+");
-            btnAjout.setStyle("-fx-font-size: 11px; -fx-background-radius: 3;");
+            // Action : Ouvrir une fenêtre de dialogue complète
+            btnAjoutSousTache.setOnAction(e -> ouvrirDialogAjoutSousTache());
 
-            // Action Ajouter
-            Runnable actionAjout = () -> {
-                if (!champAjout.getText().trim().isEmpty()) {
-                    controleur.creerSousTache((TacheMere) tache, champAjout.getText(), LocalDate.now(), Priorite.MOYENNE);
-                    champAjout.clear();
-                }
-            };
-
-            btnAjout.setOnAction(e -> actionAjout.run());
-            champAjout.setOnAction(e -> actionAjout.run()); // Touche Entrée
-
-            zoneAjoutSousTache = new HBox(5, champAjout, btnAjout);
-            zoneAjoutSousTache.setAlignment(Pos.CENTER_LEFT);
-            HBox.setHgrow(champAjout, Priority.ALWAYS);
-
-            this.getChildren().addAll(sep, containerSousTaches, zoneAjoutSousTache);
+            this.getChildren().addAll(sep, containerSousTaches, btnAjoutSousTache);
         }
 
         mettreAJourAffichage();
+    }
+
+    // --- NOUVELLE MÉTHODE : Dialog pour créer une sous-tâche ---
+    private void ouvrirDialogAjoutSousTache() {
+        if (!(tache instanceof TacheMere)) return;
+        TacheMere parent = (TacheMere) tache;
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Nouvelle Sous-tâche");
+        dialog.setHeaderText("Ajouter une étape à : " + parent.getTitre());
+
+        // Champs du formulaire
+        TextField txtTitre = new TextField();
+        txtTitre.setPromptText("Titre de l'étape...");
+
+        DatePicker datePicker = new DatePicker(LocalDate.now());
+
+        ComboBox<Priorite> comboPrio = new ComboBox<>();
+        comboPrio.getItems().setAll(Priorite.values());
+        comboPrio.setValue(Priorite.MOYENNE);
+
+        // Mise en page
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        grid.add(new Label("Titre :"), 0, 0);
+        grid.add(txtTitre, 1, 0);
+        grid.add(new Label("Date limite :"), 0, 1);
+        grid.add(datePicker, 1, 1);
+        grid.add(new Label("Priorité :"), 0, 2);
+        grid.add(comboPrio, 1, 2);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        // Focus sur le titre
+        Platform.runLater(txtTitre::requestFocus);
+
+        // Résultat
+        dialog.showAndWait().ifPresent(type -> {
+            if (type == ButtonType.OK && !txtTitre.getText().trim().isEmpty()) {
+                controleur.creerSousTache(
+                        parent,
+                        txtTitre.getText(),
+                        datePicker.getValue(),
+                        comboPrio.getValue()
+                );
+            }
+        });
     }
 
     @Override
@@ -127,35 +162,30 @@ public class VueCarte extends VBox implements Observateur {
             TacheMere tm = (TacheMere) tache;
 
             for (TacheAbstraite sousTache : tm.getEnfants()) {
-                HBox ligne = new HBox(8); // Espacement horizontal
-                ligne.setAlignment(Pos.TOP_LEFT); // Alignement en haut pour gérer le multiline
+                HBox ligne = new HBox(8);
+                ligne.setAlignment(Pos.TOP_LEFT);
                 ligne.setStyle("-fx-padding: 4 0 4 0; -fx-border-color: transparent transparent #f0f0f0 transparent;");
 
-                // Checkbox visuelle (Puce)
+                // Puce
                 Label puce = new Label("•");
                 puce.setStyle("-fx-text-fill: #5e6c84; -fx-font-size: 14px; -fx-padding: -2 0 0 0;");
 
-                // --- CONTENEUR TEXTE (Titre + Détails en dessous) ---
-                VBox conteneurTexte = new VBox(2); // 2px d'espace entre titre et détails
+                // Infos (Titre + Détails)
+                VBox conteneurTexte = new VBox(2);
                 conteneurTexte.setAlignment(Pos.CENTER_LEFT);
 
-                // Titre sous-tâche
                 Label lblST = new Label(sousTache.getTitre());
                 lblST.setStyle("-fx-font-size: 12px; -fx-text-fill: #172b4d;");
                 lblST.setMaxWidth(Double.MAX_VALUE);
                 lblST.setWrapText(true);
 
-                // Détails sous-tâche (Date + Priorité)
                 Label lblDetails = new Label(sousTache.getDateLimite() + " • " + sousTache.getPriorite());
                 lblDetails.setStyle("-fx-font-size: 10px; -fx-text-fill: #97a0af;");
 
                 conteneurTexte.getChildren().addAll(lblST, lblDetails);
                 HBox.setHgrow(conteneurTexte, Priority.ALWAYS);
 
-                // --- Boutons d'action ---
-                VBox actionsBox = new VBox(0); // Empiler ou aligner les boutons
-                actionsBox.setAlignment(Pos.CENTER);
-
+                // Boutons (Modifier / Supprimer)
                 HBox btnGroup = new HBox(2);
 
                 Button btnModifST = new Button("✎");
