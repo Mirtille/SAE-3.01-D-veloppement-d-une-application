@@ -1,6 +1,7 @@
 package vue;
 
 import controleur.ControleurFX;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -26,7 +27,10 @@ public class VueCarte extends VBox implements Observateur {
 
     private Label lblTitre;
     private Label lblInfo;
-    private Label lblSousTaches;
+
+    // Conteneurs pour la partie "Sous-tâches"
+    private VBox containerSousTaches;
+    private HBox zoneAjoutSousTache;
 
     public VueCarte(TacheAbstraite tache, ControleurFX controleur) {
         this.tache = tache;
@@ -34,81 +38,145 @@ public class VueCarte extends VBox implements Observateur {
 
         this.tache.enregistrerObservateur(this);
 
+        // --- Style de la Carte ---
         this.setStyle("-fx-background-color: white; " +
                 "-fx-background-radius: 8; " +
                 "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);");
         this.setPadding(new Insets(10));
         this.setSpacing(8);
 
+        // --- ENTÊTE (Titre + Actions Principales) ---
         lblTitre = new Label(tache.getTitre());
         lblTitre.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #172b4d;");
         lblTitre.setWrapText(true);
         lblTitre.setMaxWidth(Double.MAX_VALUE);
 
-        // Bouton Modifier
-        Button btnModifier = new Button("modif ✎");
-        btnModifier.setStyle("-fx-background-color: transparent; -fx-text-fill: #5e6c84; -fx-font-size: 14px; -fx-cursor: hand;");
-        btnModifier.setTooltip(new Tooltip("Modifier"));
+        Button btnModifier = new Button("✎");
+        btnModifier.setStyle("-fx-background-color: transparent; -fx-text-fill: #5e6c84; -fx-cursor: hand;");
+        btnModifier.setTooltip(new Tooltip("Modifier la tâche principale"));
         btnModifier.setOnAction(e -> ouvrirPopUpModification(this.tache));
 
-        // Bouton Supprimer
         Button btnSuppr = new Button("×");
-        btnSuppr.setStyle("-fx-background-color: transparent; -fx-text-fill: #eb5a46; -fx-font-size: 18px; -fx-cursor: hand; -fx-padding: 0 5 0 5;");
-        btnSuppr.setTooltip(new Tooltip("Supprimer"));
+        btnSuppr.setStyle("-fx-background-color: transparent; -fx-text-fill: #eb5a46; -fx-font-weight: bold; -fx-cursor: hand;");
+        btnSuppr.setTooltip(new Tooltip("Supprimer la tâche principale"));
         btnSuppr.setOnAction(e -> controleur.supprimerTache(tache));
 
-        HBox actions = new HBox(0, btnModifier, btnSuppr);
+        HBox actions = new HBox(btnModifier, btnSuppr);
         actions.setAlignment(Pos.TOP_RIGHT);
-        actions.setMinWidth(60);
 
         HBox entete = new HBox(10);
         entete.setAlignment(Pos.TOP_LEFT);
         entete.getChildren().addAll(lblTitre, actions);
         HBox.setHgrow(lblTitre, Priority.ALWAYS);
 
+        // --- INFOS (Date / Priorité) ---
         lblInfo = new Label();
-        mettreAJourInfos();
         lblInfo.setStyle("-fx-text-fill: #5e6c84; -fx-font-size: 11px;");
 
         this.getChildren().addAll(entete, lblInfo);
 
+        // --- SECTION SOUS-TÂCHES (Seulement si c'est une TacheMere) ---
         if (tache instanceof TacheMere) {
-            lblSousTaches = new Label();
-            mettreAJourCompteurSousTaches();
-            lblSousTaches.setStyle("-fx-text-fill: #172b4d; -fx-font-size: 11px; -fx-font-style: italic;");
+            Separator sep = new Separator();
 
-            Button btnVoirSousTaches = new Button("Gérer sous-tâches");
-            btnVoirSousTaches.setMaxWidth(Double.MAX_VALUE);
-            btnVoirSousTaches.setStyle("-fx-background-color: #f4f5f7; -fx-text-fill: #172b4d; -fx-cursor: hand;");
-            btnVoirSousTaches.setOnAction(e -> ouvrirFenetreSousTaches());
+            // Conteneur visuel des sous-tâches
+            containerSousTaches = new VBox(4); // Espacement vertical entre les lignes
+            containerSousTaches.setPadding(new Insets(5, 0, 5, 0));
 
-            this.getChildren().addAll(lblSousTaches, btnVoirSousTaches);
+            // Zone d'ajout rapide en bas
+            TextField champAjout = new TextField();
+            champAjout.setPromptText("Ajouter une étape...");
+            champAjout.setStyle("-fx-font-size: 11px; -fx-background-color: #f4f5f7; -fx-background-radius: 3;");
+
+            Button btnAjout = new Button("+");
+            btnAjout.setStyle("-fx-font-size: 11px; -fx-background-radius: 3;");
+
+            // Action Ajouter
+            Runnable actionAjout = () -> {
+                if (!champAjout.getText().trim().isEmpty()) {
+                    controleur.creerSousTache((TacheMere) tache, champAjout.getText(), LocalDate.now(), Priorite.MOYENNE);
+                    champAjout.clear();
+                }
+            };
+
+            btnAjout.setOnAction(e -> actionAjout.run());
+            champAjout.setOnAction(e -> actionAjout.run()); // Touche Entrée
+
+            zoneAjoutSousTache = new HBox(5, champAjout, btnAjout);
+            zoneAjoutSousTache.setAlignment(Pos.CENTER_LEFT);
+            HBox.setHgrow(champAjout, Priority.ALWAYS);
+
+            this.getChildren().addAll(sep, containerSousTaches, zoneAjoutSousTache);
         }
+
+        mettreAJourAffichage();
     }
 
     @Override
     public void actualiser(Sujet s) {
-        // Correction : On s'assure d'être dans le thread JavaFX pour la mise à jour UI
-        javafx.application.Platform.runLater(() -> {
-            lblTitre.setText(tache.getTitre());
-            mettreAJourInfos();
-            if (tache instanceof TacheMere) {
-                mettreAJourCompteurSousTaches();
-            }
-        });
+        Platform.runLater(this::mettreAJourAffichage);
     }
 
-    private void mettreAJourInfos() {
+    private void mettreAJourAffichage() {
+        lblTitre.setText(tache.getTitre());
         lblInfo.setText(tache.getDateLimite() + " • " + tache.getPriorite());
-    }
 
-    private void mettreAJourCompteurSousTaches() {
-        if (lblSousTaches != null && tache instanceof TacheMere) {
-            int nb = ((TacheMere) tache).getEnfants().size();
-            lblSousTaches.setText(nb + " sous-tâche(s)");
+        // Mise à jour de la liste des sous-tâches
+        if (tache instanceof TacheMere && containerSousTaches != null) {
+            containerSousTaches.getChildren().clear();
+            TacheMere tm = (TacheMere) tache;
+
+            for (TacheAbstraite sousTache : tm.getEnfants()) {
+                HBox ligne = new HBox(8); // Espacement horizontal
+                ligne.setAlignment(Pos.TOP_LEFT); // Alignement en haut pour gérer le multiline
+                ligne.setStyle("-fx-padding: 4 0 4 0; -fx-border-color: transparent transparent #f0f0f0 transparent;");
+
+                // Checkbox visuelle (Puce)
+                Label puce = new Label("•");
+                puce.setStyle("-fx-text-fill: #5e6c84; -fx-font-size: 14px; -fx-padding: -2 0 0 0;");
+
+                // --- CONTENEUR TEXTE (Titre + Détails en dessous) ---
+                VBox conteneurTexte = new VBox(2); // 2px d'espace entre titre et détails
+                conteneurTexte.setAlignment(Pos.CENTER_LEFT);
+
+                // Titre sous-tâche
+                Label lblST = new Label(sousTache.getTitre());
+                lblST.setStyle("-fx-font-size: 12px; -fx-text-fill: #172b4d;");
+                lblST.setMaxWidth(Double.MAX_VALUE);
+                lblST.setWrapText(true);
+
+                // Détails sous-tâche (Date + Priorité)
+                Label lblDetails = new Label(sousTache.getDateLimite() + " • " + sousTache.getPriorite());
+                lblDetails.setStyle("-fx-font-size: 10px; -fx-text-fill: #97a0af;");
+
+                conteneurTexte.getChildren().addAll(lblST, lblDetails);
+                HBox.setHgrow(conteneurTexte, Priority.ALWAYS);
+
+                // --- Boutons d'action ---
+                VBox actionsBox = new VBox(0); // Empiler ou aligner les boutons
+                actionsBox.setAlignment(Pos.CENTER);
+
+                HBox btnGroup = new HBox(2);
+
+                Button btnModifST = new Button("✎");
+                btnModifST.setStyle("-fx-background-color: transparent; -fx-text-fill: #5e6c84; -fx-font-size: 11px; -fx-cursor: hand;");
+                btnModifST.setTooltip(new Tooltip("Modifier"));
+                btnModifST.setOnAction(e -> ouvrirPopUpModification(sousTache));
+
+                Button btnDelST = new Button("×");
+                btnDelST.setStyle("-fx-background-color: transparent; -fx-text-fill: #eb5a46; -fx-font-size: 14px; -fx-padding: 0 5 0 5; -fx-cursor: hand;");
+                btnDelST.setTooltip(new Tooltip("Supprimer"));
+                btnDelST.setOnAction(e -> controleur.supprimerTache(sousTache));
+
+                btnGroup.getChildren().addAll(btnModifST, btnDelST);
+
+                ligne.getChildren().addAll(puce, conteneurTexte, btnGroup);
+                containerSousTaches.getChildren().add(ligne);
+            }
         }
     }
 
+    // --- POPUP MODIFICATION (Inchangé) ---
     private void ouvrirPopUpModification(TacheAbstraite tacheCible) {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
@@ -141,85 +209,6 @@ public class VueCarte extends VBox implements Observateur {
 
         grid.add(btnValider, 1, 3);
         popup.setScene(new Scene(grid, 350, 250));
-        popup.showAndWait();
-    }
-
-    private void ouvrirFenetreSousTaches() {
-        if (!(tache instanceof TacheMere)) return;
-        TacheMere maTacheConteneur = (TacheMere) tache;
-
-        Stage popup = new Stage();
-        popup.initModality(Modality.APPLICATION_MODAL);
-        popup.setTitle("Sous-tâches : " + tache.getTitre());
-
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(15));
-
-        ListView<TacheAbstraite> listeVisuelle = new ListView<>();
-
-        listeVisuelle.setCellFactory(param -> new ListCell<>() {
-            @Override
-            protected void updateItem(TacheAbstraite item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    Label text = new Label(item.getTitre() + " (" + item.getPriorite() + ")");
-                    HBox.setHgrow(text, Priority.ALWAYS);
-                    text.setMaxWidth(Double.MAX_VALUE);
-
-                    Button btnDel = new Button("x");
-                    btnDel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-                    btnDel.setOnAction(e -> {
-                        controleur.supprimerTache(item);
-                        getListView().getItems().remove(item);
-                        // On force la notification du parent
-                        maTacheConteneur.notifierObservateurs();
-                    });
-
-                    Button btnModifier = new Button("mod ✎");
-                    btnModifier.setStyle("-fx-background-color: transparent; -fx-text-fill: #5e6c84; -fx-font-size: 14px; -fx-cursor: hand;");
-
-                    btnModifier.setOnAction(e -> ouvrirPopUpModification(item));
-
-                    HBox cellLayout = new HBox(10, text, btnDel, btnModifier);
-                    cellLayout.setAlignment(Pos.CENTER_LEFT);
-                    setGraphic(cellLayout);
-                }
-            }
-        });
-
-        listeVisuelle.getItems().addAll(maTacheConteneur.getEnfants());
-
-        TextField champSousTache = new TextField();
-        champSousTache.setPromptText("Nouvelle sous-tâche...");
-        Button btnAjouter = new Button("Ajouter");
-        btnAjouter.setDefaultButton(true);
-
-        btnAjouter.setOnAction(e -> {
-            // --- CORRECTION ICI ---
-            // On utilise creerSousTache au lieu de creerTache
-            // Et on retire le "false" à la fin
-            controleur.creerSousTache(
-                    maTacheConteneur,
-                    champSousTache.getText(),
-                    LocalDate.now(),
-                    Priorite.MOYENNE
-            );
-
-            listeVisuelle.getItems().clear();
-            listeVisuelle.getItems().addAll(maTacheConteneur.getEnfants());
-            champSousTache.clear();
-
-            // Mise à jour visuelle de la carte parente
-            actualiser(tache);
-        });
-
-        HBox ajoutBox = new HBox(10, champSousTache, btnAjouter);
-        layout.getChildren().addAll(new Label("Liste des tâches :"), listeVisuelle, ajoutBox);
-
-        popup.setScene(new Scene(layout, 350, 450));
         popup.showAndWait();
     }
 }
