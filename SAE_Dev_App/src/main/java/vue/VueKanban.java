@@ -8,53 +8,53 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import modele.Priorite;
-import modele.TacheAbstraite;
-import modele.TacheMere;
+import modele.Colonne;
+import modele.Projet;
 import observateur.Observateur;
 import observateur.Sujet;
 
-import java.time.LocalDate;
-
 public class VueKanban extends VBox implements Observateur {
 
-    private TacheMere projet;
+    private Projet projet; // Utilisation de la nouvelle classe Projet
     private HBox containerColonnes;
     private ControleurFX controleur;
 
-    public VueKanban(TacheMere projet) {
+    public VueKanban(Projet projet) {
         this.projet = projet;
+        // On écoute le projet : si une colonne est ajoutée/supprimée, on actualise
         this.projet.enregistrerObservateur(this);
 
         this.controleur = new ControleurFX();
 
+        // Style général du Kanban (Fond bleu type Trello)
         this.setPadding(new Insets(10));
         this.setSpacing(10);
         this.setStyle("-fx-background-color: #0079bf;");
 
+        // Conteneur horizontal pour les colonnes (scrollable)
         containerColonnes = new HBox(15);
         ScrollPane scrollH = new ScrollPane(containerColonnes);
         scrollH.setFitToHeight(true);
         scrollH.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+        // Permet au scrollpane de prendre toute la place disponible
         VBox.setVgrow(scrollH, Priority.ALWAYS);
 
         // Bouton pour créer une nouvelle colonne
         Button btnNouvelleColonne = new Button("+ Ajouter une liste");
         btnNouvelleColonne.setStyle("-fx-background-color: rgba(255,255,255,0.3); -fx-text-fill: white; -fx-font-weight: bold;");
+        btnNouvelleColonne.setPrefHeight(40);
 
         btnNouvelleColonne.setOnAction(e -> {
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle("Nouvelle Liste");
             dialog.setHeaderText("Nom de la nouvelle colonne :");
+            dialog.setContentText("Nom :");
 
             dialog.showAndWait().ifPresent(nom -> {
-                controleur.creerTache(
-                        this.projet, // On utilise le projet stocké
-                        nom,
-                        LocalDate.now(),
-                        Priorite.MOYENNE,
-                        true
-                );
+                if (!nom.trim().isEmpty()) {
+                    // Appel au contrôleur pour ajouter une Colonne au Projet
+                    controleur.ajouterColonne(this.projet, nom);
+                }
             });
         });
 
@@ -66,11 +66,10 @@ public class VueKanban extends VBox implements Observateur {
     private void rafraichir() {
         containerColonnes.getChildren().clear();
 
-        for (TacheAbstraite t : projet.getEnfants()) {
-            if (t instanceof TacheMere) {
-                VueColonne colonne = new VueColonne((TacheMere) t);
-                containerColonnes.getChildren().add(colonne);
-            }
+        // On itère maintenant sur les objets 'Colonne' du Projet
+        for (Colonne c : projet.getColonnes()) {
+            VueColonne vueColonne = new VueColonne(c);
+            containerColonnes.getChildren().add(vueColonne);
         }
     }
 

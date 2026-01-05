@@ -1,7 +1,6 @@
 package vue;
 
 import controleur.ControleurFX;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -89,12 +88,14 @@ public class VueCarte extends VBox implements Observateur {
 
     @Override
     public void actualiser(Sujet s) {
-
+        // Correction : On s'assure d'être dans le thread JavaFX pour la mise à jour UI
+        javafx.application.Platform.runLater(() -> {
             lblTitre.setText(tache.getTitre());
             mettreAJourInfos();
             if (tache instanceof TacheMere) {
                 mettreAJourCompteurSousTaches();
-            };
+            }
+        });
     }
 
     private void mettreAJourInfos() {
@@ -171,18 +172,16 @@ public class VueCarte extends VBox implements Observateur {
                     Button btnDel = new Button("x");
                     btnDel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
                     btnDel.setOnAction(e -> {
-                        // Action de suppression
                         controleur.supprimerTache(item);
-                        // On rafraichit la liste visuelle immédiatement
                         getListView().getItems().remove(item);
-                        actualiser(tache); // Met à jour le compteur sur la carte parente
+                        // On force la notification du parent
+                        maTacheConteneur.notifierObservateurs();
                     });
 
-                    // Bouton Modifier
                     Button btnModifier = new Button("mod ✎");
                     btnModifier.setStyle("-fx-background-color: transparent; -fx-text-fill: #5e6c84; -fx-font-size: 14px; -fx-cursor: hand;");
-                    final TacheAbstraite tacheA_Modifier = item;
-                    btnModifier.setOnAction(e -> ouvrirPopUpModification(tacheA_Modifier));
+
+                    btnModifier.setOnAction(e -> ouvrirPopUpModification(item));
 
                     HBox cellLayout = new HBox(10, text, btnDel, btnModifier);
                     cellLayout.setAlignment(Pos.CENTER_LEFT);
@@ -191,25 +190,31 @@ public class VueCarte extends VBox implements Observateur {
             }
         });
 
-        // Chargement initial
         listeVisuelle.getItems().addAll(maTacheConteneur.getEnfants());
 
-        // Formulaire Ajout
         TextField champSousTache = new TextField();
         champSousTache.setPromptText("Nouvelle sous-tâche...");
         Button btnAjouter = new Button("Ajouter");
         btnAjouter.setDefaultButton(true);
 
         btnAjouter.setOnAction(e -> {
-            controleur.creerTache(maTacheConteneur, champSousTache.getText(), LocalDate.now(), Priorite.MOYENNE, false);
-            // On rafraichit la liste visuelle en rechargeant tout depuis le modèle
+            // --- CORRECTION ICI ---
+            // On utilise creerSousTache au lieu de creerTache
+            // Et on retire le "false" à la fin
+            controleur.creerSousTache(
+                    maTacheConteneur,
+                    champSousTache.getText(),
+                    LocalDate.now(),
+                    Priorite.MOYENNE
+            );
+
             listeVisuelle.getItems().clear();
             listeVisuelle.getItems().addAll(maTacheConteneur.getEnfants());
             champSousTache.clear();
+
+            // Mise à jour visuelle de la carte parente
             actualiser(tache);
         });
-
-
 
         HBox ajoutBox = new HBox(10, champSousTache, btnAjouter);
         layout.getChildren().addAll(new Label("Liste des tâches :"), listeVisuelle, ajoutBox);

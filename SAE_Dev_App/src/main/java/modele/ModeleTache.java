@@ -13,31 +13,39 @@ public class ModeleTache {
         return instance;
     }
 
-    // 1. MÉTHODE POUR CRÉER UN PROJET (Nouveau !)
+    // 1. CRÉER UN PROJET (Type Projet et non TacheMere)
     public void creerNouveauProjet(String nomProjet) {
         if (nomProjet != null && !nomProjet.isEmpty()) {
-            TacheMere nouveau = new TacheMere(nomProjet, LocalDate.now(), Priorite.MOYENNE);
-            // On l'ajoute au Singleton
+            Projet nouveau = new Projet(nomProjet);
             SingletonTache.getInstance().ajouterProjet(nouveau);
         }
     }
 
-    // 2. MÉTHODE POUR CRÉER UNE TÂCHE (Dans un projet existant)
-    public void creerEtAjouterTache(TacheMere parent, String titre, LocalDate date, Priorite prio, boolean estDossier) {
-        if (titre == null || titre.isEmpty()) return;
+    // 2. CRÉER UNE TÂCHE DANS UNE COLONNE (Niveau 1 : Tâche principale)
+    public void creerEtAjouterTache(Colonne colonne, String titre, LocalDate date, Priorite prio) {
+        if (titre == null || titre.isEmpty() || colonne == null) return;
 
-        // Sécurité : Si pas de parent, on ne peut rien faire (il faut choisir un projet
-        if (parent == null) return;
+        // Par défaut, une tâche créée dans une colonne est une TacheMere (peut avoir des sous-tâches)
+        TacheMere nouvelleTache = new TacheMere(titre, date, prio);
+        colonne.ajouterTache(nouvelleTache);
+    }
 
-        TacheAbstraite tache;
-        if (estDossier) {
-            tache = new TacheMere(titre, date, prio);
-        } else {
-            tache = new SousTache(titre, date, prio);
+    // 3. CRÉER UNE SOUS-TÂCHE (Niveau 2 : Enfant d'une TacheMere)
+    public void creerEtAjouterSousTache(TacheMere parent, String titre, LocalDate date, Priorite prio) {
+        if (titre == null || titre.isEmpty() || parent == null) return;
+
+        // Une sous-tâche est ajoutée aux enfants du parent
+        SousTache sousTache = new SousTache(titre, date, prio);
+        parent.ajouterEnfant(sousTache);
+    }
+
+    // Modification d'une tâche (inchangé)
+    public void modifierTache(TacheAbstraite tache, String titre, LocalDate date, Priorite prio) {
+        if(tache != null) {
+            tache.setTitre(titre);
+            tache.setDateLimite(date);
+            tache.setPriorite(prio);
+            tache.notifierObservateurs();
         }
-
-        parent.ajouterEnfant(tache);
-        // On notifie le projet concerné pour qu'il mette à jour sa liste de tâches
-        parent.notifierObservateurs();
     }
 }

@@ -5,8 +5,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import modele.Colonne;
 import modele.Priorite;
-import modele.TacheAbstraite;
 import modele.TacheMere;
 import observateur.Observateur;
 import observateur.Sujet;
@@ -15,24 +15,26 @@ import java.time.LocalDate;
 
 public class VueColonne extends VBox implements Observateur {
 
-    private TacheMere colonneDonnees;
+    private Colonne colonne;
     private ControleurFX controleur;
     private VBox containerCartes;
 
-    public VueColonne(TacheMere colonneDonnees) {
-        this.colonneDonnees = colonneDonnees;
+    public VueColonne(Colonne colonne) {
+        this.colonne = colonne;
+        // On initialise le contrôleur ici pour pouvoir le passer aux cartes
         this.controleur = new ControleurFX();
 
-        this.colonneDonnees.enregistrerObservateur(this);
+        this.colonne.enregistrerObservateur(this);
 
-        // Style Colonne
+        // --- Style de la Colonne ---
         this.setMinWidth(280);
         this.setMaxWidth(280);
         this.setStyle("-fx-background-color: #ebecf0; -fx-background-radius: 8;");
         this.setPadding(new Insets(10));
         this.setSpacing(10);
 
-        Label lblTitre = new Label(colonneDonnees.getTitre());
+        // Titre de la colonne
+        Label lblTitre = new Label(colonne.getNom());
         lblTitre.setStyle("-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #172b4d;");
 
         containerCartes = new VBox(10);
@@ -41,41 +43,37 @@ public class VueColonne extends VBox implements Observateur {
         scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
         VBox.setVgrow(scroll, Priority.ALWAYS);
 
-        Button btnAjouterCarte = new Button("+ Ajouter une tache");
+        Button btnAjouterCarte = new Button("+ Ajouter une tâche");
         btnAjouterCarte.setMaxWidth(Double.MAX_VALUE);
-
-        // Bouton Supprimer
-        Button btnSuppr = new Button("supprimer ×");
-        btnSuppr.setStyle("-fx-background-color: transparent; -fx-text-fill: #eb5a46; -fx-font-size: 18px; -fx-cursor: hand; -fx-padding: 0 5 0 5;");
-        btnSuppr.setTooltip(new Tooltip("Supprimer"));
-        btnSuppr.setOnAction(e -> controleur.supprimerTache(colonneDonnees));
 
         btnAjouterCarte.setOnAction(e -> {
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle("Nouvelle Carte");
-            dialog.setHeaderText("Ajouter une tâche dans : " + colonneDonnees.getTitre());
+            dialog.setHeaderText("Ajouter une tâche dans : " + colonne.getNom());
             dialog.setContentText("Titre :");
 
             dialog.showAndWait().ifPresent(titre -> {
-
-                controleur.creerTache(
-                        colonneDonnees,
-                        titre,
-                        LocalDate.now(),
-                        Priorite.MOYENNE,
-                        true // <--- C'est un conteneur (Carte avec sous-tâches)
-                );
+                if (!titre.trim().isEmpty()) {
+                    controleur.creerTache(
+                            colonne,
+                            titre,
+                            LocalDate.now(),
+                            Priorite.MOYENNE
+                    );
+                }
             });
         });
 
-        this.getChildren().addAll(lblTitre, scroll, btnAjouterCarte, btnSuppr);
+        this.getChildren().addAll(lblTitre, scroll, btnAjouterCarte);
 
         rafraichir();
     }
 
     private void rafraichir() {
         containerCartes.getChildren().clear();
-        for (TacheAbstraite t : colonneDonnees.getEnfants()) {
+
+        // Correction ici : On passe 't' (la tâche) ET 'controleur'
+        for (TacheMere t : colonne.getTaches()) {
             containerCartes.getChildren().add(new VueCarte(t, controleur));
         }
     }

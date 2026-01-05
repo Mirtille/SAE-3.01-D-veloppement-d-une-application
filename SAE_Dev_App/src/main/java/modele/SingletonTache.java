@@ -9,17 +9,15 @@ public class SingletonTache implements Sujet {
 
     private static SingletonTache instance;
 
-    // TA LISTE DE PROJETS (Au lieu d'une seule racine)
-    private List<TacheMere> mesProjets;
-
-    // Gestion des observateurs (ceux qui regardent la liste des projets)
+    // CHANGEMENT ICI : Liste de Projet
+    private List<Projet> mesProjets;
     private List<Observateur> observateurs;
 
     private SingletonTache() {
         this.mesProjets = new ArrayList<>();
         this.observateurs = new ArrayList<>();
-        // On initialise avec un projet par défaut
-        mesProjets.add(new TacheMere("Mon Premier Projet", java.time.LocalDate.now(), Priorite.MOYENNE));
+        // Projet par défaut
+        mesProjets.add(new Projet("Mon Premier Projet"));
     }
 
     public static synchronized SingletonTache getInstance() {
@@ -29,25 +27,20 @@ public class SingletonTache implements Sujet {
         return instance;
     }
 
-    public List<TacheMere> getMesProjets() {
+    public List<Projet> getMesProjets() {
         return mesProjets;
     }
 
-    public void ajouterProjet(TacheMere projet) {
+    public void ajouterProjet(Projet projet) {
         mesProjets.add(projet);
-        notifierObservateurs(); // On dit à la VueListe : "La liste des projets a changé !"
-    }
-
-    // --- SUJET ---
-    @Override
-    public void enregistrerObservateur(Observateur o) {
-        observateurs.add(o);
+        notifierObservateurs();
     }
 
     @Override
-    public void supprimerObservateur(Observateur o) {
-        observateurs.remove(o);
-    }
+    public void enregistrerObservateur(Observateur o) { observateurs.add(o); }
+
+    @Override
+    public void supprimerObservateur(Observateur o) { observateurs.remove(o); }
 
     @Override
     public void notifierObservateurs() {

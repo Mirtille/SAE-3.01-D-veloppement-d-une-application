@@ -3,6 +3,7 @@ package app;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import modele.Projet;
 import modele.SingletonTache;
 import modele.TacheMere;
 import vue.VueKanban;
@@ -25,7 +26,7 @@ public class MainFX extends Application {
     // ...
     @Override
     public void start(Stage stage) {
-        TacheMere projet = SingletonTache.getInstance().getMesProjets().get(0);
+        Projet projet = SingletonTache.getInstance().getMesProjets().get(0);
 
         VueKanban kanban = new VueKanban(projet);
 
