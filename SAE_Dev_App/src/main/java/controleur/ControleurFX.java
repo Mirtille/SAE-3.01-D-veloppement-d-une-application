@@ -98,4 +98,18 @@ public class ControleurFX {
 
         colonneDestination.ajouterTache(tacheAInquerir);
     }
+
+    public void deplacerVersTacheMere(TacheAbstraite tacheADeplacer, TacheMere nouveauParent) {
+        if (tacheADeplacer == null || nouveauParent == null) return;
+        if (tacheADeplacer == nouveauParent) return; // Sécurité
+
+        // 1. On l'enlève de son ancien parent (ou colonne)
+        supprimerTache(tacheADeplacer);
+
+        // 2. On l'ajoute au nouveau parent
+        nouveauParent.ajouterEnfant(tacheADeplacer);
+
+        // 3. On force la mise à jour
+        nouveauParent.notifierObservateurs();
+    }
 }
