@@ -36,9 +36,58 @@ public class ControleurFX {
     }
 
     public void supprimerTache(TacheAbstraite tacheASupprimer) {
-        // La suppression nécessite de parcourir les projets/colonnes pour trouver le parent
-        // Pour l'instant, on peut simplifier ou gérer ça dans l'itération suivante
-        // car cela demande une recherche inverse (Parent de la tâche).
-        System.out.println("Suppression à implémenter avec la nouvelle structure Projet/Colonne");
+        if (tacheASupprimer == null) return;
+
+        // On parcourt tous les projets pour trouver où se cache la tâche
+        for (Projet projet : SingletonTache.getInstance().getMesProjets()) {
+
+            // On parcourt toutes les colonnes du projet
+            for (Colonne colonne : projet.getColonnes()) {
+
+                // CAS 1 : La tâche est directement dans la colonne (c'est une racine)
+                // Note : colonne.getTaches() contient des TacheMere
+                if (colonne.getTaches().contains(tacheASupprimer)) {
+                    // Le cast est sûr car la liste ne contient que des TacheMere
+                    colonne.supprimerTache((TacheMere) tacheASupprimer);
+                    return; // On a trouvé et supprimé, on arrête tout
+                }
+
+                // CAS 2 : La tâche est une sous-tâche (il faut fouiller dans les enfants)
+                for (TacheMere tacheRacine : colonne.getTaches()) {
+                    boolean resultat = trouverEtSupprimerRecursif(tacheRacine, tacheASupprimer);
+                    if (resultat) return; // Trouvé et supprimé dans les sous-dossiers
+                }
+            }
+        }
+    }
+
+    private boolean trouverEtSupprimerRecursif(TacheMere parent, TacheAbstraite cible) {
+        // 1. Est-ce que 'cible' est un enfant direct de 'parent' ?
+        if (parent.getEnfants().contains(cible)) {
+            parent.supprimerEnfant(cible);
+            return true;
+        }
+
+        // 2. Sinon, on regarde si un des enfants est lui-même un dossier qui contient la cible
+        for (TacheAbstraite enfant : parent.getEnfants()) {
+            if (enfant instanceof TacheMere) {
+                // Appel récursif
+                boolean trouve = trouverEtSupprimerRecursif((TacheMere) enfant, cible);
+                if (trouve) return true;
+            }
+        }
+        return false;
+    }
+
+    public void supprimerColonne(Colonne colonneASupprimer) {
+        if (colonneASupprimer == null) return;
+
+        // On cherche dans quel projet se trouve cette colonne
+        for (Projet p : SingletonTache.getInstance().getMesProjets()) {
+            if (p.getColonnes().contains(colonneASupprimer)) {
+                p.supprimerColonne(colonneASupprimer);
+                return; // On a trouvé et supprimé, on s'arrête
+            }
+        }
     }
 }

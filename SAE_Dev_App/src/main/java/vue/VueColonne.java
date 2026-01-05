@@ -2,8 +2,11 @@ package vue;
 
 import controleur.ControleurFX;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import modele.Colonne;
 import modele.Priorite;
@@ -21,7 +24,6 @@ public class VueColonne extends VBox implements Observateur {
 
     public VueColonne(Colonne colonne) {
         this.colonne = colonne;
-        // On initialise le contrôleur ici pour pouvoir le passer aux cartes
         this.controleur = new ControleurFX();
 
         this.colonne.enregistrerObservateur(this);
@@ -33,10 +35,36 @@ public class VueColonne extends VBox implements Observateur {
         this.setPadding(new Insets(10));
         this.setSpacing(10);
 
-        // Titre de la colonne
+        // --- EN-TÊTE (Titre + Bouton Supprimer) ---
+        HBox header = new HBox(10);
+        header.setAlignment(Pos.CENTER_LEFT);
+
         Label lblTitre = new Label(colonne.getNom());
         lblTitre.setStyle("-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #172b4d;");
 
+        // Espace flexible pour pousser le bouton à droite
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        // Bouton supprimer la colonne
+        Button btnSupprColonne = new Button("×");
+        btnSupprColonne.setStyle("-fx-background-color: transparent; -fx-text-fill: #6b778c; -fx-font-size: 16px; -fx-cursor: hand; -fx-font-weight: bold;");
+        btnSupprColonne.setTooltip(new Tooltip("Supprimer la liste"));
+
+        // ACTION SUPPRESSION
+        btnSupprColonne.setOnAction(e -> {
+            // Petite confirmation (optionnel mais conseillé)
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Supprimer la liste '" + colonne.getNom() + "' et toutes ses tâches ?", ButtonType.YES, ButtonType.NO);
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.YES) {
+                    controleur.supprimerColonne(colonne);
+                }
+            });
+        });
+
+        header.getChildren().addAll(lblTitre, spacer, btnSupprColonne);
+
+        // --- CONTENU DES CARTES ---
         containerCartes = new VBox(10);
         ScrollPane scroll = new ScrollPane(containerCartes);
         scroll.setFitToWidth(true);
@@ -64,15 +92,14 @@ public class VueColonne extends VBox implements Observateur {
             });
         });
 
-        this.getChildren().addAll(lblTitre, scroll, btnAjouterCarte);
+        // On ajoute le header au lieu de juste le label
+        this.getChildren().addAll(header, scroll, btnAjouterCarte);
 
         rafraichir();
     }
 
     private void rafraichir() {
         containerCartes.getChildren().clear();
-
-        // Correction ici : On passe 't' (la tâche) ET 'controleur'
         for (TacheMere t : colonne.getTaches()) {
             containerCartes.getChildren().add(new VueCarte(t, controleur));
         }
