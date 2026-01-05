@@ -19,6 +19,8 @@ import observateur.Observateur;
 import observateur.Sujet;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 public class VueCarte extends VBox implements Observateur {
 
@@ -27,9 +29,10 @@ public class VueCarte extends VBox implements Observateur {
 
     private Label lblTitre;
     private Label lblInfo;
-
-    // Conteneur pour la liste des sous-tâches
     private VBox containerSousTaches;
+
+    // Pour gérer les abonnements aux sous-tâches et éviter les bugs de rafraîchissement
+    private Set<TacheAbstraite> sousTachesObservees = new HashSet<>();
 
     public VueCarte(TacheAbstraite tache, ControleurFX controleur) {
         this.tache = tache;
@@ -37,14 +40,37 @@ public class VueCarte extends VBox implements Observateur {
 
         this.tache.enregistrerObservateur(this);
 
-        // --- Style de la Carte ---
+        // --- STYLE ---
         this.setStyle("-fx-background-color: white; " +
                 "-fx-background-radius: 8; " +
                 "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);");
         this.setPadding(new Insets(10));
         this.setSpacing(8);
 
-        // --- ENTÊTE (Titre + Actions Principales) ---
+        // ==========================================
+        //        DRAG & DROP : SOURCE
+        // ==========================================
+        this.setOnDragDetected(event -> {
+            // On signale quelle tâche est déplacée
+            ControleurFX.tacheEnDeplacement = this.tache;
+
+            // On initialise le Dragboard
+            javafx.scene.input.Dragboard db = this.startDragAndDrop(javafx.scene.input.TransferMode.MOVE);
+            javafx.scene.input.ClipboardContent content = new javafx.scene.input.ClipboardContent();
+            content.putString(tache.getTitre()); // Il faut mettre un contenu sinon le drag ne part pas
+            db.setContent(content);
+
+            event.consume();
+        });
+
+        this.setOnDragDone(event -> {
+            // Nettoyage après le drop
+            ControleurFX.tacheEnDeplacement = null;
+            event.consume();
+        });
+        // ==========================================
+
+        // --- ENTÊTE ---
         lblTitre = new Label(tache.getTitre());
         lblTitre.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #172b4d;");
         lblTitre.setWrapText(true);
@@ -68,26 +94,21 @@ public class VueCarte extends VBox implements Observateur {
         entete.getChildren().addAll(lblTitre, actions);
         HBox.setHgrow(lblTitre, Priority.ALWAYS);
 
-        // --- INFOS (Date / Priorité) ---
+        // --- INFOS ---
         lblInfo = new Label();
         lblInfo.setStyle("-fx-text-fill: #5e6c84; -fx-font-size: 11px;");
 
         this.getChildren().addAll(entete, lblInfo);
 
-        // --- SECTION SOUS-TÂCHES (Seulement si c'est une TacheMere) ---
+        // --- SOUS-TÂCHES ---
         if (tache instanceof TacheMere) {
             Separator sep = new Separator();
-
-            // Conteneur visuel des sous-tâches existantes
             containerSousTaches = new VBox(4);
             containerSousTaches.setPadding(new Insets(5, 0, 5, 0));
 
-            // --- NOUVEAU BOUTON D'AJOUT (remplace le champ texte) ---
             Button btnAjoutSousTache = new Button("+ Ajouter une sous-tâche");
             btnAjoutSousTache.setMaxWidth(Double.MAX_VALUE);
             btnAjoutSousTache.setStyle("-fx-background-color: #f4f5f7; -fx-text-fill: #172b4d; -fx-font-size: 11px; -fx-cursor: hand;");
-
-            // Action : Ouvrir une fenêtre de dialogue complète
             btnAjoutSousTache.setOnAction(e -> ouvrirDialogAjoutSousTache());
 
             this.getChildren().addAll(sep, containerSousTaches, btnAjoutSousTache);
@@ -96,7 +117,15 @@ public class VueCarte extends VBox implements Observateur {
         mettreAJourAffichage();
     }
 
-    // --- NOUVELLE MÉTHODE : Dialog pour créer une sous-tâche ---
+    // Méthode pour se désabonner proprement (évite les fuites mémoire)
+    public void detruire() {
+        if (tache != null) tache.supprimerObservateur(this);
+        for (TacheAbstraite st : sousTachesObservees) {
+            st.supprimerObservateur(this);
+        }
+        sousTachesObservees.clear();
+    }
+
     private void ouvrirDialogAjoutSousTache() {
         if (!(tache instanceof TacheMere)) return;
         TacheMere parent = (TacheMere) tache;
@@ -105,17 +134,13 @@ public class VueCarte extends VBox implements Observateur {
         dialog.setTitle("Nouvelle Sous-tâche");
         dialog.setHeaderText("Ajouter une étape à : " + parent.getTitre());
 
-        // Champs du formulaire
         TextField txtTitre = new TextField();
         txtTitre.setPromptText("Titre de l'étape...");
-
         DatePicker datePicker = new DatePicker(LocalDate.now());
-
         ComboBox<Priorite> comboPrio = new ComboBox<>();
         comboPrio.getItems().setAll(Priorite.values());
         comboPrio.setValue(Priorite.MOYENNE);
 
-        // Mise en page
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
@@ -130,19 +155,11 @@ public class VueCarte extends VBox implements Observateur {
 
         dialog.getDialogPane().setContent(grid);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        // Focus sur le titre
         Platform.runLater(txtTitre::requestFocus);
 
-        // Résultat
         dialog.showAndWait().ifPresent(type -> {
             if (type == ButtonType.OK && !txtTitre.getText().trim().isEmpty()) {
-                controleur.creerSousTache(
-                        parent,
-                        txtTitre.getText(),
-                        datePicker.getValue(),
-                        comboPrio.getValue()
-                );
+                controleur.creerSousTache(parent, txtTitre.getText(), datePicker.getValue(), comboPrio.getValue());
             }
         });
     }
@@ -156,21 +173,26 @@ public class VueCarte extends VBox implements Observateur {
         lblTitre.setText(tache.getTitre());
         lblInfo.setText(tache.getDateLimite() + " • " + tache.getPriorite());
 
-        // Mise à jour de la liste des sous-tâches
+        // On nettoie les anciens observateurs de sous-tâches
+        for (TacheAbstraite st : sousTachesObservees) st.supprimerObservateur(this);
+        sousTachesObservees.clear();
+
         if (tache instanceof TacheMere && containerSousTaches != null) {
             containerSousTaches.getChildren().clear();
             TacheMere tm = (TacheMere) tache;
 
             for (TacheAbstraite sousTache : tm.getEnfants()) {
+                // IMPORTANT : On s'abonne à la sous-tâche
+                sousTache.enregistrerObservateur(this);
+                sousTachesObservees.add(sousTache);
+
                 HBox ligne = new HBox(8);
                 ligne.setAlignment(Pos.TOP_LEFT);
                 ligne.setStyle("-fx-padding: 4 0 4 0; -fx-border-color: transparent transparent #f0f0f0 transparent;");
 
-                // Puce
                 Label puce = new Label("•");
                 puce.setStyle("-fx-text-fill: #5e6c84; -fx-font-size: 14px; -fx-padding: -2 0 0 0;");
 
-                // Infos (Titre + Détails)
                 VBox conteneurTexte = new VBox(2);
                 conteneurTexte.setAlignment(Pos.CENTER_LEFT);
 
@@ -185,9 +207,7 @@ public class VueCarte extends VBox implements Observateur {
                 conteneurTexte.getChildren().addAll(lblST, lblDetails);
                 HBox.setHgrow(conteneurTexte, Priority.ALWAYS);
 
-                // Boutons (Modifier / Supprimer)
                 HBox btnGroup = new HBox(2);
-
                 Button btnModifST = new Button("✎");
                 btnModifST.setStyle("-fx-background-color: transparent; -fx-text-fill: #5e6c84; -fx-font-size: 11px; -fx-cursor: hand;");
                 btnModifST.setTooltip(new Tooltip("Modifier"));
@@ -199,14 +219,12 @@ public class VueCarte extends VBox implements Observateur {
                 btnDelST.setOnAction(e -> controleur.supprimerTache(sousTache));
 
                 btnGroup.getChildren().addAll(btnModifST, btnDelST);
-
                 ligne.getChildren().addAll(puce, conteneurTexte, btnGroup);
                 containerSousTaches.getChildren().add(ligne);
             }
         }
     }
 
-    // --- POPUP MODIFICATION (Inchangé) ---
     private void ouvrirPopUpModification(TacheAbstraite tacheCible) {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);

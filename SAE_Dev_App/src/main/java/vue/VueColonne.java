@@ -10,7 +10,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import modele.Colonne;
-import modele.Priorite; // Nécessaire pour le ComboBox
+import modele.Priorite;
+import modele.TacheAbstraite;
 import modele.TacheMere;
 import observateur.Observateur;
 import observateur.Sujet;
@@ -29,7 +30,7 @@ public class VueColonne extends VBox implements Observateur {
 
         this.colonne.enregistrerObservateur(this);
 
-        // --- Style de la Colonne ---
+        // --- Style ---
         this.setMinWidth(280);
         this.setMaxWidth(280);
         this.setStyle("-fx-background-color: #ebecf0; -fx-background-radius: 8;");
@@ -49,88 +50,104 @@ public class VueColonne extends VBox implements Observateur {
         Button btnSupprColonne = new Button("×");
         btnSupprColonne.setStyle("-fx-background-color: transparent; -fx-text-fill: #6b778c; -fx-font-size: 16px; -fx-cursor: hand; -fx-font-weight: bold;");
         btnSupprColonne.setTooltip(new Tooltip("Supprimer la liste"));
-
         btnSupprColonne.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Supprimer la liste '" + colonne.getNom() + "' et toutes ses tâches ?", ButtonType.YES, ButtonType.NO);
             alert.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.YES) {
-                    controleur.supprimerColonne(colonne);
-                }
+                if (response == ButtonType.YES) controleur.supprimerColonne(colonne);
             });
         });
 
         header.getChildren().addAll(lblTitre, spacer, btnSupprColonne);
 
-        // --- CONTENU DES CARTES ---
+        // --- CARTES ---
         containerCartes = new VBox(10);
         ScrollPane scroll = new ScrollPane(containerCartes);
         scroll.setFitToWidth(true);
         scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
         VBox.setVgrow(scroll, Priority.ALWAYS);
 
-        // --- BOUTON AJOUTER (Modifié) ---
         Button btnAjouterCarte = new Button("+ Ajouter une tâche");
         btnAjouterCarte.setMaxWidth(Double.MAX_VALUE);
-
-        // NOUVELLE LOGIQUE ICI : Formulaire complet
-        btnAjouterCarte.setOnAction(e -> {
-            // 1. Création de la boite de dialogue personnalisée
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setTitle("Nouvelle Tâche");
-            dialog.setHeaderText("Créer une tâche dans : " + colonne.getNom());
-
-            // 2. Les champs du formulaire
-            TextField txtTitre = new TextField();
-            txtTitre.setPromptText("Titre de la tâche...");
-
-            DatePicker datePicker = new DatePicker(LocalDate.now());
-
-            ComboBox<Priorite> comboPrio = new ComboBox<>();
-            comboPrio.getItems().setAll(Priorite.values());
-            comboPrio.setValue(Priorite.MOYENNE); // Valeur par défaut
-
-            // 3. Mise en page (GridPane)
-            GridPane grid = new GridPane();
-            grid.setHgap(10);
-            grid.setVgap(10);
-            grid.setPadding(new Insets(20, 150, 10, 10));
-
-            grid.add(new Label("Titre :"), 0, 0);
-            grid.add(txtTitre, 1, 0);
-            grid.add(new Label("Date limite :"), 0, 1);
-            grid.add(datePicker, 1, 1);
-            grid.add(new Label("Priorité :"), 0, 2);
-            grid.add(comboPrio, 1, 2);
-
-            dialog.getDialogPane().setContent(grid);
-            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-            // 4. Focus sur le titre à l'ouverture
-            javafx.application.Platform.runLater(txtTitre::requestFocus);
-
-            // 5. Traitement du résultat
-            dialog.showAndWait().ifPresent(type -> {
-                if (type == ButtonType.OK && !txtTitre.getText().trim().isEmpty()) {
-                    controleur.creerTache(
-                            colonne,
-                            txtTitre.getText(),
-                            datePicker.getValue(),
-                            comboPrio.getValue()
-                    );
-                }
-            });
-        });
+        btnAjouterCarte.setOnAction(e -> ouvrirDialogAjoutTache());
 
         this.getChildren().addAll(header, scroll, btnAjouterCarte);
+
+        // ==========================================
+        //        DRAG & DROP : CIBLE
+        // ==========================================
+        this.setOnDragOver(event -> {
+            // Si une tâche est en déplacement, on accepte le survol
+            if (event.getDragboard().hasString() && ControleurFX.tacheEnDeplacement != null) {
+                event.acceptTransferModes(javafx.scene.input.TransferMode.MOVE);
+            }
+            event.consume();
+        });
+
+        this.setOnDragDropped(event -> {
+            boolean success = false;
+            TacheAbstraite tachePosee = ControleurFX.tacheEnDeplacement;
+
+            if (tachePosee != null) {
+                // Appel au contrôleur pour déplacer la tâche ici
+                controleur.deplacerTache(tachePosee, this.colonne);
+                success = true;
+            }
+
+            event.setDropCompleted(success);
+            event.consume();
+        });
+        // ==========================================
 
         rafraichir();
     }
 
     private void rafraichir() {
+        // Nettoyage des anciennes cartes (important pour le fix des sous-tâches)
+        for (javafx.scene.Node node : containerCartes.getChildren()) {
+            if (node instanceof VueCarte) {
+                ((VueCarte) node).detruire();
+            }
+        }
+
         containerCartes.getChildren().clear();
         for (TacheMere t : colonne.getTaches()) {
             containerCartes.getChildren().add(new VueCarte(t, controleur));
         }
+    }
+
+    private void ouvrirDialogAjoutTache() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Nouvelle Tâche");
+        dialog.setHeaderText("Créer une tâche dans : " + colonne.getNom());
+
+        TextField txtTitre = new TextField();
+        txtTitre.setPromptText("Titre de la tâche...");
+        DatePicker datePicker = new DatePicker(LocalDate.now());
+        ComboBox<Priorite> comboPrio = new ComboBox<>();
+        comboPrio.getItems().setAll(Priorite.values());
+        comboPrio.setValue(Priorite.MOYENNE);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        grid.add(new Label("Titre :"), 0, 0);
+        grid.add(txtTitre, 1, 0);
+        grid.add(new Label("Date limite :"), 0, 1);
+        grid.add(datePicker, 1, 1);
+        grid.add(new Label("Priorité :"), 0, 2);
+        grid.add(comboPrio, 1, 2);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        javafx.application.Platform.runLater(txtTitre::requestFocus);
+
+        dialog.showAndWait().ifPresent(type -> {
+            if (type == ButtonType.OK && !txtTitre.getText().trim().isEmpty()) {
+                controleur.creerTache(colonne, txtTitre.getText(), datePicker.getValue(), comboPrio.getValue());
+            }
+        });
     }
 
     @Override
