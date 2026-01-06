@@ -7,8 +7,6 @@ public class ControleurFX {
 
     private ModeleTache modele;
 
-    // --- 1. VARIABLE POUR LE DRAG & DROP ---
-    // Stocke la tâche temporairement pendant le glisser-déposer
     public static TacheAbstraite tacheEnDeplacement = null;
 
     public ControleurFX() {
@@ -42,6 +40,7 @@ public class ControleurFX {
 
         for (Projet projet : SingletonTache.getInstance().getMesProjets()) {
             for (Colonne colonne : projet.getColonnes()) {
+
                 // Cas 1 : Tâche racine dans une colonne
                 if (colonne.getTaches().contains(tacheASupprimer)) {
                     colonne.supprimerTache((TacheMere) tacheASupprimer);
@@ -93,7 +92,7 @@ public class ControleurFX {
         } else {
             // Conversion SousTache -> TacheMere
             tacheAInquerir = new TacheMere(tache.getTitre(), tache.getDateLimite(), tache.getPriorite());
-            // Note: On perd les enfants d'une sous-tâche ici car une SousTache n'a pas d'enfants dans ce modèle
+            // Note: On perd les enfants d'une sous-tâche ( pas encore implémenté)
         }
 
         colonneDestination.ajouterTache(tacheAInquerir);

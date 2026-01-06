@@ -23,10 +23,10 @@ public class MainFX extends Application {
         stage.show();
     }
 **/
-    // ...
+
     @Override
     public void start(Stage stage) {
-        Projet projet = SingletonTache.getInstance().getMesProjets().get(0);
+        Projet projet = SingletonTache.getInstance().getMesProjets().getFirst();
 
         VueKanban kanban = new VueKanban(projet);
 
@@ -36,18 +36,18 @@ public class MainFX extends Application {
         stage.show();
     }
 
-/**
-@Override
-public void start(Stage stage) {
-    // On change ici pour utiliser la nouvelle vue
-    VueSemaine vue = new VueSemaine();
+    /**
+    @Override
+    public void start(Stage stage) {
+        // On change ici pour utiliser la nouvelle vue
+        VueSemaine vue = new VueSemaine();
 
-    Scene scene = new Scene(vue, 800, 600); // Un peu plus large pour l'arbre
-    stage.setTitle("Gestionnaire de Tâches - Vue Semaine");
-    stage.setScene(scene);
-    stage.show();
-}
-**/
+        Scene scene = new Scene(vue, 800, 600); // Un peu plus large pour l'arbre
+        stage.setTitle("Gestionnaire de Tâches - Vue Semaine");
+        stage.setScene(scene);
+        stage.show();
+    }
+    **/
 
     public static void main(String[] args) {
         launch(args);
