@@ -7,6 +7,7 @@ public class ControleurFX {
 
     private ModeleTache modele;
 
+    // Variable pour le Drag & Drop
     public static TacheAbstraite tacheEnDeplacement = null;
 
     public ControleurFX() {
@@ -24,18 +25,30 @@ public class ControleurFX {
     }
 
     public void creerTache(Colonne colonne, String titre, LocalDate date, Priorite priorite) {
+        // Une tâche racine est toujours une TacheMere
         modele.creerEtAjouterTache(colonne, titre, date, priorite);
     }
 
+    // --- MODIFICATION MAJEURE ICI ---
     public void creerSousTache(TacheMere parent, String titre, LocalDate date, Priorite priorite) {
-        modele.creerEtAjouterSousTache(parent, titre, date, priorite);
+        if (parent != null) {
+            // ON CRÉE UNE TacheMere (et non plus une SousTache) pour permettre la récursivité
+            TacheMere nouvelleSousTache = new TacheMere(titre, date, priorite);
+            parent.ajouterEnfant(nouvelleSousTache);
+        }
     }
 
     public void modifierTache(TacheAbstraite tache, String titre, LocalDate date, Priorite prio) {
-        if (date.isBefore(LocalDate.now())) {
-            modele.modifierTache(tache, titre, LocalDate.now(), prio);
-        }else {
-            modele.modifierTache(tache, titre, date, prio);
+        modele.modifierTache(tache, titre, date, prio);
+    }
+
+    public void supprimerColonne(Colonne colonneASupprimer) {
+        if (colonneASupprimer == null) return;
+        for (Projet p : SingletonTache.getInstance().getMesProjets()) {
+            if (p.getColonnes().contains(colonneASupprimer)) {
+                p.supprimerColonne(colonneASupprimer);
+                return;
+            }
         }
     }
 
@@ -44,13 +57,10 @@ public class ControleurFX {
 
         for (Projet projet : SingletonTache.getInstance().getMesProjets()) {
             for (Colonne colonne : projet.getColonnes()) {
-
-                // Cas 1 : Tâche racine dans une colonne
                 if (colonne.getTaches().contains(tacheASupprimer)) {
                     colonne.supprimerTache((TacheMere) tacheASupprimer);
                     return;
                 }
-                // Cas 2 : Sous-tâche (récursif)
                 for (TacheMere tacheRacine : colonne.getTaches()) {
                     if (trouverEtSupprimerRecursif(tacheRacine, tacheASupprimer)) return;
                 }
@@ -71,48 +81,27 @@ public class ControleurFX {
         return false;
     }
 
-    public void supprimerColonne(Colonne colonneASupprimer) {
-        if (colonneASupprimer == null) return;
-        for (Projet p : SingletonTache.getInstance().getMesProjets()) {
-            if (p.getColonnes().contains(colonneASupprimer)) {
-                p.supprimerColonne(colonneASupprimer);
-                return;
-            }
-        }
-    }
-
-    // --- 2. LOGIQUE DE DÉPLACEMENT (DRAG & DROP) ---
     public void deplacerTache(TacheAbstraite tache, Colonne colonneDestination) {
         if (tache == null || colonneDestination == null) return;
 
-        // 1. On retire la tâche de son ancien emplacement
         supprimerTache(tache);
 
-        // 2. On l'ajoute à la nouvelle colonne
-        // Si c'était une sous-tâche, on la convertit en TacheMere pour qu'elle puisse aller dans une colonne
+        // On s'assure que c'est une TacheMere avant de l'ajouter à la colonne
         TacheMere tacheAInquerir;
         if (tache instanceof TacheMere) {
             tacheAInquerir = (TacheMere) tache;
         } else {
-            // Conversion SousTache -> TacheMere
             tacheAInquerir = new TacheMere(tache.getTitre(), tache.getDateLimite(), tache.getPriorite());
-            // Note: On perd les enfants d'une sous-tâche ( pas encore implémenté)
         }
-
         colonneDestination.ajouterTache(tacheAInquerir);
     }
 
     public void deplacerVersTacheMere(TacheAbstraite tacheADeplacer, TacheMere nouveauParent) {
         if (tacheADeplacer == null || nouveauParent == null) return;
-        if (tacheADeplacer == nouveauParent) return; // Sécurité
+        if (tacheADeplacer == nouveauParent) return;
 
-        // 1. On l'enlève de son ancien parent (ou colonne)
         supprimerTache(tacheADeplacer);
-
-        // 2. On l'ajoute au nouveau parent
         nouveauParent.ajouterEnfant(tacheADeplacer);
-
-        // 3. On force la mise à jour
         nouveauParent.notifierObservateurs();
     }
 }

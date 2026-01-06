@@ -72,9 +72,7 @@ public class VueColonne extends VBox implements Observateur {
 
         this.getChildren().addAll(header, scroll, btnAjouterCarte);
 
-        // ==========================================
-        //        DRAG & DROP : CIBLE
-        // ==========================================
+        //DRAG & DROP
         this.setOnDragOver(event -> {
             // Si une tâche est en déplacement, on accepte le survol
             if (event.getDragboard().hasString() && ControleurFX.tacheEnDeplacement != null) {
@@ -96,13 +94,12 @@ public class VueColonne extends VBox implements Observateur {
             event.setDropCompleted(success);
             event.consume();
         });
-        // ==========================================
 
         rafraichir();
     }
 
     private void rafraichir() {
-        // Nettoyage des anciennes cartes (important pour le fix des sous-tâches)
+        // Nettoyage des anciennes cartes
         for (javafx.scene.Node node : containerCartes.getChildren()) {
             if (node instanceof VueCarte) {
                 ((VueCarte) node).detruire();
