@@ -121,21 +121,16 @@ public class VueCarte extends VBox implements Observateur {
      * Méthode récursive pour afficher une tâche et ses enfants
      */
     private void construireBrancheRecursive(TacheAbstraite tacheCourante, VBox conteneurParent, int niveau) {
-        // A. Abonnement aux mises à jour
         tacheCourante.enregistrerObservateur(this);
         sousTachesObservees.add(tacheCourante);
-
-        // B. Création de la ligne visuelle
         HBox ligne = new HBox(8);
         ligne.setAlignment(Pos.TOP_LEFT);
-        // Indentation : on décale à gauche en fonction du niveau (0, 1, 2...)
+        // décalage à gauche en fonction du niveau
         ligne.setPadding(new Insets(4, 0, 4, niveau * 20));
         ligne.setStyle("-fx-border-color: transparent transparent #f0f0f0 transparent;");
-
-        // Drag & Drop pour cette ligne spécifique
         configurerDragSource(ligne, tacheCourante);
 
-        // Drop Target : Si cette sous-tâche est survolée, elle peut recevoir des enfants !
+        // elle peut recevoir des enfants
         if (tacheCourante instanceof TacheMere) {
             configurerDropTarget(ligne, (TacheMere) tacheCourante);
         }
@@ -154,14 +149,11 @@ public class VueCarte extends VBox implements Observateur {
         conteneurTexte.getChildren().addAll(lblST, lblDetails);
         HBox.setHgrow(conteneurTexte, Priority.ALWAYS);
 
-        // Boutons actions
         HBox btnGroup = new HBox(2);
 
-        // BOUTON "+" : Permet d'ajouter une sous-tâche à CETTE tâche
         Button btnAddSub = new Button("+");
         btnAddSub.setStyle("-fx-background-color: transparent; -fx-text-fill: #0079bf; -fx-font-size: 12px; -fx-font-weight:bold; -fx-cursor: hand;");
         btnAddSub.setTooltip(new Tooltip("Ajouter une sous-tâche ici"));
-        // On passe la tacheCourante comme parent
         if (tacheCourante instanceof TacheMere) {
             btnAddSub.setOnAction(e -> ouvrirDialogAjoutSousTache((TacheMere) tacheCourante));
         } else {
@@ -179,10 +171,8 @@ public class VueCarte extends VBox implements Observateur {
         btnGroup.getChildren().addAll(btnAddSub, btnModif, btnDel);
         ligne.getChildren().addAll(puce, conteneurTexte, btnGroup);
 
-        // C. Ajout de la ligne au parent
         conteneurParent.getChildren().add(ligne);
 
-        // D. RECURSION : Si cette tâche a des enfants, on les affiche en dessous
         if (tacheCourante instanceof TacheMere) {
             TacheMere tm = (TacheMere) tacheCourante;
             if (!tm.getEnfants().isEmpty()) {
@@ -193,8 +183,6 @@ public class VueCarte extends VBox implements Observateur {
             }
         }
     }
-
-    // --- UTILITAIRES DRAG & DROP FACTORISÉS ---
 
     private void configurerDragSource(javafx.scene.Node node, TacheAbstraite tacheAssociee) {
         node.setOnDragDetected(event -> {
