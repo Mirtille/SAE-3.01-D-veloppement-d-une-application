@@ -202,9 +202,6 @@ public class VueCarte extends VBox implements Observateur {
                 ligne.setAlignment(Pos.TOP_LEFT);
                 ligne.setStyle("-fx-padding: 4 0 4 0; -fx-border-color: transparent transparent #f0f0f0 transparent;");
 
-                // ==========================================
-                //  C'EST ICI : RENDRE LA SOUS-TÂCHE DÉPLAÇABLE
-                // ==========================================
                 ligne.setOnDragDetected(event -> {
                     ControleurFX.tacheEnDeplacement = sousTache;
                     javafx.scene.input.Dragboard db = ligne.startDragAndDrop(javafx.scene.input.TransferMode.MOVE);
@@ -218,7 +215,6 @@ public class VueCarte extends VBox implements Observateur {
                     ControleurFX.tacheEnDeplacement = null;
                     event.consume();
                 });
-                // ==========================================
 
                 Label puce = new Label("•");
                 puce.setStyle("-fx-text-fill: #5e6c84; -fx-font-size: 14px; -fx-padding: -2 0 0 0;");
