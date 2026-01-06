@@ -32,7 +32,11 @@ public class ControleurFX {
     }
 
     public void modifierTache(TacheAbstraite tache, String titre, LocalDate date, Priorite prio) {
-        modele.modifierTache(tache, titre, date, prio);
+        if (date.isBefore(LocalDate.now())) {
+            modele.modifierTache(tache, titre, LocalDate.now(), prio);
+        }else {
+            modele.modifierTache(tache, titre, date, prio);
+        }
     }
 
     public void supprimerTache(TacheAbstraite tacheASupprimer) {
