@@ -1,0 +1,25 @@
+1. FONCTIONNALITÉS DÉVELOPPÉES
+---------------------------------------------------------------------
+restructuration :
+modification de la structure de tache mere imbriquant des taches en une liste de tache mere dans des colonnes.
+
+affichage des sous taches :
+modification de l'affichage des taches pour afficher les sous taches dans les carte de tache
+
+implementation du drag and drop :
+ajout de la fonctionnalité de drag and drop pour déplacer les taches dans les colonnes ou dans d'autres taches mères.
+
+
+2. CAS D'UTILISATION
+---------------------------------------------------------------------
+- CU1 : cree des colonnes.
+- CU2 : afficher les sous taches dans une carte.
+- CU3 : deplacer une tache dans une autre tache.
+
+3. RÔLES DES MEMBRES DU GROUPE
+---------------------------------------------------------------------
+Pierre :
+
+Louis :
+
+Mathis :
