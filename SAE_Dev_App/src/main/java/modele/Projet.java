@@ -19,7 +19,6 @@ public class Projet implements Sujet, Serializable {
         this.colonnes = new ArrayList<>();
         this.observateurs = new ArrayList<>();
 
-        // Initialisation par défaut (Optionnel mais pratique pour le Kanban)
         ajouterColonne(new Colonne("À Faire"));
         ajouterColonne(new Colonne("En Cours"));
         ajouterColonne(new Colonne("Terminé"));
@@ -43,7 +42,6 @@ public class Projet implements Sujet, Serializable {
         return nom;
     }
 
-    // --- Observer ---
     @Override
     public void enregistrerObservateur(Observateur o) {
         observateurs.add(o);

@@ -26,11 +26,9 @@ public class VueMenu extends BorderPane {
 
         Projet projetCourant = SingletonTache.getInstance().getMesProjets().get(0);
 
-        //Initialisation des sous-vues
         this.vueKanban = new VueKanban(projetCourant);
         this.vueListe = new VueListe();
 
-        //Création de la barre de menu
         HBox barreMenu = new HBox(15);
         barreMenu.setPadding(new Insets(10, 20, 10, 20));
         barreMenu.setStyle("-fx-background-color: #f4f5f7; -fx-border-color: #dfe1e6; -fx-border-width: 0 0 1 0;");
@@ -39,7 +37,6 @@ public class VueMenu extends BorderPane {
         Button btnKanban = new Button("Kanban");
         Button btnListe = new Button("Liste");
 
-        // Style des boutons
         String styleBtn = "-fx-background-color: white; -fx-border-color: #c1c7d0; -fx-border-radius: 3; -fx-background-radius: 3; -fx-cursor: hand;";
         btnKanban.setStyle(styleBtn);
         btnListe.setStyle(styleBtn);

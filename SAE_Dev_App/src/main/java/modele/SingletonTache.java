@@ -12,7 +12,6 @@ public class SingletonTache implements Sujet, Serializable {
 
     private static SingletonTache instance;
 
-    // CHANGEMENT ICI : Liste de Projet
     private List<Projet> mesProjets;
     private List<Observateur> observateurs;
 

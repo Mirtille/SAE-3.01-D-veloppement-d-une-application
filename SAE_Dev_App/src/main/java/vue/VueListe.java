@@ -28,17 +28,14 @@ public class VueListe extends VBox implements Observateur {
 
     private ControleurFX controleur;
 
-    // --- Composants graphiques ---
     private ComboBox<Projet> selecteurProjet;
     private ScrollPane scrollPane;
     private VBox containerDates;
     private CheckBox checkAfficherSousTaches;
 
-    // --- Données ---
     private Projet projetEnCours;
     private List<Colonne> colonnesObservees = new ArrayList<>();
 
-    // --- Formulaire ajout ---
     private TextField champTitre;
     private DatePicker dateDebutPicker;
     private DatePicker dateFinPicker;
@@ -52,9 +49,6 @@ public class VueListe extends VBox implements Observateur {
 
         SingletonTache.getInstance().enregistrerObservateur(this);
 
-        // ============================================
-        // 1. BARRE D'OUTILS
-        // ============================================
         Label labelProjet = new Label("Projet :");
         labelProjet.setStyle("-fx-font-weight: bold; -fx-text-fill: #172b4d;");
 
@@ -84,9 +78,6 @@ public class VueListe extends VBox implements Observateur {
         HBox barreOutils = new HBox(10, labelProjet, selecteurProjet, btnNouveauProjet, new Separator(javafx.geometry.Orientation.VERTICAL), checkAfficherSousTaches);
         barreOutils.setAlignment(Pos.CENTER_LEFT);
 
-        // ============================================
-        // 2. CONTENU (Menus dépliants)
-        // ============================================
         containerDates = new VBox(10);
         containerDates.setPadding(new Insets(10));
 
@@ -95,9 +86,6 @@ public class VueListe extends VBox implements Observateur {
         scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
         VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
-        // ============================================
-        // 3. FORMULAIRE D'AJOUT RAPIDE
-        // ============================================
         champTitre = new TextField();
         champTitre.setPromptText("Nouvelle tâche...");
         HBox.setHgrow(champTitre, Priority.ALWAYS);
@@ -127,8 +115,6 @@ public class VueListe extends VBox implements Observateur {
 
         rafraichirListeDesProjets();
     }
-
-    // --- GESTION ---
 
     private void changerProjet(Projet p) {
         if (this.projetEnCours != null) {
@@ -175,7 +161,6 @@ public class VueListe extends VBox implements Observateur {
 
             VBox contenuDate = new VBox(5);
             contenuDate.setPadding(new Insets(10));
-            // Fond blanc pour le contenu du menu
             contenuDate.setStyle("-fx-background-color: white;");
 
             for (TacheMere t : tachesDuJour) {
@@ -202,7 +187,6 @@ public class VueListe extends VBox implements Observateur {
         }
 
         Label lblTitre = new Label(tache.getTitre());
-        // CORRECTION VISUELLE : On force la couleur noire pour éviter le blanc sur blanc
         if (niveau == 0) lblTitre.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #172b4d;");
         else lblTitre.setStyle("-fx-font-size: 13px; -fx-text-fill: #172b4d;");
 
@@ -239,13 +223,10 @@ public class VueListe extends VBox implements Observateur {
         List<Projet> projets = SingletonTache.getInstance().getMesProjets();
         selecteurProjet.getItems().setAll(projets);
 
-        // Sélection intelligente
         if (selection != null && projets.contains(selection)) {
             selecteurProjet.setValue(selection);
         } else if (!projets.isEmpty()) {
-            // Sélectionne automatiquement le premier projet au lancement
             selecteurProjet.getSelectionModel().selectFirst();
-            // Force le déclenchement de l'action si le listener ne s'est pas activé
             if (projetEnCours == null) changerProjet(projets.get(0));
         }
     }
@@ -257,12 +238,10 @@ public class VueListe extends VBox implements Observateur {
             return;
         }
 
-        // CORRECTION UX : Si aucune colonne n'existe, on en crée une par défaut "À faire"
         if (projetEnCours.getColonnes().isEmpty()) {
             controleur.ajouterColonne(projetEnCours, "À faire");
         }
 
-        // On est maintenant sûr d'avoir au moins une colonne (la 0)
         controleur.creerTache(
                 projetEnCours.getColonnes().get(0),
                 champTitre.getText(),
@@ -283,10 +262,8 @@ public class VueListe extends VBox implements Observateur {
         grid.setHgap(10);
         grid.setVgap(15);
 
-        // --- CHAMPS DU FORMULAIRE ---
         TextField txtTitre = new TextField(tacheCible.getTitre());
 
-        // NOUVEAU : Récupération de la date de début
         DatePicker dateDebut = new DatePicker(tacheCible.getDateDebut());
 
         DatePicker dateFin = new DatePicker(tacheCible.getDateLimite());
@@ -295,25 +272,22 @@ public class VueListe extends VBox implements Observateur {
         cbPrio.getItems().setAll(Priorite.values());
         cbPrio.setValue(tacheCible.getPriorite());
 
-        // --- PLACEMENT DANS LA GRILLE ---
         grid.add(new Label("Titre :"), 0, 0);
         grid.add(txtTitre, 1, 0);
 
-        // Décalage des lignes suivantes
         grid.add(new Label("Fin :"), 0, 1);
         grid.add(dateFin, 1, 1);
 
         grid.add(new Label("Prio :"), 0, 2);
         grid.add(cbPrio, 1, 2);
 
-        // --- ACTION BOUTON ---
         Button btnSave = new Button("Enregistrer");
         btnSave.setOnAction(e -> {
             // Appel au contrôleur avec les 2 dates
             controleur.modifierTache(
                     tacheCible,
                     txtTitre.getText(),
-                    dateDebut.getValue(), // On passe la date de début modifiée
+                    dateDebut.getValue(),
                     dateFin.getValue(),
                     cbPrio.getValue()
             );

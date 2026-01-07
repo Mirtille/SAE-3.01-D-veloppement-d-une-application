@@ -31,7 +31,6 @@ public class VueCarte extends VBox implements Observateur {
     private Label lblInfo;
     private VBox containerSousTaches;
 
-    // Set pour gérer les abonnements de TOUTES les sous-tâches (récursif)
     private Set<TacheAbstraite> sousTachesObservees = new HashSet<>();
 
     public VueCarte(TacheAbstraite tache, ControleurFX controleur) {
@@ -39,20 +38,17 @@ public class VueCarte extends VBox implements Observateur {
         this.controleur = controleur;
         this.tache.enregistrerObservateur(this);
 
-        // --- STYLE ---
         this.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);");
         this.setPadding(new Insets(10));
         this.setSpacing(8);
 
-        // --- DRAG SOURCE (Carte Principale) ---
         configurerDragSource(this, this.tache);
 
-        // --- DROP TARGET (La racine peut recevoir) ---
         if (tache instanceof TacheMere) {
             configurerDropTarget(this, (TacheMere) this.tache);
         }
 
-        // --- ENTÊTE ---
+        // entete
         lblTitre = new Label(tache.getTitre());
         lblTitre.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #172b4d;");
         lblTitre.setWrapText(true);
@@ -74,12 +70,11 @@ public class VueCarte extends VBox implements Observateur {
         entete.getChildren().addAll(lblTitre, actions);
         HBox.setHgrow(lblTitre, Priority.ALWAYS);
 
-        // --- INFOS ---
+        // infos
         lblInfo = new Label();
         lblInfo.setStyle("-fx-text-fill: #5e6c84; -fx-font-size: 11px;");
         this.getChildren().addAll(entete, lblInfo);
 
-        // --- CONTENEUR SOUS-TÂCHES ---
         if (tache instanceof TacheMere) {
             Separator sep = new Separator();
             containerSousTaches = new VBox(2); // Espacement vertical réduit
@@ -88,7 +83,7 @@ public class VueCarte extends VBox implements Observateur {
             Button btnAjoutSousTache = new Button("+ Ajouter une sous-tâche");
             btnAjoutSousTache.setMaxWidth(Double.MAX_VALUE);
             btnAjoutSousTache.setStyle("-fx-background-color: #f4f5f7; -fx-text-fill: #172b4d; -fx-font-size: 11px; -fx-cursor: hand;");
-            // Ajout à la racine
+
             btnAjoutSousTache.setOnAction(e -> ouvrirDialogAjoutSousTache((TacheMere) tache));
 
             this.getChildren().addAll(sep, containerSousTaches, btnAjoutSousTache);
@@ -97,7 +92,6 @@ public class VueCarte extends VBox implements Observateur {
         mettreAJourAffichage();
     }
 
-    // --- MISE A JOUR RÉCURSIVE ---
     private void mettreAJourAffichage() {
         lblTitre.setText(tache.getTitre());
         lblInfo.setText(" Date début : " + tache.getDateDebut() + " \n Date fin : " + tache.getDateLimite() + " \n Priorité : " + tache.getPriorite());
@@ -123,12 +117,10 @@ public class VueCarte extends VBox implements Observateur {
         sousTachesObservees.add(tacheCourante);
         HBox ligne = new HBox(8);
         ligne.setAlignment(Pos.TOP_LEFT);
-        // décalage à gauche en fonction du niveau
         ligne.setPadding(new Insets(4, 0, 4, niveau * 20));
         ligne.setStyle("-fx-border-color: transparent transparent #f0f0f0 transparent;");
         configurerDragSource(ligne, tacheCourante);
 
-        // elle peut recevoir des enfants
         if (tacheCourante instanceof TacheMere) {
             configurerDropTarget(ligne, (TacheMere) tacheCourante);
         }
@@ -176,7 +168,6 @@ public class VueCarte extends VBox implements Observateur {
             TacheMere tm = (TacheMere) tacheCourante;
             if (!tm.getEnfants().isEmpty()) {
                 for (TacheAbstraite enfant : tm.getEnfants()) {
-                    // On augmente le niveau d'indentation
                     construireBrancheRecursive(enfant, conteneurParent, niveau + 1);
                 }
             }
@@ -201,7 +192,6 @@ public class VueCarte extends VBox implements Observateur {
     private void configurerDropTarget(javafx.scene.Node node, TacheMere cible) {
         node.setOnDragOver(event -> {
             TacheAbstraite source = ControleurFX.tacheEnDeplacement;
-            // On accepte si source != null, source != cible
             if (event.getDragboard().hasString() && source != null && source != cible) {
                 event.acceptTransferModes(javafx.scene.input.TransferMode.MOVE);
                 node.setStyle("-fx-background-color: #e2e4e6; -fx-border-color: #0079bf; -fx-border-width: 2;");
@@ -210,7 +200,6 @@ public class VueCarte extends VBox implements Observateur {
         });
 
         node.setOnDragExited(event -> {
-            // Reset style (attention, style par défaut simplifié ici, ajustez selon votre charte)
             node.setStyle("-fx-background-color: transparent;");
             event.consume();
         });
@@ -227,7 +216,6 @@ public class VueCarte extends VBox implements Observateur {
         });
     }
 
-    // --- LE RESTES DES MÉTHODES (ouvrirDialog, detruire...) ---
 
     public void detruire() {
         if (tache != null) tache.supprimerObservateur(this);
@@ -266,7 +254,6 @@ public class VueCarte extends VBox implements Observateur {
         Platform.runLater(txtTitre::requestFocus);
         dialog.showAndWait().ifPresent(type -> {
             if (type == ButtonType.OK && !txtTitre.getText().trim().isEmpty()) {
-                // Appel contrôleur avec les 2 dates
                 controleur.creerSousTache(
                         parent,
                         txtTitre.getText(),
@@ -290,7 +277,6 @@ public class VueCarte extends VBox implements Observateur {
 
         TextField champTitre = new TextField(tacheCible.getTitre());
 
-        // NOUVEAU : Récupération date début existante
         DatePicker champDateDebut = new DatePicker(tacheCible.getDateDebut());
 
         DatePicker champDateFin = new DatePicker(tacheCible.getDateLimite());

@@ -15,7 +15,6 @@ public abstract class TacheAbstraite implements Sujet, Serializable {
     protected Priorite priorite;
     protected Etat etat;
 
-    // Gestion des observateurs factorisée ici
     protected List<Observateur> observateurs;
 
     public TacheAbstraite(String titre, LocalDate dateDebut, LocalDate dateLimite, Priorite priorite) {
@@ -27,7 +26,6 @@ public abstract class TacheAbstraite implements Sujet, Serializable {
         this.observateurs = new ArrayList<>();
     }
 
-    // --- Getter et Setter pour l'État ---
     public Etat getEtat() {
         return etat;
     }
@@ -41,7 +39,6 @@ public abstract class TacheAbstraite implements Sujet, Serializable {
 
     public abstract String afficher();
 
-    // --- Implémentation Sujet ---
     @Override
     public void enregistrerObservateur(Observateur o) {
         observateurs.add(o);

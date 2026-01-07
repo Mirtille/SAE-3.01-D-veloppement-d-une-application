@@ -40,7 +40,7 @@ public class ControleurFX {
             if (dateFin.isBefore(LocalDate.now()) || dateFin.isBefore(dateDebut)) {
                 dateFin = dateDebut.plusDays(1);
             }
-            // ON CRÉE UNE TacheMere (et non plus une SousTache) pour permettre la récursivité
+
             TacheMere nouvelleSousTache = new TacheMere(titre, dateDebut,dateFin, priorite);
             parent.ajouterEnfant(nouvelleSousTache);
         }
@@ -103,7 +103,7 @@ public class ControleurFX {
         if (tache instanceof TacheMere) {
             tacheAInquerir = (TacheMere) tache;
         } else {
-            // On conserve la date de début lors de la conversion
+
             tacheAInquerir = new TacheMere(tache.getTitre(), tache.getDateDebut(), tache.getDateLimite(), tache.getPriorite());
         }
         colonneDestination.ajouterTache(tacheAInquerir);

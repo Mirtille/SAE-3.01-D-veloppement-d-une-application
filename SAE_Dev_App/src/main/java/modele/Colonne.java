@@ -11,7 +11,7 @@ public class Colonne implements Sujet, Serializable {
     private static final long serialVersionUID = 1L;
 
     private String nom;
-    private List<TacheMere> taches; // Contient les tâches (qui peuvent avoir des sous-tâches)
+    private List<TacheMere> taches;
     private List<Observateur> observateurs;
 
     public Colonne(String nom) {
@@ -48,7 +48,6 @@ public class Colonne implements Sujet, Serializable {
         return nom;
     }
 
-    // --- Implémentation du Pattern Observer ---
     @Override
     public void enregistrerObservateur(Observateur o) {
         observateurs.add(o);

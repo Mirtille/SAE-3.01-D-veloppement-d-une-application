@@ -15,28 +15,25 @@ import observateur.Sujet;
 
 public class VueKanban extends VBox implements Observateur {
 
-    private Projet projet; // Utilisation de la nouvelle classe Projet
+    private Projet projet;
     private HBox containerColonnes;
     private ControleurFX controleur;
 
     public VueKanban(Projet projet) {
         this.projet = projet;
-        // On écoute le projet : si une colonne est ajoutée/supprimée, on actualise
         this.projet.enregistrerObservateur(this);
 
         this.controleur = new ControleurFX();
 
-        // Style général du Kanban (Fond bleu type Trello)
         this.setPadding(new Insets(10));
         this.setSpacing(10);
         this.setStyle("-fx-background-color: #0079bf;");
 
-        // Conteneur horizontal pour les colonnes (scrollable)
         containerColonnes = new HBox(15);
         ScrollPane scrollH = new ScrollPane(containerColonnes);
         scrollH.setFitToHeight(true);
         scrollH.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
-        // Permet au scrollpane de prendre toute la place disponible
+
         VBox.setVgrow(scrollH, Priority.ALWAYS);
 
         // Bouton pour créer une nouvelle colonne
@@ -66,7 +63,6 @@ public class VueKanban extends VBox implements Observateur {
     private void rafraichir() {
         containerColonnes.getChildren().clear();
 
-        // On itère maintenant sur les objets 'Colonne' du Projet
         for (Colonne c : projet.getColonnes()) {
             VueColonne vueColonne = new VueColonne(c);
             containerColonnes.getChildren().add(vueColonne);
