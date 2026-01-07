@@ -280,6 +280,7 @@ public class VueListe extends VBox implements Observateur {
         grid.add(new Label("Prio :"), 0, 2); grid.add(cbPrio, 1, 2);
 
         Button btnSave = new Button("Enregistrer");
+
         btnSave.setOnAction(e -> {
             controleur.modifierTache(tacheCible, txtTitre.getText(), dtPicker.getValue(), cbPrio.getValue());
             popup.close();
