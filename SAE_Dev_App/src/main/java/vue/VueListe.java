@@ -40,7 +40,8 @@ public class VueListe extends VBox implements Observateur {
 
     // --- Formulaire ajout ---
     private TextField champTitre;
-    private DatePicker datePicker;
+    private DatePicker dateDebutPicker;
+    private DatePicker dateFinPicker;
     private ComboBox<Priorite> prioriteBox;
 
     public VueListe() {
@@ -101,8 +102,13 @@ public class VueListe extends VBox implements Observateur {
         champTitre.setPromptText("Nouvelle tâche...");
         HBox.setHgrow(champTitre, Priority.ALWAYS);
 
-        datePicker = new DatePicker(LocalDate.now());
-        datePicker.setPrefWidth(110);
+        dateDebutPicker = new DatePicker(LocalDate.now());
+        dateDebutPicker.setPrefWidth(110);
+        dateDebutPicker.setPromptText("Début");
+
+        dateFinPicker = new DatePicker(LocalDate.now());
+        dateFinPicker.setPrefWidth(110);
+        dateFinPicker.setPromptText("Fin");
 
         prioriteBox = new ComboBox<>();
         prioriteBox.getItems().addAll(Priorite.values());
@@ -113,7 +119,7 @@ public class VueListe extends VBox implements Observateur {
         btnAjouter.setStyle("-fx-background-color: #0079bf; -fx-text-fill: white; -fx-font-weight: bold;");
         btnAjouter.setOnAction(e -> ajouterTache());
 
-        HBox formulaire = new HBox(10, champTitre, datePicker, prioriteBox, btnAjouter);
+        HBox formulaire = new HBox(10, champTitre, dateDebutPicker, dateFinPicker, prioriteBox, btnAjouter);
         formulaire.setAlignment(Pos.CENTER_LEFT);
         formulaire.setPadding(new Insets(10, 0, 0, 0));
 
@@ -254,7 +260,8 @@ public class VueListe extends VBox implements Observateur {
         controleur.creerTache(
                 projetEnCours.getColonnes().get(0),
                 champTitre.getText(),
-                datePicker.getValue(),
+                dateDebutPicker.getValue(),
+                dateFinPicker.getValue(),
                 prioriteBox.getValue()
         );
         champTitre.clear();
@@ -263,29 +270,56 @@ public class VueListe extends VBox implements Observateur {
     private void ouvrirPopUpModification(TacheAbstraite tacheCible) {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
-        popup.setTitle("Modifier");
+        popup.setTitle("Modifier la tâche");
+
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(20));
         grid.setHgap(10);
         grid.setVgap(15);
 
+        // --- CHAMPS DU FORMULAIRE ---
         TextField txtTitre = new TextField(tacheCible.getTitre());
-        DatePicker dtPicker = new DatePicker(tacheCible.getDateLimite());
+
+        // NOUVEAU : Récupération de la date de début
+        DatePicker dateDebut = new DatePicker(tacheCible.getDateDebut());
+
+        DatePicker dateFin = new DatePicker(tacheCible.getDateLimite());
+
         ComboBox<Priorite> cbPrio = new ComboBox<>();
         cbPrio.getItems().setAll(Priorite.values());
         cbPrio.setValue(tacheCible.getPriorite());
 
-        grid.add(new Label("Titre :"), 0, 0); grid.add(txtTitre, 1, 0);
-        grid.add(new Label("Date :"), 0, 1); grid.add(dtPicker, 1, 1);
-        grid.add(new Label("Prio :"), 0, 2); grid.add(cbPrio, 1, 2);
+        // --- PLACEMENT DANS LA GRILLE ---
+        grid.add(new Label("Titre :"), 0, 0);
+        grid.add(txtTitre, 1, 0);
 
+        // Ajout de la ligne "Début"
+        grid.add(new Label("Début :"), 0, 1);
+        grid.add(dateDebut, 1, 1);
+
+        // Décalage des lignes suivantes
+        grid.add(new Label("Fin :"), 0, 2);
+        grid.add(dateFin, 1, 2);
+
+        grid.add(new Label("Prio :"), 0, 3);
+        grid.add(cbPrio, 1, 3);
+
+        // --- ACTION BOUTON ---
         Button btnSave = new Button("Enregistrer");
-
         btnSave.setOnAction(e -> {
-            controleur.modifierTache(tacheCible, txtTitre.getText(), dtPicker.getValue(), cbPrio.getValue());
+            // Appel au contrôleur avec les 2 dates
+            controleur.modifierTache(
+                    tacheCible,
+                    txtTitre.getText(),
+                    dateDebut.getValue(), // On passe la date de début modifiée
+                    dateFin.getValue(),
+                    cbPrio.getValue()
+            );
             popup.close();
         });
-        grid.add(btnSave, 1, 3);
+
+        grid.add(btnSave, 1, 4);
+
         popup.setScene(new Scene(grid));
         popup.show();
     }

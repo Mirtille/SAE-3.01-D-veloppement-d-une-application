@@ -22,27 +22,28 @@ public class ModeleTache {
     }
 
     // 2. CRÉER UNE TÂCHE DANS UNE COLONNE (Niveau 1 : Tâche principale)
-    public void creerEtAjouterTache(Colonne colonne, String titre, LocalDate date, Priorite prio) {
+    public void creerEtAjouterTache(Colonne colonne, String titre, LocalDate dateDebut, LocalDate dateFin, Priorite prio) {
         if (titre == null || titre.isEmpty() || colonne == null) return;
 
         // Par défaut, une tâche créée dans une colonne est une TacheMere (peut avoir des sous-tâches)
-        TacheMere nouvelleTache = new TacheMere(titre, date, prio);
+        TacheMere nouvelleTache = new TacheMere(titre,dateDebut , dateFin, prio);
         colonne.ajouterTache(nouvelleTache);
     }
 
     // 3. CRÉER UNE SOUS-TÂCHE (Niveau 2 : Enfant d'une TacheMere)
-    public void creerEtAjouterSousTache(TacheMere parent, String titre, LocalDate date, Priorite prio) {
+    public void creerEtAjouterSousTache(TacheMere parent, String titre,LocalDate dateDebut, LocalDate dateFin, Priorite prio) {
         if (titre == null || titre.isEmpty() || parent == null) return;
 
         // Une sous-tâche est ajoutée aux enfants du parent
-        SousTache sousTache = new SousTache(titre, date, prio);
+        SousTache sousTache = new SousTache(titre, dateDebut, dateFin, prio);
         parent.ajouterEnfant(sousTache);
     }
 
     // Modification d'une tâche (inchangé)
-    public void modifierTache(TacheAbstraite tache, String titre, LocalDate date, Priorite prio) {
+    public void modifierTache(TacheAbstraite tache, String titre, LocalDate date, LocalDate dateFin, Priorite prio) {
         if(tache != null) {
             tache.setTitre(titre);
+            tache.setDateDebut(date);
             tache.setDateLimite(date);
             tache.setPriorite(prio);
             tache.notifierObservateurs();

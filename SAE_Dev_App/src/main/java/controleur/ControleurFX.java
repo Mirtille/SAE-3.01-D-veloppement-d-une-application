@@ -6,8 +6,6 @@ import java.time.LocalDate;
 public class ControleurFX {
 
     private ModeleTache modele;
-
-    // Variable pour le Drag & Drop
     public static TacheAbstraite tacheEnDeplacement = null;
 
     public ControleurFX() {
@@ -24,22 +22,20 @@ public class ControleurFX {
         }
     }
 
-    public void creerTache(Colonne colonne, String titre, LocalDate date, Priorite priorite) {
-        // Une tâche racine est toujours une TacheMere
-        modele.creerEtAjouterTache(colonne, titre, date, priorite);
+    public void creerTache(Colonne colonne, String titre, LocalDate dateDebut, LocalDate dateFin, Priorite priorite) {
+        modele.creerEtAjouterTache(colonne, titre, dateDebut, dateFin, priorite);
     }
 
-    // --- MODIFICATION MAJEURE ICI ---
-    public void creerSousTache(TacheMere parent, String titre, LocalDate date, Priorite priorite) {
+    public void creerSousTache(TacheMere parent, String titre, LocalDate dateDebut, LocalDate dateFin, Priorite priorite) {
         if (parent != null) {
             // ON CRÉE UNE TacheMere (et non plus une SousTache) pour permettre la récursivité
-            TacheMere nouvelleSousTache = new TacheMere(titre, date, priorite);
+            TacheMere nouvelleSousTache = new TacheMere(titre, dateDebut,dateFin, priorite);
             parent.ajouterEnfant(nouvelleSousTache);
         }
     }
 
-    public void modifierTache(TacheAbstraite tache, String titre, LocalDate date, Priorite prio) {
-        modele.modifierTache(tache, titre, date, prio);
+    public void modifierTache(TacheAbstraite tache, String titre,LocalDate dateDebut, LocalDate dateFin, Priorite prio) {
+        modele.modifierTache(tache, titre, dateDebut, dateFin, prio);
     }
 
     public void supprimerColonne(Colonne colonneASupprimer) {
@@ -83,15 +79,14 @@ public class ControleurFX {
 
     public void deplacerTache(TacheAbstraite tache, Colonne colonneDestination) {
         if (tache == null || colonneDestination == null) return;
-
         supprimerTache(tache);
 
-        // On s'assure que c'est une TacheMere avant de l'ajouter à la colonne
         TacheMere tacheAInquerir;
         if (tache instanceof TacheMere) {
             tacheAInquerir = (TacheMere) tache;
         } else {
-            tacheAInquerir = new TacheMere(tache.getTitre(), tache.getDateLimite(), tache.getPriorite());
+            // On conserve la date de début lors de la conversion
+            tacheAInquerir = new TacheMere(tache.getTitre(), tache.getDateDebut(), tache.getDateLimite(), tache.getPriorite());
         }
         colonneDestination.ajouterTache(tacheAInquerir);
     }

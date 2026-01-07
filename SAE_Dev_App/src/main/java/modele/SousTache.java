@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 public class SousTache extends TacheAbstraite {
 
-    public SousTache(String titre, LocalDate dateLimite, Priorite priorite) {
-        super(titre, dateLimite, priorite);
+    public SousTache(String titre,LocalDate dateDebut, LocalDate dateFin, Priorite priorite) {
+        super(titre,dateDebut, dateFin, priorite);
     }
 
     @Override

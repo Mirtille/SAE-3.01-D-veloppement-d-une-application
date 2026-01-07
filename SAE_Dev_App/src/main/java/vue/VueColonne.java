@@ -119,7 +119,8 @@ public class VueColonne extends VBox implements Observateur {
 
         TextField txtTitre = new TextField();
         txtTitre.setPromptText("Titre de la tâche...");
-        DatePicker datePicker = new DatePicker(LocalDate.now());
+        DatePicker dateDebut = new DatePicker(LocalDate.now());
+        DatePicker dateFin = new DatePicker(LocalDate.now());
         ComboBox<Priorite> comboPrio = new ComboBox<>();
         comboPrio.getItems().setAll(Priorite.values());
         comboPrio.setValue(Priorite.MOYENNE);
@@ -131,10 +132,12 @@ public class VueColonne extends VBox implements Observateur {
 
         grid.add(new Label("Titre :"), 0, 0);
         grid.add(txtTitre, 1, 0);
-        grid.add(new Label("Date limite :"), 0, 1);
-        grid.add(datePicker, 1, 1);
-        grid.add(new Label("Priorité :"), 0, 2);
-        grid.add(comboPrio, 1, 2);
+        grid.add(new Label("Début :"), 0, 1);
+        grid.add(dateDebut, 1, 1); // NOUVEAU
+        grid.add(new Label("Fin :"), 0, 2);
+        grid.add(dateFin, 1, 2);
+        grid.add(new Label("Prio :"), 0, 3);
+        grid.add(comboPrio, 1, 3);
 
         dialog.getDialogPane().setContent(grid);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -142,7 +145,8 @@ public class VueColonne extends VBox implements Observateur {
 
         dialog.showAndWait().ifPresent(type -> {
             if (type == ButtonType.OK && !txtTitre.getText().trim().isEmpty()) {
-                controleur.creerTache(colonne, txtTitre.getText(), datePicker.getValue(), comboPrio.getValue());
+                controleur.creerTache(colonne, txtTitre.getText(),
+                        dateDebut.getValue(), dateFin.getValue(), comboPrio.getValue());
             }
         });
     }

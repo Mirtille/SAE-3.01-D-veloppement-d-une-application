@@ -9,6 +9,7 @@ import java.util.List;
 public abstract class TacheAbstraite implements Sujet {
 
     protected String titre;
+    protected LocalDate dateDebut;
     protected LocalDate dateLimite;
     protected Priorite priorite;
     protected Etat etat;
@@ -16,8 +17,9 @@ public abstract class TacheAbstraite implements Sujet {
     // Gestion des observateurs factorisée ici
     protected List<Observateur> observateurs;
 
-    public TacheAbstraite(String titre, LocalDate dateLimite, Priorite priorite) {
+    public TacheAbstraite(String titre, LocalDate dateDebut, LocalDate dateLimite, Priorite priorite) {
         this.titre = titre;
+        this.dateDebut = dateDebut;
         this.dateLimite = dateLimite;
         this.priorite = priorite;
         this.etat = Etat.A_FAIRE; // État par défaut
@@ -76,6 +78,15 @@ public abstract class TacheAbstraite implements Sujet {
 
     public LocalDate getDateLimite() {
         return dateLimite;
+    }
+
+    public LocalDate getDateDebut() {
+        return dateDebut;
+    }
+
+    public void setDateDebut(LocalDate dateDebut) {
+        this.dateDebut = dateDebut;
+        notifierObservateurs();
     }
 
     public Priorite setPriorite(Priorite nouvellePriorite) {

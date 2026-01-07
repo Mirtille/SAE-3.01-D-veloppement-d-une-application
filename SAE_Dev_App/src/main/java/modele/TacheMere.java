@@ -8,8 +8,8 @@ public class TacheMere extends TacheAbstraite {
 
     private List<TacheAbstraite> enfants;
 
-    public TacheMere(String titre, LocalDate dateLimite, Priorite priorite) {
-        super(titre, dateLimite, priorite);
+    public TacheMere(String titre, LocalDate dateDebut, LocalDate dateLimite, Priorite priorite) {
+        super(titre, dateDebut, dateLimite, priorite);
         this.enfants = new ArrayList<>();
     }
 

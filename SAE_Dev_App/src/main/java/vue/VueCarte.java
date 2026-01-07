@@ -100,9 +100,8 @@ public class VueCarte extends VBox implements Observateur {
     // --- MISE A JOUR RÉCURSIVE ---
     private void mettreAJourAffichage() {
         lblTitre.setText(tache.getTitre());
-        lblInfo.setText(tache.getDateLimite() + " • " + tache.getPriorite());
+        lblInfo.setText(tache.getDateDebut() + " -> " + tache.getDateLimite() + " • " + tache.getPriorite());
 
-        // 1. Nettoyage des anciens observateurs
         for (TacheAbstraite st : sousTachesObservees) st.supprimerObservateur(this);
         sousTachesObservees.clear();
 
@@ -110,7 +109,6 @@ public class VueCarte extends VBox implements Observateur {
             containerSousTaches.getChildren().clear();
             TacheMere racine = (TacheMere) tache;
 
-            // Appel de la méthode récursive pour construire l'arbre
             for (TacheAbstraite enfant : racine.getEnfants()) {
                 construireBrancheRecursive(enfant, containerSousTaches, 0);
             }
@@ -141,10 +139,11 @@ public class VueCarte extends VBox implements Observateur {
 
         VBox conteneurTexte = new VBox(2);
         conteneurTexte.setAlignment(Pos.CENTER_LEFT);
+
         Label lblST = new Label(tacheCourante.getTitre());
         lblST.setStyle("-fx-font-size: 12px; -fx-text-fill: #172b4d;");
         lblST.setWrapText(true);
-        Label lblDetails = new Label(tacheCourante.getDateLimite() + " • " + tacheCourante.getPriorite());
+        Label lblDetails = new Label(tacheCourante.getDateDebut() + " -> " + tacheCourante.getDateLimite() + " • " + tacheCourante.getPriorite());
         lblDetails.setStyle("-fx-font-size: 10px; -fx-text-fill: #97a0af;");
         conteneurTexte.getChildren().addAll(lblST, lblDetails);
         HBox.setHgrow(conteneurTexte, Priority.ALWAYS);
@@ -242,26 +241,39 @@ public class VueCarte extends VBox implements Observateur {
         dialog.setHeaderText("Ajouter une étape à : " + parent.getTitre());
         TextField txtTitre = new TextField();
         txtTitre.setPromptText("Titre de l'étape...");
-        DatePicker datePicker = new DatePicker(LocalDate.now());
+        DatePicker dateDebut = new DatePicker(LocalDate.now());
+        DatePicker dateFin = new DatePicker(LocalDate.now().plusDays(1));
         ComboBox<Priorite> comboPrio = new ComboBox<>();
         comboPrio.getItems().setAll(Priorite.values());
         comboPrio.setValue(Priorite.MOYENNE);
+
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
+
         grid.add(new Label("Titre :"), 0, 0);
         grid.add(txtTitre, 1, 0);
-        grid.add(new Label("Date limite :"), 0, 1);
-        grid.add(datePicker, 1, 1);
-        grid.add(new Label("Priorité :"), 0, 2);
-        grid.add(comboPrio, 1, 2);
+        grid.add(new Label("Début :"), 0, 1);
+        grid.add(dateDebut, 1, 1); // NOUVEAU
+        grid.add(new Label("Fin :"), 0, 2);
+        grid.add(dateFin, 1, 2);
+        grid.add(new Label("Prio :"), 0, 3);
+        grid.add(comboPrio, 1, 3);
+
         dialog.getDialogPane().setContent(grid);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
         Platform.runLater(txtTitre::requestFocus);
         dialog.showAndWait().ifPresent(type -> {
             if (type == ButtonType.OK && !txtTitre.getText().trim().isEmpty()) {
-                controleur.creerSousTache(parent, txtTitre.getText(), datePicker.getValue(), comboPrio.getValue());
+                // Appel contrôleur avec les 2 dates
+                controleur.creerSousTache(
+                        parent,
+                        txtTitre.getText(),
+                        dateDebut.getValue(),
+                        dateFin.getValue(),
+                        comboPrio.getValue()
+                );
             }
         });
     }
@@ -270,29 +282,50 @@ public class VueCarte extends VBox implements Observateur {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setTitle("Modifier");
+
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(20));
         grid.setHgap(10);
         grid.setVgap(15);
+
         TextField champTitre = new TextField(tacheCible.getTitre());
-        DatePicker champDate = new DatePicker(tacheCible.getDateLimite());
+
+        // NOUVEAU : Récupération date début existante
+        DatePicker champDateDebut = new DatePicker(tacheCible.getDateDebut());
+
+        DatePicker champDateFin = new DatePicker(tacheCible.getDateLimite());
+
         ComboBox<Priorite> champPriorite = new ComboBox<>();
         champPriorite.getItems().setAll(Priorite.values());
         champPriorite.setValue(tacheCible.getPriorite());
+
         grid.add(new Label("Titre :"), 0, 0);
         grid.add(champTitre, 1, 0);
-        grid.add(new Label("Date :"), 0, 1);
-        grid.add(champDate, 1, 1);
-        grid.add(new Label("Priorité :"), 0, 2);
-        grid.add(champPriorite, 1, 2);
+
+        grid.add(new Label("Début :"), 0, 1);
+        grid.add(champDateDebut, 1, 1);
+
+        grid.add(new Label("Fin :"), 0, 2);
+        grid.add(champDateFin, 1, 2);
+
+        grid.add(new Label("Prio :"), 0, 3);
+        grid.add(champPriorite, 1, 3);
+
         Button btnValider = new Button("Enregistrer");
         btnValider.setDefaultButton(true);
         btnValider.setOnAction(e -> {
-            controleur.modifierTache(tacheCible, champTitre.getText(), champDate.getValue(), champPriorite.getValue());
+            controleur.modifierTache(
+                    tacheCible,
+                    champTitre.getText(),
+                    champDateDebut.getValue(), // Passage de la nouvelle date de début
+                    champDateFin.getValue(),
+                    champPriorite.getValue()
+            );
             popup.close();
         });
-        grid.add(btnValider, 1, 3);
-        popup.setScene(new Scene(grid, 350, 250));
+
+        grid.add(btnValider, 1, 4);
+        popup.setScene(new Scene(grid, 350, 280)); // Légèrement plus haut pour faire tenir le champ
         popup.showAndWait();
     }
 
