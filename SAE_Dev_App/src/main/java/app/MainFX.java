@@ -10,7 +10,6 @@ import vue.VueKanban;
 import vue.VueListe;
 
 public class MainFX extends Application {
-    /**
     @Override
     public void start(Stage stage) {
 
@@ -22,19 +21,18 @@ public class MainFX extends Application {
         stage.setScene(scene);
         stage.show();
     }
-**/
 
-    @Override
-    public void start(Stage stage) {
-        Projet projet = SingletonTache.getInstance().getMesProjets().getFirst();
-
-        VueKanban kanban = new VueKanban(projet);
-
-        Scene scene = new Scene(kanban, 900, 600);
-        stage.setTitle("Mon Kanban Trello");
-        stage.setScene(scene);
-        stage.show();
-    }
+//    @Override
+//    public void start(Stage stage) {
+//        Projet projet = SingletonTache.getInstance().getMesProjets().getFirst();
+//
+//        VueKanban kanban = new VueKanban(projet);
+//
+//        Scene scene = new Scene(kanban, 900, 600);
+//        stage.setTitle("Mon Kanban Trello");
+//        stage.setScene(scene);
+//        stage.show();
+//    }
 
     /**
     @Override
