@@ -100,7 +100,7 @@ public class VueCarte extends VBox implements Observateur {
     // --- MISE A JOUR RÉCURSIVE ---
     private void mettreAJourAffichage() {
         lblTitre.setText(tache.getTitre());
-        lblInfo.setText(tache.getDateDebut() + " -> " + tache.getDateLimite() + " • " + tache.getPriorite());
+        lblInfo.setText(" Date début : " + tache.getDateDebut() + " \n Date fin : " + tache.getDateLimite() + " \n Priorité : " + tache.getPriorite());
 
         for (TacheAbstraite st : sousTachesObservees) st.supprimerObservateur(this);
         sousTachesObservees.clear();
@@ -143,7 +143,7 @@ public class VueCarte extends VBox implements Observateur {
         Label lblST = new Label(tacheCourante.getTitre());
         lblST.setStyle("-fx-font-size: 12px; -fx-text-fill: #172b4d;");
         lblST.setWrapText(true);
-        Label lblDetails = new Label(tacheCourante.getDateDebut() + " -> " + tacheCourante.getDateLimite() + " • " + tacheCourante.getPriorite());
+        Label lblDetails = new Label("Date début : " + tacheCourante.getDateDebut() + " \nDate fin : " + tacheCourante.getDateLimite() + " \nPriorité : " + tacheCourante.getPriorite());
         lblDetails.setStyle("-fx-font-size: 10px; -fx-text-fill: #97a0af;");
         conteneurTexte.getChildren().addAll(lblST, lblDetails);
         HBox.setHgrow(conteneurTexte, Priority.ALWAYS);
