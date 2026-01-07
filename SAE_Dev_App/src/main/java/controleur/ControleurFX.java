@@ -23,11 +23,23 @@ public class ControleurFX {
     }
 
     public void creerTache(Colonne colonne, String titre, LocalDate dateDebut, LocalDate dateFin, Priorite priorite) {
+        if (dateDebut.isBefore(LocalDate.now())) {
+            dateDebut = LocalDate.now();
+        }
+        if (dateFin.isBefore(LocalDate.now()) || dateFin.isBefore(dateDebut)) {
+            dateFin = dateDebut.plusDays(1);
+        }
         modele.creerEtAjouterTache(colonne, titre, dateDebut, dateFin, priorite);
     }
 
     public void creerSousTache(TacheMere parent, String titre, LocalDate dateDebut, LocalDate dateFin, Priorite priorite) {
         if (parent != null) {
+            if (dateDebut.isBefore(LocalDate.now())) {
+                dateDebut = LocalDate.now();
+            }
+            if (dateFin.isBefore(LocalDate.now()) || dateFin.isBefore(dateDebut)) {
+                dateFin = dateDebut.plusDays(1);
+            }
             // ON CRÉE UNE TacheMere (et non plus une SousTache) pour permettre la récursivité
             TacheMere nouvelleSousTache = new TacheMere(titre, dateDebut,dateFin, priorite);
             parent.ajouterEnfant(nouvelleSousTache);
@@ -35,6 +47,12 @@ public class ControleurFX {
     }
 
     public void modifierTache(TacheAbstraite tache, String titre,LocalDate dateDebut, LocalDate dateFin, Priorite prio) {
+        if (dateDebut.isBefore(LocalDate.now())) {
+            dateDebut = LocalDate.now();
+        }
+        if (dateFin.isBefore(LocalDate.now()) || dateFin.isBefore(dateDebut)) {
+            dateFin = dateDebut.plusDays(1);
+        }
         modele.modifierTache(tache, titre, dateDebut, dateFin, prio);
     }
 

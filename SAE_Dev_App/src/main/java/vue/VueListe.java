@@ -119,7 +119,7 @@ public class VueListe extends VBox implements Observateur {
         btnAjouter.setStyle("-fx-background-color: #0079bf; -fx-text-fill: white; -fx-font-weight: bold;");
         btnAjouter.setOnAction(e -> ajouterTache());
 
-        HBox formulaire = new HBox(10, champTitre, dateDebutPicker, dateFinPicker, prioriteBox, btnAjouter);
+        HBox formulaire = new HBox(10, champTitre, dateFinPicker, prioriteBox, btnAjouter);
         formulaire.setAlignment(Pos.CENTER_LEFT);
         formulaire.setPadding(new Insets(10, 0, 0, 0));
 
@@ -206,6 +206,12 @@ public class VueListe extends VBox implements Observateur {
         if (niveau == 0) lblTitre.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #172b4d;");
         else lblTitre.setStyle("-fx-font-size: 13px; -fx-text-fill: #172b4d;");
 
+        Label lblDate = new Label("Date de publication : " + tache.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        lblDate.setStyle("-fx-text-fill: #6b778c; -fx-font-size: 12px;");
+
+        Label lblPriorite = new Label("Priorités : " + tache.getPriorite().toString());
+        lblPriorite.setStyle("-fx-text-fill: #172b4d;");
+
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
@@ -217,7 +223,7 @@ public class VueListe extends VBox implements Observateur {
         btnSuppr.setStyle("-fx-background-color: transparent; -fx-text-fill: #eb5a46; -fx-font-weight: bold; -fx-cursor: hand;");
         btnSuppr.setOnAction(e -> controleur.supprimerTache(tache));
 
-        ligne.getChildren().addAll(puce, lblTitre, spacer, btnEdit, btnSuppr);
+        ligne.getChildren().addAll(puce, lblTitre, lblDate, lblPriorite, spacer, btnEdit, btnSuppr);
         container.getChildren().add(ligne);
 
         if (checkAfficherSousTaches.isSelected() && tache instanceof TacheMere) {
@@ -293,16 +299,12 @@ public class VueListe extends VBox implements Observateur {
         grid.add(new Label("Titre :"), 0, 0);
         grid.add(txtTitre, 1, 0);
 
-        // Ajout de la ligne "Début"
-        grid.add(new Label("Début :"), 0, 1);
-        grid.add(dateDebut, 1, 1);
-
         // Décalage des lignes suivantes
-        grid.add(new Label("Fin :"), 0, 2);
-        grid.add(dateFin, 1, 2);
+        grid.add(new Label("Fin :"), 0, 1);
+        grid.add(dateFin, 1, 1);
 
-        grid.add(new Label("Prio :"), 0, 3);
-        grid.add(cbPrio, 1, 3);
+        grid.add(new Label("Prio :"), 0, 2);
+        grid.add(cbPrio, 1, 2);
 
         // --- ACTION BOUTON ---
         Button btnSave = new Button("Enregistrer");
