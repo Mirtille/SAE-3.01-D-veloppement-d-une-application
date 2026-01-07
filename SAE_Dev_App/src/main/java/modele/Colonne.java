@@ -2,10 +2,13 @@ package modele;
 
 import observateur.Observateur;
 import observateur.Sujet;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Colonne implements Sujet {
+public class Colonne implements Sujet, Serializable {
+    private static final long serialVersionUID = 1L;
 
     private String nom;
     private List<TacheMere> taches; // Contient les tâches (qui peuvent avoir des sous-tâches)
@@ -61,5 +64,8 @@ public class Colonne implements Sujet {
         for (Observateur o : observateurs) {
             o.actualiser(this);
         }
+    }
+    public void viderObservateurs() {
+        observateurs.clear();
     }
 }

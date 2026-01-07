@@ -2,10 +2,13 @@ package modele;
 
 import observateur.Observateur;
 import observateur.Sujet;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Projet implements Sujet {
+public class Projet implements Sujet, Serializable {
+    private static final long serialVersionUID = 1L;
 
     private String nom;
     private List<Colonne> colonnes;
@@ -56,5 +59,8 @@ public class Projet implements Sujet {
         for (Observateur o : observateurs) {
             o.actualiser(this);
         }
+    }
+    public void viderObservateurs() {
+        observateurs.clear();
     }
 }

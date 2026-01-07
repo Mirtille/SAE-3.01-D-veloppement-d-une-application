@@ -5,9 +5,10 @@ import observateur.Sujet;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
-public abstract class TacheAbstraite implements Sujet {
-
+public abstract class TacheAbstraite implements Sujet, Serializable {
+    private static final long serialVersionUID = 1L;
     protected String titre;
     protected LocalDate dateDebut;
     protected LocalDate dateLimite;
@@ -92,5 +93,8 @@ public abstract class TacheAbstraite implements Sujet {
     public Priorite setPriorite(Priorite nouvellePriorite) {
         this.priorite = nouvellePriorite;
         return this.priorite;
+    }
+    public void viderObservateurs() {
+        observateurs.clear();
     }
 }

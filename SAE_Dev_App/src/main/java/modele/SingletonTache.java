@@ -2,10 +2,13 @@ package modele;
 
 import observateur.Observateur;
 import observateur.Sujet;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SingletonTache implements Sujet {
+public class SingletonTache implements Sujet, Serializable {
+    private static final long serialVersionUID = 1L;
 
     private static SingletonTache instance;
 
@@ -45,5 +48,13 @@ public class SingletonTache implements Sujet {
     @Override
     public void notifierObservateurs() {
         for (Observateur o : observateurs) o.actualiser(this);
+    }
+    public void viderObservateurs() {
+        observateurs.clear();
+    }
+    public void reinitialiserAvecProjets(List<Projet> projets) {
+        this.mesProjets.clear();
+        this.mesProjets.addAll(projets);
+        notifierObservateurs();
     }
 }

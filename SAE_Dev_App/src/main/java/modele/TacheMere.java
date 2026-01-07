@@ -1,10 +1,12 @@
 package modele;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TacheMere extends TacheAbstraite {
+public class TacheMere extends TacheAbstraite implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private List<TacheAbstraite> enfants;
 
