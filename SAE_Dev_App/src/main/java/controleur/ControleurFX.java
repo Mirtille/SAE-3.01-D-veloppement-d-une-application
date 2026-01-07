@@ -26,7 +26,7 @@ public class ControleurFX {
         if (dateDebut.isBefore(LocalDate.now())) {
             dateDebut = LocalDate.now();
         }
-        if (dateFin.isBefore(LocalDate.now()) || dateFin.isBefore(dateDebut)) {
+        if (dateFin.isBefore(dateDebut)) {
             dateFin = dateDebut.plusDays(1);
         }
         modele.creerEtAjouterTache(colonne, titre, dateDebut, dateFin, priorite);
@@ -50,7 +50,7 @@ public class ControleurFX {
         if (dateDebut.isBefore(LocalDate.now())) {
             dateDebut = LocalDate.now();
         }
-        if (dateFin.isBefore(LocalDate.now()) || dateFin.isBefore(dateDebut)) {
+        if (dateFin.isBefore(dateDebut)) {
             dateFin = dateDebut.plusDays(1);
         }
         modele.modifierTache(tache, titre, dateDebut, dateFin, prio);
