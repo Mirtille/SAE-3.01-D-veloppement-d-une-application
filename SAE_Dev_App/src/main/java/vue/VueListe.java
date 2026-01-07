@@ -28,14 +28,18 @@ public class VueListe extends VBox implements Observateur {
 
     private ControleurFX controleur;
 
+    // --- Composants graphiques ---
     private ComboBox<Projet> selecteurProjet;
     private ScrollPane scrollPane;
     private VBox containerDates;
     private CheckBox checkAfficherSousTaches;
 
+    // --- Données ---
     private Projet projetEnCours;
     private List<Colonne> colonnesObservees = new ArrayList<>();
+    private Set<TacheAbstraite> tachesObservees = new HashSet<>();
 
+    // --- Formulaire ajout rapide ---
     private TextField champTitre;
     private DatePicker dateDebutPicker;
     private DatePicker dateFinPicker;
@@ -49,6 +53,7 @@ public class VueListe extends VBox implements Observateur {
 
         SingletonTache.getInstance().enregistrerObservateur(this);
 
+        // BARRE D'OUTILS
         Label labelProjet = new Label("Projet :");
         labelProjet.setStyle("-fx-font-weight: bold; -fx-text-fill: #172b4d;");
 
@@ -78,6 +83,7 @@ public class VueListe extends VBox implements Observateur {
         HBox barreOutils = new HBox(10, labelProjet, selecteurProjet, btnNouveauProjet, new Separator(javafx.geometry.Orientation.VERTICAL), checkAfficherSousTaches);
         barreOutils.setAlignment(Pos.CENTER_LEFT);
 
+        // CONTENU
         containerDates = new VBox(10);
         containerDates.setPadding(new Insets(10));
 
@@ -85,6 +91,7 @@ public class VueListe extends VBox implements Observateur {
         scrollPane.setFitToWidth(true);
         scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
         VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
 
         champTitre = new TextField();
         champTitre.setPromptText("Nouvelle tâche...");
@@ -107,7 +114,7 @@ public class VueListe extends VBox implements Observateur {
         btnAjouter.setStyle("-fx-background-color: #0079bf; -fx-text-fill: white; -fx-font-weight: bold;");
         btnAjouter.setOnAction(e -> ajouterTache());
 
-        HBox formulaire = new HBox(10, champTitre, dateFinPicker, prioriteBox, btnAjouter);
+        HBox formulaire = new HBox(10, champTitre, dateDebutPicker, dateFinPicker, prioriteBox, btnAjouter);
         formulaire.setAlignment(Pos.CENTER_LEFT);
         formulaire.setPadding(new Insets(10, 0, 0, 0));
 
@@ -115,6 +122,8 @@ public class VueListe extends VBox implements Observateur {
 
         rafraichirListeDesProjets();
     }
+
+    // --- GESTION PROJET & ABONNEMENTS ---
 
     private void changerProjet(Projet p) {
         if (this.projetEnCours != null) {
@@ -134,7 +143,12 @@ public class VueListe extends VBox implements Observateur {
     }
 
     private void rafraichirContenu() {
+        for (TacheAbstraite t : tachesObservees) {
+            t.supprimerObservateur(this);
+        }
+        tachesObservees.clear();
         containerDates.getChildren().clear();
+
         if (projetEnCours == null) return;
 
         List<TacheMere> toutesLesTaches = new ArrayList<>();
@@ -149,12 +163,14 @@ public class VueListe extends VBox implements Observateur {
             return;
         }
 
+        // Groupement par date
         Map<LocalDate, List<TacheMere>> mapParDate = toutesLesTaches.stream()
                 .collect(Collectors.groupingBy(TacheAbstraite::getDateLimite));
 
         List<LocalDate> datesTriees = new ArrayList<>(mapParDate.keySet());
         Collections.sort(datesTriees);
 
+        // Construction des TitledPane
         for (LocalDate date : datesTriees) {
             List<TacheMere> tachesDuJour = mapParDate.get(date);
             String titreDate = date.format(DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.FRENCH));
@@ -168,16 +184,23 @@ public class VueListe extends VBox implements Observateur {
             }
 
             TitledPane menuDepliant = new TitledPane(titreDate + " (" + tachesDuJour.size() + ")", contenuDate);
-            menuDepliant.setStyle("-fx-text-fill: #172b4d;"); // Couleur du titre du menu
+            menuDepliant.setStyle("-fx-text-fill: #172b4d;");
             menuDepliant.setExpanded(true);
             containerDates.getChildren().add(menuDepliant);
         }
     }
 
+    // --- CONSTRUCTION D'UNE LIGNE ---
+
     private void construireLigneTacheRecursive(TacheAbstraite tache, VBox container, int niveau) {
+
+        tache.enregistrerObservateur(this);
+        tachesObservees.add(tache);
+
+        // Structure visuelle
         HBox ligne = new HBox(10);
         ligne.setAlignment(Pos.CENTER_LEFT);
-        ligne.setPadding(new Insets(2, 0, 2, niveau * 25));
+        ligne.setPadding(new Insets(2, 0, 2, niveau * 25)); // Indentation
 
         Circle puce = new Circle(4);
         switch (tache.getPriorite()) {
@@ -190,24 +213,33 @@ public class VueListe extends VBox implements Observateur {
         if (niveau == 0) lblTitre.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #172b4d;");
         else lblTitre.setStyle("-fx-font-size: 13px; -fx-text-fill: #172b4d;");
 
-        Label lblDate = new Label("Date de publication : " + tache.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        lblDate.setStyle("-fx-text-fill: #6b778c; -fx-font-size: 12px;");
-
-        Label lblPriorite = new Label("Priorités : " + tache.getPriorite().toString());
-        lblPriorite.setStyle("-fx-text-fill: #172b4d;");
-
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
+        // --- BOUTONS D'ACTION ---
+
+        // Bouton "Ajouter sous-tâche"
+        Button btnAddSub = new Button("+");
+        btnAddSub.setStyle("-fx-background-color: transparent; -fx-text-fill: #0079bf; -fx-font-weight: bold; -fx-cursor: hand;");
+        btnAddSub.setTooltip(new Tooltip("Ajouter une sous-tâche"));
+
+        if (tache instanceof TacheMere) {
+            btnAddSub.setOnAction(e -> ouvrirDialogAjoutSousTache((TacheMere) tache));
+        } else {
+            btnAddSub.setDisable(true);
+        }
+
+        // Bouton "Modifier"
         Button btnEdit = new Button("✎");
         btnEdit.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-text-fill: #5e6c84;");
         btnEdit.setOnAction(e -> ouvrirPopUpModification(tache));
 
+        // Bouton "Supprimer"
         Button btnSuppr = new Button("×");
         btnSuppr.setStyle("-fx-background-color: transparent; -fx-text-fill: #eb5a46; -fx-font-weight: bold; -fx-cursor: hand;");
         btnSuppr.setOnAction(e -> controleur.supprimerTache(tache));
 
-        ligne.getChildren().addAll(puce, lblTitre, lblDate, lblPriorite, spacer, btnEdit, btnSuppr);
+        ligne.getChildren().addAll(puce, lblTitre, spacer, btnAddSub, btnEdit, btnSuppr);
         container.getChildren().add(ligne);
 
         if (checkAfficherSousTaches.isSelected() && tache instanceof TacheMere) {
@@ -218,11 +250,88 @@ public class VueListe extends VBox implements Observateur {
         }
     }
 
+    // --- DIALOGUES ---
+
+    private void ouvrirDialogAjoutSousTache(TacheMere parent) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Nouvelle Sous-tâche");
+        dialog.setHeaderText("Ajouter une étape à : " + parent.getTitre());
+
+        TextField txtTitre = new TextField();
+        txtTitre.setPromptText("Titre de l'étape...");
+
+        DatePicker dateDebut = new DatePicker(LocalDate.now());
+        DatePicker dateFin = new DatePicker(LocalDate.now());
+
+        ComboBox<Priorite> comboPrio = new ComboBox<>();
+        comboPrio.getItems().setAll(Priorite.values());
+        comboPrio.setValue(Priorite.MOYENNE);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        grid.add(new Label("Titre :"), 0, 0); grid.add(txtTitre, 1, 0);
+        grid.add(new Label("Début :"), 0, 1); grid.add(dateDebut, 1, 1);
+        grid.add(new Label("Fin :"), 0, 2);   grid.add(dateFin, 1, 2);
+        grid.add(new Label("Prio :"), 0, 3);  grid.add(comboPrio, 1, 3);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        Platform.runLater(txtTitre::requestFocus);
+
+        dialog.showAndWait().ifPresent(type -> {
+            if (type == ButtonType.OK && !txtTitre.getText().trim().isEmpty()) {
+                controleur.creerSousTache(
+                        parent,
+                        txtTitre.getText(),
+                        dateDebut.getValue(),
+                        dateFin.getValue(),
+                        comboPrio.getValue()
+                );
+            }
+        });
+    }
+
+    private void ouvrirPopUpModification(TacheAbstraite tacheCible) {
+        Stage popup = new Stage();
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.setTitle("Modifier");
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(20));
+        grid.setHgap(10);
+        grid.setVgap(15);
+
+        TextField txtTitre = new TextField(tacheCible.getTitre());
+        DatePicker dtDebut = new DatePicker(tacheCible.getDateDebut());
+        DatePicker dtFin = new DatePicker(tacheCible.getDateLimite());
+        ComboBox<Priorite> cbPrio = new ComboBox<>();
+        cbPrio.getItems().setAll(Priorite.values());
+        cbPrio.setValue(tacheCible.getPriorite());
+
+        grid.add(new Label("Titre :"), 0, 0); grid.add(txtTitre, 1, 0);
+        grid.add(new Label("Début :"), 0, 1); grid.add(dtDebut, 1, 1);
+        grid.add(new Label("Fin :"), 0, 2);   grid.add(dtFin, 1, 2);
+        grid.add(new Label("Prio :"), 0, 3);  grid.add(cbPrio, 1, 3);
+
+        Button btnSave = new Button("Enregistrer");
+        btnSave.setOnAction(e -> {
+            controleur.modifierTache(tacheCible, txtTitre.getText(), dtDebut.getValue(), dtFin.getValue(), cbPrio.getValue());
+            popup.close();
+        });
+        grid.add(btnSave, 1, 4);
+
+        popup.setScene(new Scene(grid));
+        popup.show();
+    }
+
+
     private void rafraichirListeDesProjets() {
         Projet selection = selecteurProjet.getValue();
         List<Projet> projets = SingletonTache.getInstance().getMesProjets();
         selecteurProjet.getItems().setAll(projets);
-
         if (selection != null && projets.contains(selection)) {
             selecteurProjet.setValue(selection);
         } else if (!projets.isEmpty()) {
@@ -237,11 +346,9 @@ public class VueListe extends VBox implements Observateur {
             alert.show();
             return;
         }
-
         if (projetEnCours.getColonnes().isEmpty()) {
             controleur.ajouterColonne(projetEnCours, "À faire");
         }
-
         controleur.creerTache(
                 projetEnCours.getColonnes().get(0),
                 champTitre.getText(),
@@ -250,54 +357,6 @@ public class VueListe extends VBox implements Observateur {
                 prioriteBox.getValue()
         );
         champTitre.clear();
-    }
-
-    private void ouvrirPopUpModification(TacheAbstraite tacheCible) {
-        Stage popup = new Stage();
-        popup.initModality(Modality.APPLICATION_MODAL);
-        popup.setTitle("Modifier la tâche");
-
-        GridPane grid = new GridPane();
-        grid.setPadding(new Insets(20));
-        grid.setHgap(10);
-        grid.setVgap(15);
-
-        TextField txtTitre = new TextField(tacheCible.getTitre());
-
-        DatePicker dateDebut = new DatePicker(tacheCible.getDateDebut());
-
-        DatePicker dateFin = new DatePicker(tacheCible.getDateLimite());
-
-        ComboBox<Priorite> cbPrio = new ComboBox<>();
-        cbPrio.getItems().setAll(Priorite.values());
-        cbPrio.setValue(tacheCible.getPriorite());
-
-        grid.add(new Label("Titre :"), 0, 0);
-        grid.add(txtTitre, 1, 0);
-
-        grid.add(new Label("Fin :"), 0, 1);
-        grid.add(dateFin, 1, 1);
-
-        grid.add(new Label("Prio :"), 0, 2);
-        grid.add(cbPrio, 1, 2);
-
-        Button btnSave = new Button("Enregistrer");
-        btnSave.setOnAction(e -> {
-            // Appel au contrôleur avec les 2 dates
-            controleur.modifierTache(
-                    tacheCible,
-                    txtTitre.getText(),
-                    dateDebut.getValue(),
-                    dateFin.getValue(),
-                    cbPrio.getValue()
-            );
-            popup.close();
-        });
-
-        grid.add(btnSave, 1, 4);
-
-        popup.setScene(new Scene(grid));
-        popup.show();
     }
 
     @Override
