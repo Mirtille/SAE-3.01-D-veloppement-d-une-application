@@ -44,7 +44,7 @@ public class ModeleTache {
         if(tache != null) {
             tache.setTitre(titre);
             tache.setDateDebut(date);
-            tache.setDateLimite(date);
+            tache.setDateLimite(dateFin);
             tache.setPriorite(prio);
             tache.notifierObservateurs();
         }
