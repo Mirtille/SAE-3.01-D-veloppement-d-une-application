@@ -123,8 +123,6 @@ public class VueListe extends VBox implements Observateur {
         rafraichirListeDesProjets();
     }
 
-    // --- GESTION PROJET & ABONNEMENTS ---
-
     private void changerProjet(Projet p) {
         if (this.projetEnCours != null) {
             this.projetEnCours.supprimerObservateur(this);
@@ -190,8 +188,6 @@ public class VueListe extends VBox implements Observateur {
         }
     }
 
-    // --- CONSTRUCTION D'UNE LIGNE ---
-
     private void construireLigneTacheRecursive(TacheAbstraite tache, VBox container, int niveau) {
 
         tache.enregistrerObservateur(this);
@@ -216,9 +212,6 @@ public class VueListe extends VBox implements Observateur {
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // --- BOUTONS D'ACTION ---
-
-        // Bouton "Ajouter sous-tâche"
         Button btnAddSub = new Button("+");
         btnAddSub.setStyle("-fx-background-color: transparent; -fx-text-fill: #0079bf; -fx-font-weight: bold; -fx-cursor: hand;");
         btnAddSub.setTooltip(new Tooltip("Ajouter une sous-tâche"));
@@ -250,7 +243,6 @@ public class VueListe extends VBox implements Observateur {
         }
     }
 
-    // --- DIALOGUES ---
 
     private void ouvrirDialogAjoutSousTache(TacheMere parent) {
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -258,7 +250,7 @@ public class VueListe extends VBox implements Observateur {
         dialog.setHeaderText("Ajouter une étape à : " + parent.getTitre());
 
         TextField txtTitre = new TextField();
-        txtTitre.setPromptText("Titre de l'étape...");
+        txtTitre.setPromptText("Titre de l'étape");
 
         DatePicker dateDebut = new DatePicker(LocalDate.now());
         DatePicker dateFin = new DatePicker(LocalDate.now());
