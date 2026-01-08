@@ -209,6 +209,22 @@ public class VueListe extends VBox implements Observateur {
         if (niveau == 0) lblTitre.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #172b4d;");
         else lblTitre.setStyle("-fx-font-size: 13px; -fx-text-fill: #172b4d;");
 
+        Label lblDates = new Label("[" + tache.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM")) + " --> " + tache.getDateLimite().format(DateTimeFormatter.ofPattern("dd/MM")) + "]");
+        lblDates.setStyle("-fx-text-fill: #5e6c84; -fx-font-size: 11px;");
+        lblTitre.setGraphic(lblDates);
+        lblTitre.setGraphicTextGap(5);
+
+        Label lblPrio = new Label();
+        switch (tache.getPriorite()) {
+            case HAUTE -> lblPrio.setText("Priorité Haute");
+            case MOYENNE -> lblPrio.setText("Priorité Moyenne");
+            case BASSE -> lblPrio.setText("Priorité Basse");
+        }
+        lblPrio.setStyle("-fx-text-fill: #5e6c84; -fx-font-size: 11px;");
+        lblTitre.setTooltip(new Tooltip(lblPrio.getText()));
+
+
+
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
@@ -232,7 +248,7 @@ public class VueListe extends VBox implements Observateur {
         btnSuppr.setStyle("-fx-background-color: transparent; -fx-text-fill: #eb5a46; -fx-font-weight: bold; -fx-cursor: hand;");
         btnSuppr.setOnAction(e -> controleur.supprimerTache(tache));
 
-        ligne.getChildren().addAll(puce, lblTitre, spacer, btnAddSub, btnEdit, btnSuppr);
+        ligne.getChildren().addAll(puce, lblTitre, lblPrio, lblDates, spacer, btnAddSub, btnEdit, btnSuppr);
         container.getChildren().add(ligne);
 
         if (checkAfficherSousTaches.isSelected() && tache instanceof TacheMere) {
