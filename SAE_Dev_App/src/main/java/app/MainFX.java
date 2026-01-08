@@ -22,7 +22,7 @@ public class MainFX extends Application {
         stage.setScene(scene);
         stage.show();
 
-        
+
         stage.setOnCloseRequest(event -> {
             GestionnaireSauvegarde.sauvegarder();
             System.out.println("Données sauvegardées automatiquement");

@@ -16,10 +16,10 @@ public class GestionnaireSauvegarde {
 
     public static void sauvegarder(String cheminFichier) {
         try {
-            // Récupération des projets
+
             List<Projet> projets = SingletonTache.getInstance().getMesProjets();
 
-            // Nettoyage des observateurs avant sérialisation
+
             nettoyerObservateurs(projets);
 
             // Sérialisation
@@ -58,7 +58,7 @@ public class GestionnaireSauvegarde {
             // Désérialisation
             List<Projet> projets = (List<Projet>) ois.readObject();
 
-            // Réinitialisation du singleton avec les projets chargés
+
             SingletonTache.getInstance().reinitialiserAvecProjets(projets);
 
             System.out.println("Chargement réussi : " + projets.size() + " projet(s) chargé(s)");
@@ -70,18 +70,18 @@ public class GestionnaireSauvegarde {
     }
 
     private static void nettoyerObservateurs(List<Projet> projets) {
-        // Nettoyage du singleton
+
         SingletonTache.getInstance().viderObservateurs();
 
-        // Nettoyage de chaque projet
+
         for (Projet projet : projets) {
             projet.viderObservateurs();
 
-            // Nettoyage des colonnes
+
             for (Colonne colonne : projet.getColonnes()) {
                 colonne.viderObservateurs();
 
-                // Nettoyage des tâches (récursif)
+
                 for (TacheMere tache : colonne.getTaches()) {
                     nettoyerTacheRecursive(tache);
                 }
