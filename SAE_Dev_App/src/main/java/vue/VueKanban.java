@@ -37,13 +37,13 @@ public class VueKanban extends VBox implements Observateur {
         VBox.setVgrow(scrollH, Priority.ALWAYS);
 
         // Bouton pour créer une nouvelle colonne
-        Button btnNouvelleColonne = new Button("+ Ajouter une liste");
+        Button btnNouvelleColonne = new Button("+ Ajouter une colonne");
         btnNouvelleColonne.setStyle("-fx-background-color: rgba(255,255,255,0.3); -fx-text-fill: white; -fx-font-weight: bold;");
         btnNouvelleColonne.setPrefHeight(40);
 
         btnNouvelleColonne.setOnAction(e -> {
             TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Nouvelle Liste");
+            dialog.setTitle("Nouvelle colonne");
             dialog.setHeaderText("Nom de la nouvelle colonne :");
             dialog.setContentText("Nom :");
 
