@@ -33,7 +33,6 @@ public class VueGantt extends VBox implements Observateur {
 
     private Set<TacheAbstraite> tachesObservees = new HashSet<>();
 
-    // Formulaire
     private TextField champTitre;
     private DatePicker dateDebutPicker;
     private DatePicker dateFinPicker;
@@ -52,11 +51,9 @@ public class VueGantt extends VBox implements Observateur {
         this.setSpacing(15);
         this.setStyle("-fx-background-color: white;");
 
-        // 1. Titre
         Label titreVue = new Label("Gantt : " + projet.getNom());
         titreVue.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #172b4d;");
 
-        // 2. Zone Gantt
         containerGantt = new VBox();
         ScrollPane scrollPane = new ScrollPane(containerGantt);
 
@@ -70,7 +67,6 @@ public class VueGantt extends VBox implements Observateur {
         scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
         VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
-        // 3. Formulaire
         HBox formulaire = creerFormulaireAjout();
 
         this.getChildren().addAll(titreVue, scrollPane, formulaire);
@@ -79,7 +75,6 @@ public class VueGantt extends VBox implements Observateur {
     }
 
     private void rafraichir() {
-        // --- 1. NETTOYAGE DES ANCIENS OBSERVATEURS ---
         for (TacheAbstraite t : tachesObservees) {
             t.supprimerObservateur(this);
         }
@@ -148,7 +143,6 @@ public class VueGantt extends VBox implements Observateur {
             ligne.setPrefHeight(HAUTEUR_LIGNE);
             ligne.setStyle("-fx-border-color: #f4f5f7; -fx-border-width: 0 0 1 0;");
 
-            // --- 1. Titre ---
             Label lblTitre = new Label(tache.getTitre());
             lblTitre.setMinWidth(LARGEUR_TITRE);
             lblTitre.setPrefWidth(LARGEUR_TITRE);
