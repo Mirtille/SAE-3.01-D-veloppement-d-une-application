@@ -5,18 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="215c67f4-e118-49e1-876e-ed6e6ec9faa2" name="Changes" comment="change">
-      <change afterPath="$PROJECT_DIR$/src/main/java/modele/Colonne.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/modele/Projet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/MainFX.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/MainFX.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controleur/ControleurFX.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controleur/ControleurFX.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modele/ModeleTache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/ModeleTache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modele/SingletonTache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modele/SingletonTache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/vue/VueCarte.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vue/VueCarte.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/vue/VueColonne.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vue/VueColonne.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/vue/VueKanban.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vue/VueKanban.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/vue/VueListe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vue/VueListe.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/vue/VueMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vue/VueMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,12 +34,12 @@
     &quot;assignee&quot;: &quot;Mirtille&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Mirtille/SAE-3.01-D-veloppement-d-une-application.git&quot;,
-    &quot;accountId&quot;: &quot;216d7a57-f93d-4e59-b8a9-6fc905af518f&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Mirtille/SAE-3.01-D-veloppement-d-une-application.git",
+    "accountId": "36915b25-cf76-4575-958c-f7169bf329a5"
   }
-}</component>
+}]]></component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
