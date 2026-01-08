@@ -22,40 +22,6 @@ public class ControleurFX {
         }
     }
 
-    public void creerTache(Colonne colonne, String titre, LocalDate dateDebut, LocalDate dateFin, Priorite priorite) {
-        if (dateDebut.isBefore(LocalDate.now())) {
-            dateDebut = LocalDate.now();
-        }
-        if (dateFin.isBefore(dateDebut)) {
-            dateFin = dateDebut.plusDays(1);
-        }
-        modele.creerEtAjouterTache(colonne, titre, dateDebut, dateFin, priorite);
-    }
-
-    public void creerSousTache(TacheMere parent, String titre, LocalDate dateDebut, LocalDate dateFin, Priorite priorite) {
-        if (parent != null) {
-            if (dateDebut.isBefore(LocalDate.now())) {
-                dateDebut = LocalDate.now();
-            }
-            if (dateFin.isBefore(LocalDate.now()) || dateFin.isBefore(dateDebut)) {
-                dateFin = dateDebut.plusDays(1);
-            }
-            // ON CRÉE UNE TacheMere (et non plus une SousTache) pour permettre la récursivité
-            TacheMere nouvelleSousTache = new TacheMere(titre, dateDebut,dateFin, priorite);
-            parent.ajouterEnfant(nouvelleSousTache);
-        }
-    }
-
-    public void modifierTache(TacheAbstraite tache, String titre,LocalDate dateDebut, LocalDate dateFin, Priorite prio) {
-        if (dateDebut.isBefore(LocalDate.now())) {
-            dateDebut = LocalDate.now();
-        }
-        if (dateFin.isBefore(dateDebut)) {
-            dateFin = dateDebut.plusDays(1);
-        }
-        modele.modifierTache(tache, titre, dateDebut, dateFin, prio);
-    }
-
     public void supprimerColonne(Colonne colonneASupprimer) {
         if (colonneASupprimer == null) return;
         for (Projet p : SingletonTache.getInstance().getMesProjets()) {
@@ -64,6 +30,49 @@ public class ControleurFX {
                 return;
             }
         }
+    }
+
+    public void creerTache(Colonne colonne, String titre, LocalDate dateDebut, LocalDate dateFin, Priorite priorite) {
+        if (dateDebut.isBefore(LocalDate.now())) dateDebut = LocalDate.now();
+        if (dateFin.isBefore(dateDebut)) dateFin = dateDebut;
+
+        modele.creerEtAjouterTache(colonne, titre, dateDebut, dateFin, priorite);
+    }
+
+    public void creerSousTache(TacheMere parent, String titre, LocalDate dateDebut, LocalDate dateFin, Priorite priorite) {
+        if (parent != null) {
+            if (dateFin.isAfter(parent.getDateLimite())) {
+                dateFin = parent.getDateLimite();
+            }
+            if (dateDebut.isBefore(parent.getDateDebut())) {
+                dateDebut = parent.getDateDebut();
+            }
+
+            if (dateDebut.isBefore(LocalDate.now())) dateDebut = LocalDate.now();
+            if (dateFin.isBefore(dateDebut)) dateFin = dateDebut; // Minimum 1 jour ou même jour
+
+            TacheMere nouvelleSousTache = new TacheMere(titre, dateDebut, dateFin, priorite);
+            parent.ajouterEnfant(nouvelleSousTache);
+        }
+    }
+
+    public void modifierTache(TacheAbstraite tache, String titre, LocalDate dateDebut, LocalDate dateFin, Priorite prio) {
+        TacheMere parent = trouverParent(tache);
+
+        if (parent != null) {
+            if (dateFin.isAfter(parent.getDateLimite())) {
+                dateFin = parent.getDateLimite();
+            }
+            if (dateDebut.isBefore(parent.getDateDebut())) {
+                dateDebut = parent.getDateDebut();
+            }
+        }
+
+        if (dateFin.isBefore(dateDebut)) {
+            dateFin = dateDebut;
+        }
+
+        modele.modifierTache(tache, titre, dateDebut, dateFin, prio);
     }
 
     public void supprimerTache(TacheAbstraite tacheASupprimer) {
@@ -103,7 +112,6 @@ public class ControleurFX {
         if (tache instanceof TacheMere) {
             tacheAInquerir = (TacheMere) tache;
         } else {
-            // On conserve la date de début lors de la conversion
             tacheAInquerir = new TacheMere(tache.getTitre(), tache.getDateDebut(), tache.getDateLimite(), tache.getPriorite());
         }
         colonneDestination.ajouterTache(tacheAInquerir);
@@ -113,8 +121,39 @@ public class ControleurFX {
         if (tacheADeplacer == null || nouveauParent == null) return;
         if (tacheADeplacer == nouveauParent) return;
 
+        if (tacheADeplacer.getDateLimite().isAfter(nouveauParent.getDateLimite())) {
+            tacheADeplacer.setDateLimite(nouveauParent.getDateLimite());
+        }
+
         supprimerTache(tacheADeplacer);
         nouveauParent.ajouterEnfant(tacheADeplacer);
         nouveauParent.notifierObservateurs();
+    }
+
+    private TacheMere trouverParent(TacheAbstraite enfant) {
+        for (Projet p : SingletonTache.getInstance().getMesProjets()) {
+            for (Colonne c : p.getColonnes()) {
+                for (TacheMere racine : c.getTaches()) {
+                    if (racine == enfant) return null;
+
+                    TacheMere parentTrouve = chercherParentRecursif(racine, enfant);
+                    if (parentTrouve != null) return parentTrouve;
+                }
+            }
+        }
+        return null;
+    }
+
+    private TacheMere chercherParentRecursif(TacheMere parentActuel, TacheAbstraite cible) {
+        if (parentActuel.getEnfants().contains(cible)) {
+            return parentActuel;
+        }
+        for (TacheAbstraite sousTache : parentActuel.getEnfants()) {
+            if (sousTache instanceof TacheMere) {
+                TacheMere resultat = chercherParentRecursif((TacheMere) sousTache, cible);
+                if (resultat != null) return resultat;
+            }
+        }
+        return null;
     }
 }

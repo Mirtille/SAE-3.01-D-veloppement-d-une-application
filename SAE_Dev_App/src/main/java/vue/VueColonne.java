@@ -30,14 +30,12 @@ public class VueColonne extends VBox implements Observateur {
 
         this.colonne.enregistrerObservateur(this);
 
-        // --- Style ---
         this.setMinWidth(280);
         this.setMaxWidth(280);
         this.setStyle("-fx-background-color: #ebecf0; -fx-background-radius: 8;");
         this.setPadding(new Insets(10));
         this.setSpacing(10);
 
-        // --- EN-TÊTE ---
         HBox header = new HBox(10);
         header.setAlignment(Pos.CENTER_LEFT);
 
@@ -59,7 +57,6 @@ public class VueColonne extends VBox implements Observateur {
 
         header.getChildren().addAll(lblTitre, spacer, btnSupprColonne);
 
-        // --- CARTES ---
         containerCartes = new VBox(10);
         ScrollPane scroll = new ScrollPane(containerCartes);
         scroll.setFitToWidth(true);
@@ -74,7 +71,7 @@ public class VueColonne extends VBox implements Observateur {
 
         //DRAG & DROP
         this.setOnDragOver(event -> {
-            // Si une tâche est en déplacement, on accepte le survol
+
             if (event.getDragboard().hasString() && ControleurFX.tacheEnDeplacement != null) {
                 event.acceptTransferModes(javafx.scene.input.TransferMode.MOVE);
             }
@@ -114,8 +111,8 @@ public class VueColonne extends VBox implements Observateur {
 
     private void ouvrirDialogAjoutTache() {
         Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Nouvelle Tâche");
-        dialog.setHeaderText("Créer une tâche dans : " + colonne.getNom());
+        dialog.setTitle("Nouvelle tachee");
+        dialog.setHeaderText("Créer une tache dans : " + colonne.getNom());
 
         TextField txtTitre = new TextField();
         txtTitre.setPromptText("Titre de la tâche...");

@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import modele.GestionnaireSauvegarde;
-import vue.VueMenu; // On importe notre nouvelle classe
+import vue.VueMenu;
 
 public class MainFX extends Application {
 

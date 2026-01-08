@@ -12,7 +12,6 @@ public class SingletonTache implements Sujet, Serializable {
 
     private static SingletonTache instance;
 
-    // CHANGEMENT ICI : Liste de Projet
     private List<Projet> mesProjets;
     private List<Observateur> observateurs;
 
@@ -20,7 +19,7 @@ public class SingletonTache implements Sujet, Serializable {
         this.mesProjets = new ArrayList<>();
         this.observateurs = new ArrayList<>();
         // Projet par défaut
-        mesProjets.add(new Projet("Mon Premier Projet"));
+        mesProjets.add(new Projet("Projet"));
     }
 
     public static synchronized SingletonTache getInstance() {

@@ -17,10 +17,10 @@ public class TacheMere extends TacheAbstraite implements Serializable {
 
     public void ajouterEnfant(TacheAbstraite t) {
         enfants.add(t);
-        // Notification automatique à la vue
+
         notifierObservateurs();
     }
-    // Dans TacheMere.java
+
     public void supprimerEnfant(TacheAbstraite t) {
         enfants.remove(t);
         notifierObservateurs(); // Indispensable pour que la carte disparaisse de l'écran !
