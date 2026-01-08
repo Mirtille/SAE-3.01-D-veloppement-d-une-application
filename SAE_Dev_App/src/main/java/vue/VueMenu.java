@@ -23,7 +23,7 @@ public class VueMenu extends BorderPane {
 
         Projet projetCourant = SingletonTache.getInstance().getMesProjets().get(0);
 
-        this.vueKanban = new VueKanban(projetCourant);
+        this.vueKanban = new VueKanban();
         this.vueListe = new VueListe();
         this.vueGantt = new VueGantt(projetCourant); // NOUVEAU
 
