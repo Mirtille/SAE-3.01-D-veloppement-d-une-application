@@ -111,8 +111,8 @@ public class VueColonne extends VBox implements Observateur {
 
     private void ouvrirDialogAjoutTache() {
         Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Nouvelle Tâche");
-        dialog.setHeaderText("Créer une tâche dans : " + colonne.getNom());
+        dialog.setTitle("Nouvelle tachee");
+        dialog.setHeaderText("Créer une tache dans : " + colonne.getNom());
 
         TextField txtTitre = new TextField();
         txtTitre.setPromptText("Titre de la tâche...");

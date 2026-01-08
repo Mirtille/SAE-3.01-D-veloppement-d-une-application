@@ -17,7 +17,7 @@ public class VueMenu extends BorderPane {
     public VueMenu() {
 
         if (SingletonTache.getInstance().getMesProjets().isEmpty()) {
-            Projet nouveauProjet = new Projet("Mon Projet");
+            Projet nouveauProjet = new Projet("Projet");
             SingletonTache.getInstance().ajouterProjet(nouveauProjet);
         }
 

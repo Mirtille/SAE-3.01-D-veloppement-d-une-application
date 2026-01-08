@@ -19,7 +19,7 @@ public class Projet implements Sujet, Serializable {
         this.colonnes = new ArrayList<>();
         this.observateurs = new ArrayList<>();
 
-        ajouterColonne(new Colonne("À Faire"));
+        ajouterColonne(new Colonne("A Faire"));
         ajouterColonne(new Colonne("En Cours"));
         ajouterColonne(new Colonne("Terminé"));
     }

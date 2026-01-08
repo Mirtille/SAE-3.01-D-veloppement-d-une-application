@@ -90,7 +90,7 @@ public class VueGantt extends VBox implements Observateur {
         }
 
         if (listeOrdonnee.isEmpty()) {
-            containerGantt.getChildren().add(new Label("Aucune tache à afficher."));
+            containerGantt.getChildren().add(new Label("pas de tache existante"));
             return;
         }
 
@@ -203,7 +203,7 @@ public class VueGantt extends VBox implements Observateur {
     private void ouvrirPopUpDetails(TacheAbstraite tache) {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
-        popup.setTitle("Détails : " + tache.getTitre());
+        popup.setTitle("Details : " + tache.getTitre());
 
         VBox layout = new VBox(15);
         layout.setPadding(new Insets(20));
@@ -275,8 +275,8 @@ public class VueGantt extends VBox implements Observateur {
 
     private void ouvrirDialogAjoutSousTache(TacheMere parent) {
         Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Nouvelle Sous-tâche");
-        dialog.setHeaderText("Sous-tâche pour : " + parent.getTitre());
+        dialog.setTitle("Nouvelle sous tache");
+        dialog.setHeaderText("sous tache pour : " + parent.getTitre());
 
         TextField txtTitre = new TextField();
         DatePicker dtDebut = new DatePicker(LocalDate.now());
@@ -320,7 +320,7 @@ public class VueGantt extends VBox implements Observateur {
         btnAjouter.setStyle("-fx-background-color: #0079bf; -fx-text-fill: white; -fx-font-weight: bold;");
         btnAjouter.setOnAction(e -> {
             if (projet.getColonnes().isEmpty()) {
-                controleur.ajouterColonne(projet, "À faire");
+                controleur.ajouterColonne(projet, "a faire");
             }
             controleur.creerTache(
                     projet.getColonnes().get(0),
@@ -345,8 +345,6 @@ public class VueGantt extends VBox implements Observateur {
     }
 
     private void construireListeHierarchique(List<TacheHierarchique> liste, TacheAbstraite tache, int niveau) {
-        // --- 2. ABONNEMENT TEMPS RÉEL ---
-        // On écoute chaque tâche pour savoir si elle change (date, titre...)
         tache.enregistrerObservateur(this);
         tachesObservees.add(tache);
 
