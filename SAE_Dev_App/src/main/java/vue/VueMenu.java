@@ -12,11 +12,11 @@ public class VueMenu extends BorderPane {
 
     private VueKanban vueKanban;
     private VueListe vueListe;
+    private VueGantt vueGantt; // NOUVEAU
 
     public VueMenu() {
 
         if (SingletonTache.getInstance().getMesProjets().isEmpty()) {
-
             Projet nouveauProjet = new Projet("Mon Projet");
             SingletonTache.getInstance().ajouterProjet(nouveauProjet);
         }
@@ -25,6 +25,7 @@ public class VueMenu extends BorderPane {
 
         this.vueKanban = new VueKanban(projetCourant);
         this.vueListe = new VueListe();
+        this.vueGantt = new VueGantt(projetCourant); // NOUVEAU
 
         HBox barreMenu = new HBox(15);
         barreMenu.setPadding(new Insets(10, 20, 10, 20));
@@ -33,17 +34,20 @@ public class VueMenu extends BorderPane {
 
         Button btnKanban = new Button("Kanban");
         Button btnListe = new Button("Liste");
+        Button btnGantt = new Button("Gantt"); // NOUVEAU
 
         String styleBtn = "-fx-background-color: white; -fx-border-color: #c1c7d0; -fx-border-radius: 3; -fx-background-radius: 3; -fx-cursor: hand;";
         btnKanban.setStyle(styleBtn);
         btnListe.setStyle(styleBtn);
+        btnGantt.setStyle(styleBtn);
 
         btnKanban.setOnAction(e -> this.setCenter(vueKanban));
         btnListe.setOnAction(e -> this.setCenter(vueListe));
+        btnGantt.setOnAction(e -> this.setCenter(vueGantt)); // NOUVEAU
 
-        barreMenu.getChildren().addAll(btnKanban, btnListe);
+        barreMenu.getChildren().addAll(btnKanban, btnListe, btnGantt);
 
         this.setTop(barreMenu);
-        this.setCenter(vueKanban); // On affiche le Kanban par défaut
+        this.setCenter(vueKanban);
     }
 }
