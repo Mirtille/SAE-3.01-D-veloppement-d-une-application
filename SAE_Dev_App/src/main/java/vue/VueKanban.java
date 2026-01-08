@@ -33,11 +33,9 @@ public class VueKanban extends VBox implements Observateur {
         this.setSpacing(10);
         this.setStyle("-fx-background-color: #0079bf;");
 
-        // --- BARRE D'OUTILS (Sélecteur + Nouveau Projet + Nouvelle Colonne) ---
         HBox barreOutils = new HBox(10);
         barreOutils.setAlignment(Pos.CENTER_LEFT);
 
-        // [NOUVEAU] Label et Sélecteur de projet
         Label labelProjet = new Label("Projet :");
         labelProjet.setStyle("-fx-font-weight: bold; -fx-text-fill: white;");
 
