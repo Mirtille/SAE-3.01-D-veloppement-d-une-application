@@ -18,9 +18,7 @@ import observateur.Sujet;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class VueGantt extends VBox implements Observateur {
 
@@ -32,6 +30,8 @@ public class VueGantt extends VBox implements Observateur {
     private final double LARGEUR_JOUR = 50.0;
     private final double HAUTEUR_LIGNE = 40.0;
     private final double LARGEUR_TITRE = 200.0;
+
+    private Set<TacheAbstraite> tachesObservees = new HashSet<>();
 
     // Formulaire
     private TextField champTitre;
@@ -79,6 +79,12 @@ public class VueGantt extends VBox implements Observateur {
     }
 
     private void rafraichir() {
+        // --- 1. NETTOYAGE DES ANCIENS OBSERVATEURS ---
+        for (TacheAbstraite t : tachesObservees) {
+            t.supprimerObservateur(this);
+        }
+        tachesObservees.clear();
+
         containerGantt.getChildren().clear();
 
         List<TacheHierarchique> listeOrdonnee = new ArrayList<>();
@@ -114,7 +120,7 @@ public class VueGantt extends VBox implements Observateur {
 
         Region espaceTitre = new Region();
         espaceTitre.setMinWidth(LARGEUR_TITRE);
-        espaceTitre.setPrefWidth(LARGEUR_TITRE); // On fixe la largeur
+        espaceTitre.setPrefWidth(LARGEUR_TITRE);
         espaceTitre.setStyle("-fx-border-color: #ddd; -fx-border-width: 0 1 1 0;");
         entete.getChildren().add(espaceTitre);
 
@@ -123,7 +129,7 @@ public class VueGantt extends VBox implements Observateur {
             Label lblJour = new Label(jour.getDayOfMonth() + "/" + jour.getMonthValue());
             lblJour.setMinWidth(LARGEUR_JOUR);
             lblJour.setMaxWidth(LARGEUR_JOUR);
-            lblJour.setPrefWidth(LARGEUR_JOUR); // Fixe largeur
+            lblJour.setPrefWidth(LARGEUR_JOUR);
             lblJour.setAlignment(Pos.CENTER);
             lblJour.setStyle("-fx-font-size: 10px; -fx-text-fill: #5e6c84; -fx-border-color: #eee; -fx-border-width: 0 0 1 1;");
 
@@ -345,6 +351,11 @@ public class VueGantt extends VBox implements Observateur {
     }
 
     private void construireListeHierarchique(List<TacheHierarchique> liste, TacheAbstraite tache, int niveau) {
+        // --- 2. ABONNEMENT TEMPS RÉEL ---
+        // On écoute chaque tâche pour savoir si elle change (date, titre...)
+        tache.enregistrerObservateur(this);
+        tachesObservees.add(tache);
+
         liste.add(new TacheHierarchique(tache, niveau));
         if (tache instanceof TacheMere) {
             List<TacheAbstraite> enfants = new ArrayList<>(((TacheMere) tache).getEnfants());

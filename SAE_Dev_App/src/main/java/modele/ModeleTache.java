@@ -27,6 +27,7 @@ public class ModeleTache {
         colonne.ajouterTache(nouvelleTache);
     }
 
+    // A ne pas utiliser
     public void creerEtAjouterSousTache(TacheMere parent, String titre,LocalDate dateDebut, LocalDate dateFin, Priorite prio) {
         if (titre == null || titre.isEmpty() || parent == null) return;
 
@@ -34,7 +35,7 @@ public class ModeleTache {
         parent.ajouterEnfant(sousTache);
     }
 
-    // Modification d'une tâche
+    // Modification d'une tache
     public void modifierTache(TacheAbstraite tache, String titre, LocalDate date, LocalDate dateFin, Priorite prio) {
         if(tache != null) {
             tache.setTitre(titre);
