@@ -19,7 +19,10 @@ ajout de la fonctionnalité de modification et suppression des tâches via l'int
 3. RÔLES DES MEMBRES DU GROUPE
 ---------------------------------------------------------------------
 Pierre :
+Début du développement de la sérialisation pour sauvegarder les données dans des fichiers binaires.
 
 Louis :
+Résolution d'un problème critique de configuration JavaFX qui empêchait le lancement de l'application depuis le dépôt Git. Préparation de l'environnement graphique.
 
 Mathis :
+Implémentation de la première version du Singleton pour centraliser l'accès aux données dans toute l'application. Développement du Contrôleur de base.
