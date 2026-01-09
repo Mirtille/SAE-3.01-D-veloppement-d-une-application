@@ -1,0 +1,28 @@
+1. FONCTIONNALITÉS DÉVELOPPÉES
+---------------------------------------------------------------------
+Vue Liste Chronologique :
+Développement d'une vue alternative affichant les tâches triées par date de fin sous forme de liste déroulante (Accordéon).
+
+Affichage Hiérarchique :
+Mise en place de l'indentation visuelle pour distinguer les tâches mères des sous-tâches dans la liste.
+
+Sauvegarde Automatique :
+Implémentation du mécanisme déclenchant la sérialisation des données automatiquement à la fermeture de l'application.
+
+
+2. CAS D'UTILISATION
+---------------------------------------------------------------------
+- CU1 : Visualiser les tâches groupées par date d'échéance.
+- CU2 : Identifier rapidement les sous-tâches grâce à l'indentation.
+- CU3 : Ne pas perdre de données en quittant l'application (Sauvegarde auto).
+
+3. RÔLES DES MEMBRES DU GROUPE
+---------------------------------------------------------------------
+Pierre :
+Finalisation de la sauvegarde automatique des données lors de la fermeture de l'application.
+
+Louis :
+Développement de la vue liste et de ses fonctionnalités et reglage des probleme existant avec Mathis.
+
+Mathis :
+Développement de la vue liste et de ses fonctionnalités et reglage des probleme existant avec louis.

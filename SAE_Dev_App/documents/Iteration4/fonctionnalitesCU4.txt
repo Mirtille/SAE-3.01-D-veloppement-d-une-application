@@ -1,0 +1,28 @@
+1. FONCTIONNALITÉS DÉVELOPPÉES
+---------------------------------------------------------------------
+Vue Liste Chronologique :
+Développement d'une vue alternative affichant les tâches triées par date de fin sous forme de liste déroulante.
+
+Règles de Gestion (Dates) :
+Implémentation de la logique de contrôle dans le ContrôleurFX : une sous-tâche ne peut plus commencer avant son parent ni finir après lui.
+
+Formulaire d'ajout rapide :
+Ajout d'un bandeau en bas de l'écran pour créer des tâches sans passer par les menus complexes.
+
+
+2. CAS D'UTILISATION
+---------------------------------------------------------------------
+- CU1 : Visualiser les tâches groupées par date d'échéance.
+- CU2 : Ajouter une tâche rapidement via le formulaire bas.
+- CU3 : Correction automatique des dates lors de la création d'une sous-tâche incohérente.
+
+3. RÔLES DES MEMBRES DU GROUPE
+---------------------------------------------------------------------
+Pierre :
+Adaptation de la sérialisation suite aux changements de structure du code et tests de persistance.
+
+Louis :
+Collaboration sur le design de la Vue Liste et intégration des composants graphiques communs.
+
+Mathis :
+Développement de la logique de la Vue Liste (trie par date) et implémentation des contraintes de date dans le Contrôleur.
