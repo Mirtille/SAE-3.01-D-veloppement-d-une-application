@@ -19,7 +19,10 @@ ajout de la fonctionnalité de drag and drop pour déplacer les taches dans les 
 3. RÔLES DES MEMBRES DU GROUPE
 ---------------------------------------------------------------------
 Pierre :
+Intégration de la sérialisation avec le modèle existant.
 
 Louis :
+Restructuration complète du code graphique pour repartir sur des bases saines (création des classes VueProjet, VueColonne, VueCarte). Implémentation de l'affichage visuel des sous-tâches et du Drag & Drop sur le Kanban.
 
 Mathis :
+Modification du Singleton et du Modèle pour s'adapter à la nouvelle structure graphique (Colonnes) avec Louis mise a jour de l'affichage des taches et de la date.

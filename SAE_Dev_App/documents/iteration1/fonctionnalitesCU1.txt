@@ -21,7 +21,10 @@ Implementation patron mvc textuelle avec creation de tache et priorite et creati
 3. RÔLES DES MEMBRES DU GROUPE
 ---------------------------------------------------------------------
 Pierre :
+Première approche sur la persistance des données (réflexion sur la sérialisation).
 
 Louis :
+Mise en place de l'environnement de projet : création du Trello pour la gestion des tâches, réalisation des diagrammes de classes et de séquences initiaux.
 
-Mathis : Implementation de la classe TacheMere et des méthodes d'ajout de sous-tâches, du patron MVC pour la vue console.
+Mathis :
+Mise en place de l'architecture MVC. Conception du cœur du modèle : création de la classe Tache et intégration du patron Composite.

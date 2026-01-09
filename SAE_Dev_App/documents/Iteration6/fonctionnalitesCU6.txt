@@ -1,0 +1,29 @@
+1. FONCTIONNALITÉS DÉVELOPPÉES
+---------------------------------------------------------------------
+Vue Diagramme de Gantt :
+Création d'une vue graphique dessinant une chronologie temporelle avec des barres proportionnelles à la durée des tâches.
+
+Système de Navigation Global :
+Création du conteneur principal (VueMenu) et intégration du sélecteur de projet permettant de basculer entre les vues (Kanban, Liste, Gantt).
+
+Interaction et Finitions :
+Ajout des pop-ups de détails sur le Gantt, correction des bugs d'affichage et vérification de l'intégrité des données.
+
+
+2. CAS D'UTILISATION
+---------------------------------------------------------------------
+- CU1 : Naviguer entre le Kanban, la Liste et le Gantt via le menu haut.
+- CU2 : Changer de projet actif via le sélecteur.
+- CU3 : Visualiser la durée des tâches sur la vue gantt.
+- CU4 : Ouvrir les détails d'une tâche depuis le graphique Gantt.
+
+3. RÔLES DES MEMBRES DU GROUPE
+---------------------------------------------------------------------
+Pierre :
+Tests finaux de la persistance (Sérialisation) et vérification de l'intégrité des données rechargées après redémarrage.
+
+Louis :
+Collaboration sur la mise en place du système de navigation (VueMenu), ajout d'un choix de projet et reglage des probleme existant.
+
+Mathis :
+Assemblage dans le VueMenu et gestion des dernier reglage et probleme de l'application avec l'ajout de la vue gantt.
